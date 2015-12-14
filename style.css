@@ -1,0 +1,59 @@
+/* Colours */
+/* https://color.adobe.com/create/color-wheel/?base=2&rule=Monochromatic&selected=1&name=My%20Color%20Theme&mode=rgb&rgbvalues=0.415686274509804,0.3185478597200035,0.05839061985888826,1,0.9378581580646921,0.7714291493891984,1,0.7663179644207629,0.14046800060392928,0.5,0.4239396690975645,0.2202340003019646,0.8,0.6130543715366104,0.11237440048314343&swatchOrder=0,4,1,3,2 */
+/* Primary: #6A510F */
+/* Secondary: #CC9C1D */
+/* Background: #FFF2CD */
+
+.col-centered {
+	float: none;
+	margin: 0 auto;
+}
+
+#my-name {
+	color: #6A510F;
+	font: bold 36px 'Merriweather Sans', sans-serif;
+	text-align: center;
+}
+
+.navbar .navbar-nav {
+	display: inline-block;
+	float: none;
+	vertical-align: top;
+}
+
+.navbar .navbar-collapse {
+	text-align: center;
+}
+
+.nav li {
+	margin: 0 30px 0 30px;
+}
+
+#main-menu li a {
+	color: #6A510F;
+	font: 24px Calibri, Verdana, sans-serif;
+}
+
+#main-menu li a:hover {
+	color: #CC9C1D;
+	background: none;
+}
+
+#main-menu li a:focus {
+	color: #CC9C1D;
+	background: none;
+}
+
+#main-menu li:hover:before {
+	content: "";
+	position: absolute;
+	left: 15%;
+	bottom: 0;
+	height: 1px;
+	width: 70%;
+	border-bottom: 2px solid #CC9C1D;
+}
+
+#content {
+	background-color: #FFF2CD;
+}
