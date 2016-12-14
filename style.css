@@ -4,21 +4,34 @@
 /* Secondary: #CC9C1D */
 /* Background: #FFF2CD */
 
+body {
+	background-color: #1E1E1D;
+}
+
 .col-centered {
 	float: none;
 	margin: 0 auto;
 }
 
 #my-name {
-	color: #6A510F;
-	font: bold 36px 'Merriweather Sans', sans-serif;
+	color: #174417;
+	font: bold 6.0rem 'Rubik', sans-serif;
+	text-transform: uppercase;
 	text-align: center;
+	margin-top: 10px;
+	margin-bottom: 0px;
+}
+
+#my-name .first-letter {
+	color: #44CC44;
 }
 
 .navbar .navbar-nav {
 	display: inline-block;
 	float: none;
 	vertical-align: top;
+	border-top: 1px solid #444;
+	border-bottom: 8px solid #44CC44;
 }
 
 .navbar .navbar-collapse {
@@ -30,30 +43,29 @@
 }
 
 #main-menu li a {
-	color: #6A510F;
-	font: 24px Calibri, Verdana, sans-serif;
+	color: #44CC44;
+	font-size: 2.5rem;
+	font-family: 'Ubuntu', sans-serif;
+	font-weight: 700;
+	text-transform: uppercase;
 }
 
 #main-menu li a:hover {
-	color: #CC9C1D;
+	color: #EAEAEA;
 	background: none;
 }
 
 #main-menu li a:focus {
-	color: #CC9C1D;
+	color: #EAEAEA;
 	background: none;
 }
 
-#main-menu li:hover:before {
-	content: "";
-	position: absolute;
-	left: 15%;
-	bottom: 0;
-	height: 1px;
-	width: 70%;
-	border-bottom: 2px solid #CC9C1D;
+#content {
+	outline: 1px solid #44CC44;
 }
 
-#content {
-	background-color: #FFF2CD;
+#content p {
+	font-size: 2.4rem;
+	font-family: sans-serif;
+	color: #D2D2D2;
 }
