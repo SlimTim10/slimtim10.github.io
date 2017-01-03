@@ -5,7 +5,7 @@
 /* Background: #FFF2CD */
 
 body {
-	background-color: #1E1E1D;
+	background-color: #1e1e1d;
 }
 
 .col-centered {
@@ -14,16 +14,15 @@ body {
 }
 
 #my-name {
-	color: #174417;
-	font: bold 6.0rem 'Rubik', sans-serif;
+	font: bold 6.0rem 'Raleway', sans-serif;
 	text-transform: uppercase;
 	text-align: center;
 	margin-top: 10px;
 	margin-bottom: 0px;
-}
-
-#my-name .first-letter {
-	color: #44CC44;
+	color: #202020;
+	background-color: #1e1e1d;
+	letter-spacing: .1em;
+	text-shadow: -1px -1px 1px #111, 3px 2px 0px #b959ff;
 }
 
 .navbar .navbar-nav {
@@ -31,7 +30,7 @@ body {
 	float: none;
 	vertical-align: top;
 	border-top: 1px solid #444;
-	border-bottom: 8px solid #44CC44;
+	border-bottom: 8px solid #b959ff;
 }
 
 .navbar .navbar-collapse {
@@ -43,29 +42,33 @@ body {
 }
 
 #main-menu li a {
-	color: #44CC44;
-	font-size: 2.5rem;
-	font-family: 'Ubuntu', sans-serif;
+	font: 2.2rem Helvetica, sans-serif;
 	font-weight: 700;
 	text-transform: uppercase;
+	text-align: center;
+	margin-top: 10px;
+	margin-bottom: 0px;
+	color: #b959ff;
+	transition: color 0.2s;
 }
 
 #main-menu li a:hover {
-	color: #EAEAEA;
-	background: none;
+	color: #f8f8f8;
+	background-color: #1e1e1d;
 }
 
 #main-menu li a:focus {
-	color: #EAEAEA;
-	background: none;
+	color: #f8f8f8;
+	background-color: #1e1e1d;
 }
 
 #content {
-	outline: 1px solid #44CC44;
+	border-bottom: 4px solid #b959ff;
+	padding: 4px;
 }
 
 #content p {
 	font-size: 2.4rem;
 	font-family: sans-serif;
-	color: #D2D2D2;
+	color: #dedede;
 }
