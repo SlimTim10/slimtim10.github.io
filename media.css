@@ -1,0 +1,46 @@
+@media (min-width: 450px) {
+	[role="navigation"] {
+		font-size: 1.4em;
+	}
+}
+
+@media (min-width: 570px) {
+	#content {
+		font-size: 1.4em;
+	}
+}
+
+@media (min-width: 650px) {
+	.blog-list {
+		align-self: center;
+		display: flex;
+		flex-wrap: wrap;
+	}
+
+	.blog-list li {
+		border-bottom: 0;
+		margin: 0.5em 1%;
+		padding: 1em;
+		width: 48%;
+	}
+}
+
+@media (min-width: 820px) {
+	#content {
+		padding-left: 4%;
+		padding-right: 4%;
+		padding-bottom: 1.2em;
+	}
+}
+
+@media (min-width: 1080px) {
+	.blog-list li {
+		width: 31.33%;
+	}
+}
+
+@media (min-width: 1590px) {
+	.blog-list li {
+		width: 23%;
+	}
+}
