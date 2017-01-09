@@ -42,6 +42,5 @@
 		["content", "about-link", "about.html"],
 		["content", "projects-link", "projects.html"],
 		["content", "blog-link", "blog.html"],
-		["content", "contact-link", "contact.html"],
 	]);
 }());
