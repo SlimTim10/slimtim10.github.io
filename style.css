@@ -14,14 +14,16 @@ body {
 [role="banner"] .my-name {
 	display: inline-block;
 	margin: 0 auto;
-	font: bold 4.0rem 'Raleway', sans-serif;
+	font-family: 'Raleway', sans-serif;
+	font-size: 4.0rem;
+	font-weight: 700;
 	text-transform: uppercase;
 	text-align: center;
 	margin-top: 10px;
 	margin-bottom: 0px;
 	color: #002b36;
 	letter-spacing: .1em;
-	text-shadow: -1px -1px 1px #002b36, 3px 2px 0px #cb4b16;
+	text-shadow: -1px -1px 1px #268bd2, 4px 2px 0px #cb4b16;
 	text-decoration: none;
 }
 
@@ -49,7 +51,7 @@ a {
 
 [role="navigation"] a {
 	font-family: Roboto, sans-serif;
-	font-weight: 500;
+	font-weight: 700;
 	line-height: 1.1;
 	display: inline-block;
 	padding: 0.7em 0.2em;
@@ -58,29 +60,16 @@ a {
 }
 
 [role="navigation"] a:hover {
-	color: #b58900;
+	color: #cb4b16;
 }
 
 [role="navigation"] a:focus {
-	color: #b58900;
-}
-
-#content {
-	box-sizing: border-box;
-	font-size: 1.2em;
-	margin: 0 auto;
-	line-height: 1.5;
-	padding-top: 0.8em;
-	width: 93%;
+	color: #cb4b16;
 }
 
 #content p {
 	font-family:  "Source Sans Pro", sans-serif;
 	color: #839496;
-}
-
-.about {
-	text-align: center;
 }
 
 [role="contentinfo"] {
@@ -100,7 +89,6 @@ a {
 
 [role="contentinfo"] #contact a {
 	font: 1.0rem "Source Sans Pro", sans-serif;
-	font-weight: 500;
 	line-height: 1.1;
 	padding: 0.7em;
 	text-decoration: none;
@@ -108,7 +96,7 @@ a {
 }
 
 [role="contentinfo"] #contact a:hover {
-	color: #b58900;
+	color: #cb4b16;
 }
 
 /* BLOG */
@@ -128,7 +116,7 @@ a {
 .blog-list li a {
 	font-family: Roboto, sans-serif;
 	font-weight: 700;
-	font-size: 1.6em;
+	font-size: 2.6em;
 	line-height: 1.1;
 	max-width: 100%;
 	display: inline-block;
@@ -137,5 +125,23 @@ a {
 }
 
 .blog-list li a:hover {
-	color: #b58900;
+	color: #cb4b16;
+}
+
+.blog-list p {
+	font-size: 1.1em;
+	line-height: 1.4;
+	margin-top: 0.5em;
+}
+
+/* ABOUT */
+
+.about {
+	box-sizing: border-box;
+	font-size: 1.2em;
+	margin: 0 auto;
+	line-height: 1.5;
+	padding-top: 0.8em;
+	width: 93%;
+	text-align: center;
 }
