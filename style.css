@@ -1,4 +1,4 @@
-/* Colours based on Solarized Dark */
+/* Colours based on Solarized */
 /* http://ethanschoonover.com/solarized */
 
 body {
@@ -68,8 +68,7 @@ a {
 }
 
 #content p {
-	font-family:  "Source Sans Pro", sans-serif;
-	color: #839496;
+	
 }
 
 [role="contentinfo"] {
@@ -129,9 +128,65 @@ a {
 }
 
 .blog-list p {
+	font-family:  "Source Sans Pro", sans-serif;
 	font-size: 1.1em;
+	color: #839496;
 	line-height: 1.4;
 	margin-top: 0.5em;
+}
+
+/* PROJECTS */
+
+.projects-list {
+	display: flex;
+	align-self: center;
+	flex-wrap: wrap;
+	padding-top: 1em;
+	max-width: 100%;
+}
+
+.projects-list li {
+	display: flex;
+	align-items: center;
+	border-bottom: 2px solid #002b36;
+	box-sizing: border-box;
+	padding: 2.4em;
+	position: relative;
+	text-align: center;
+}
+
+.projects-list li div {
+	width: 100%;
+}
+
+.projects-list li:nth-child(2n+1) {
+	background-color: #b58900;
+}
+
+.projects-list li:nth-child(2n) {
+	background-color: #cb4b16;
+}
+
+.project-title {
+	font-family: Roboto, sans-serif;
+	font-weight: 700;
+	font-size: 2.8em;
+	text-decoration: none;
+}
+
+.projects-list li:nth-child(2n+1) .project-title {
+	color: #cb4b16;
+}
+
+.projects-list li:nth-child(2n) .project-title {
+	color: #b58900;
+}
+
+.projects-list p {
+	font-family:  "Source Sans Pro", sans-serif;
+	font-size: 1.1em;
+	line-height: 1.4;
+	color: #002b36;
 }
 
 /* ABOUT */

@@ -10,6 +10,13 @@
 	}
 }
 
+@media (min-width: 620px) {
+	.projects-list li {
+		border-right: 2px solid #002b36;
+		width: 50%;
+	}
+}
+
 @media (min-width: 650px) {
 	.blog-list {
 		align-self: center;
@@ -33,9 +40,49 @@
 	}
 }
 
+@media (min-width: 1050px) {
+	.projects-list li {
+		width: 33.33;
+	}
+}
+
 @media (min-width: 1080px) {
 	.blog-list li {
 		width: 31.33%;
+	}
+}
+
+@media (min-width: 1460px) {
+	.projects-list li {
+		width: 25%;
+	}
+
+	.projects-list li:nth-child(8n+1),
+	.projects-list li:nth-child(8n+3),
+	.projects-list li:nth-child(8n+6),
+	.projects-list li:nth-child(8n) {
+		background-color: #b58900;
+	}
+
+	.projects-list li:nth-child(8n+2),
+	.projects-list li:nth-child(8n+4),
+	.projects-list li:nth-child(8n+5),
+	.projects-list li:nth-child(8n+7) {
+		background-color: #cb4b16;
+	}
+
+	.projects-list li:nth-child(8n+1) .project-title,
+	.projects-list li:nth-child(8n+3) .project-title,
+	.projects-list li:nth-child(8n+6) .project-title,
+	.projects-list li:nth-child(8n) .project-title {
+		color: #cb4b16;
+	}
+
+	.projects-list li:nth-child(8n+2) .project-title,
+	.projects-list li:nth-child(8n+4) .project-title,
+	.projects-list li:nth-child(8n+5) .project-title,
+	.projects-list li:nth-child(8n+7) .project-title {
+		color: #b58900;
 	}
 }
 
