@@ -54,5 +54,6 @@
   ];
   
   setupContentLinks(links);
+  setContent(links[0][0], links[0][3]); // Default content
   pageLoadContent(links);
 }());
