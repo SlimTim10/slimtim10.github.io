@@ -15,9 +15,34 @@
 		border-right: 2px solid #002b36;
 		width: 50%;
 	}
+
+	.projects-list li:nth-child(4n+1),
+	.projects-list li:nth-child(4n) {
+		background-color: #b58900;
+	}
+
+	.projects-list li:nth-child(4n+2),
+	.projects-list li:nth-child(4n+3) {
+		background-color: #cb4b16;
+	}
+
+	.projects-list li:nth-child(4n+1) .project-title,
+	.projects-list li:nth-child(4n) .project-title {
+		color: #cb4b16;
+	}
+
+	.projects-list li:nth-child(4n+2) .project-title,
+	.projects-list li:nth-child(4n+3) .project-title {
+		color: #b58900;
+	}
+
 }
 
 @media (min-width: 650px) {
+	[role="banner"] .my-name {
+		font-size: 4.0rem;
+	}
+
 	.blog-list {
 		align-self: center;
 		display: flex;
