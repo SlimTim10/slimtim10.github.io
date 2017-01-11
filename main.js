@@ -34,13 +34,25 @@
 
   var setupContentLinks = function(links) {
     links.forEach(function(link) {
-      setupContentLink(link[0], link[1], link[2]);
+      setupContentLink(link[0], link[1], link[3]);
     });
   };
 
-  setupContentLinks([
-    ["content", "about-link", "about.html"],
-    ["content", "projects-link", "projects.html"],
-    ["content", "blog-link", "blog.html"],
-  ]);
+  // Load correct content on page load based on hash link
+  var pageLoadContent = function(links) {
+    links.forEach(function(link) {
+      if (window.location.hash === link[2]) {
+        setContent(link[0], link[3]);
+      }
+    });
+  };
+
+  var links = [
+    ["content", "about-link", "#about", "about.html"],
+    ["content", "projects-link", "#projects", "projects.html"],
+    ["content", "blog-link", "#blog", "blog.html"],
+  ];
+  
+  setupContentLinks(links);
+  pageLoadContent(links);
 }());
