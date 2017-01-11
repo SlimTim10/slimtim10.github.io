@@ -1,0 +1,118 @@
+@media (min-width: 450px) {
+	[role="navigation"] {
+		font-size: 1.4em;
+	}
+}
+
+@media (min-width: 570px) {
+	.about {
+		font-size: 1.4em;
+	}
+}
+
+@media (min-width: 620px) {
+	.projects-list li {
+		border-right: 2px solid #002b36;
+		width: 50%;
+	}
+
+	.projects-list li:nth-child(4n+1),
+	.projects-list li:nth-child(4n) {
+		background-color: #b58900;
+	}
+
+	.projects-list li:nth-child(4n+2),
+	.projects-list li:nth-child(4n+3) {
+		background-color: #cb4b16;
+	}
+
+	.projects-list li:nth-child(4n+1) .project-title,
+	.projects-list li:nth-child(4n) .project-title {
+		color: #cb4b16;
+	}
+
+	.projects-list li:nth-child(4n+2) .project-title,
+	.projects-list li:nth-child(4n+3) .project-title {
+		color: #b58900;
+	}
+
+}
+
+@media (min-width: 650px) {
+	[role="banner"] .my-name {
+		font-size: 4.0rem;
+	}
+
+	.blog-list {
+		align-self: center;
+		display: flex;
+		flex-wrap: wrap;
+	}
+
+	.blog-list li {
+		border-bottom: 0;
+		margin: 0.5em 1%;
+		padding: 1em;
+		width: 48%;
+	}
+}
+
+@media (min-width: 820px) {
+	.about {
+		padding-left: 4%;
+		padding-right: 4%;
+		padding-bottom: 1.2em;
+	}
+}
+
+@media (min-width: 1050px) {
+	.projects-list li {
+		width: 33.33;
+	}
+}
+
+@media (min-width: 1080px) {
+	.blog-list li {
+		width: 31.33%;
+	}
+}
+
+@media (min-width: 1460px) {
+	.projects-list li {
+		width: 25%;
+	}
+
+	.projects-list li:nth-child(8n+1),
+	.projects-list li:nth-child(8n+3),
+	.projects-list li:nth-child(8n+6),
+	.projects-list li:nth-child(8n) {
+		background-color: #b58900;
+	}
+
+	.projects-list li:nth-child(8n+2),
+	.projects-list li:nth-child(8n+4),
+	.projects-list li:nth-child(8n+5),
+	.projects-list li:nth-child(8n+7) {
+		background-color: #cb4b16;
+	}
+
+	.projects-list li:nth-child(8n+1) .project-title,
+	.projects-list li:nth-child(8n+3) .project-title,
+	.projects-list li:nth-child(8n+6) .project-title,
+	.projects-list li:nth-child(8n) .project-title {
+		color: #cb4b16;
+	}
+
+	.projects-list li:nth-child(8n+2) .project-title,
+	.projects-list li:nth-child(8n+4) .project-title,
+	.projects-list li:nth-child(8n+5) .project-title,
+	.projects-list li:nth-child(8n+7) .project-title {
+		color: #b58900;
+	}
+}
+
+@media (min-width: 1590px) {
+	.blog-list li {
+		width: 23%;
+	}
+}
