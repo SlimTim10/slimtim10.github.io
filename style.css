@@ -2,13 +2,15 @@
 /* http://ethanschoonover.com/solarized */
 
 body {
-	background-color: #002b36;
+	background-color: #000000;
+	background-image: url("black-linen-2.png");
 }
 
 [role="banner"] {
 	overflow: hidden;
+	text-align: left;
+	padding-left: 3.0em;
 	padding-top: 0.6em;
-	text-align: center;
 }
 
 [role="banner"] .my-name {
@@ -67,8 +69,39 @@ a {
 	color: #cb4b16;
 }
 
-#content p {
-	
+.content {
+	margin: 1em auto 0;
+	width: 70%;
+	display: flex;
+	flex-flow: row;
+}
+
+.column {
+	flex: 1;
+	border: 1px solid green;
+}
+
+.about-me {
+	flex: 1 1 20%;
+	order: 1;
+}
+
+.about-me p {
+	font-family:  "Source Sans Pro", sans-serif;
+	font-size: 1.4em;
+	color: #fff;
+	line-height: 1.4;
+	padding-bottom: 10px;
+}
+
+.categories {
+	flex: 1 1 40%;
+	order: 2;
+}
+
+.blog {
+	flex: 1 1 20%;
+	order: 3;
 }
 
 [role="contentinfo"] {
