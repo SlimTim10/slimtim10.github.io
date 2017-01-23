@@ -23,10 +23,18 @@ body {
 	text-align: center;
 	margin-top: 10px;
 	margin-bottom: 0px;
-	color: #002b36;
+	color: white;
 	letter-spacing: .1em;
-	text-shadow: -1px -1px 1px #268bd2, 4px 2px 0px #cb4b16;
 	text-decoration: none;
+}
+
+svg {
+	font-family: 'Raleway', sans-serif;
+	font-size: 4.0em;
+	font-weight: 700;
+	text-transform: uppercase;
+	background-color: #000000;
+	background-image: url("black-linen-2.png");
 }
 
 [role="navigation"] {
