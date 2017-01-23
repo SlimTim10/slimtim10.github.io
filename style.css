@@ -47,10 +47,6 @@ body {
 	flex-grow: 1;
 }
 
-a {
-	color: #859900;
-}
-
 [role="navigation"] a {
 	font-family: Roboto, sans-serif;
 	font-weight: 700;
@@ -78,30 +74,95 @@ a {
 
 .column {
 	flex: 1;
-	border: 1px solid green;
 }
 
 .about-me {
-	flex: 1 1 20%;
+	flex: 1 1 30%;
 	order: 1;
+	/* display: flex; */
+	/* align-items: center; */
+	/* flex-direction: column */
 }
 
 .about-me p {
-	font-family:  "Source Sans Pro", sans-serif;
+	font-family:  "Open Sans", sans-serif;
 	font-size: 1.4em;
-	color: #fff;
+	color: white;
 	line-height: 1.4;
 	padding-bottom: 10px;
 }
 
 .categories {
-	flex: 1 1 40%;
+	flex: 1 1 30%;
 	order: 2;
+	margin-left: 50px;
+	display: flex;
+	align-items: center;
+}
+
+.categories ol {
+	counter-reset: item -1;
+}
+
+.categories li {
+	margin-bottom: 50px;
+	font-family:  "PT Sans Narrow", sans-serif;
+	font-weight: 700;
+	font-size: 2.6em;
+}
+
+.categories li:before {
+	margin-right: 20px;
+	counter-increment: item 1;
+	content: counter(item);
+	border: 2px solid #999;
+	color: white;
+	width: 1.1em;
+	height: 1.1em;
+	text-align: center;
+	display: inline-block;
+	transition: color 0.2s;
+}
+
+.categories li:hover:before {
+	color: #999;
+}
+
+.categories a {
+	color: white;
+	text-decoration: none;
+	transition: color 0.2s;
+}
+
+.categories a:hover {
+	color: #999;
 }
 
 .blog {
-	flex: 1 1 20%;
+	flex: 1 1 30%;
 	order: 3;
+	display: flex;
+	align-items: center;
+}
+
+.blog a {
+	border-radius: 30px;
+	font-family: "PT Sans Narrow", sans-serif;
+	font-weight: 700;
+	font-size: 2.6em;
+	color: black;
+	background: white;
+	padding: 10px 20px 10px 20px;
+	text-decoration: none;
+	transition: background-color 0.5s,
+	color 0.5s,
+	padding 0.5s;
+}
+
+.blog a:hover {
+	background: #555;
+	color: white;
+	padding: 30px 20px 30px 20px;
 }
 
 [role="contentinfo"] {
