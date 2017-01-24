@@ -13,22 +13,7 @@ body {
 	padding-top: 0.6em;
 }
 
-[role="banner"] .my-name {
-	display: inline-block;
-	margin: 0 auto;
-	font-family: 'Raleway', sans-serif;
-	font-size: 3.0rem;
-	font-weight: 700;
-	text-transform: uppercase;
-	text-align: center;
-	margin-top: 10px;
-	margin-bottom: 0px;
-	color: white;
-	letter-spacing: .1em;
-	text-decoration: none;
-}
-
-svg {
+[role="banner"] svg {
 	font-family: 'Raleway', sans-serif;
 	font-size: 4.0em;
 	font-weight: 700;
@@ -174,10 +159,7 @@ svg {
 }
 
 [role="contentinfo"] {
-	border-top: 6px solid #268bd2;
-	box-sizing: border-box;
 	margin: 1em auto 2em;
-	max-width: 720px;
 	overflow: hidden;
 	padding: 1em 0 0.8em;
 	text-align: center;
@@ -189,7 +171,9 @@ svg {
 }
 
 [role="contentinfo"] #contact a {
-	font: 1.0rem "Source Sans Pro", sans-serif;
+	font-family: "Source Sans Pro", sans-serif;
+	font-size: 1.0rem;
+	color: white;
 	line-height: 1.1;
 	padding: 0.7em;
 	text-decoration: none;
@@ -197,7 +181,7 @@ svg {
 }
 
 [role="contentinfo"] #contact a:hover {
-	color: #cb4b16;
+	color: #999;
 }
 
 /* BLOG */
@@ -301,4 +285,52 @@ svg {
 	padding-top: 0.8em;
 	width: 93%;
 	text-align: center;
+}
+
+/* FOOTER */
+
+[role="contentinfo"] nav a {
+	font-family: "Source Sans Pro", sans-serif;
+	font-size: 1.2rem;
+	color: white;
+	text-decoration: none;
+	position: relative;
+	display: inline-block;
+	margin: 15px 25px;
+	outline: none;
+	color: #fff;
+	letter-spacing: 1px;
+}
+
+[role="contentinfo"] nav a:hover,
+[role="contentinfo"] nav a:focus {
+	outline: none;
+}
+
+/* Effect 1: Brackets */
+.cl-effect-1 a::before,
+.cl-effect-1 a::after {
+	display: inline-block;
+	opacity: 0;
+	transition: transform 0.3s, opacity 0.2s;
+}
+
+.cl-effect-1 a::before {
+	margin-right: 10px;
+	content: '[';
+	transform: translateX(20px);
+}
+
+.cl-effect-1 a::after {
+	margin-left: 10px;
+	content: ']';
+	transform: translateX(-20px);
+}
+
+.cl-effect-1 a:hover::before,
+.cl-effect-1 a:hover::after,
+.cl-effect-1 a:focus::before,
+.cl-effect-1 a:focus::after {
+	opacity: 1;
+	transform: translateX(0px);
 }
