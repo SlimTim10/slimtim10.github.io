@@ -63,7 +63,7 @@ body {
 	color: #cb4b16;
 }
 
-.content {
+#content {
 	margin: 1em auto 0;
 	width: 70%;
 	display: flex;
@@ -86,11 +86,11 @@ body {
 	order: 3;
 }
 
-.about-me {
+#about-me {
 	flex: 1 1 30%;
 }
 
-.about-me p {
+#about-me p {
 	font-family:  "Open Sans", sans-serif;
 	font-size: 1.4em;
 	color: white;
@@ -98,25 +98,27 @@ body {
 	padding-bottom: 10px;
 }
 
-.categories {
+#categories {
 	flex: 1 1 30%;
 	margin-left: 50px;
 	display: flex;
 	align-items: center;
 }
 
-.categories ol {
+#categories ol {
 	counter-reset: item -1;
 }
 
-.categories li {
+#categories li {
 	margin-bottom: 50px;
 	font-family:  "PT Sans Narrow", sans-serif;
 	font-weight: 700;
 	font-size: 2.6em;
+	color: white;
+	transition: color 0.2s;
 }
 
-.categories li:before {
+#categories li:before {
 	margin-right: 20px;
 	counter-increment: item 1;
 	content: counter(item);
@@ -129,27 +131,30 @@ body {
 	transition: color 0.2s;
 }
 
-.categories li:hover:before {
+#categories li:hover:before {
 	color: #999;
 }
 
-.categories a {
-	color: white;
+#categories li:hover {
+	color: #999;
+}
+
+#categories a {
 	text-decoration: none;
-	transition: color 0.2s;
 }
 
-.categories a:hover {
-	color: #999;
+#categories a:hover,
+#categories a:focus {
+	outline: none;
 }
 
-.blog {
+#blog {
 	flex: 1 1 30%;
 	display: flex;
 	align-items: center;
 }
 
-.blog a {
+#blog a {
 	border-radius: 30px;
 	font-family: "PT Sans Narrow", sans-serif;
 	font-weight: 700;
@@ -163,10 +168,15 @@ body {
 	padding 0.5s;
 }
 
-.blog a:hover {
+#blog a:hover {
 	background: #555;
 	color: white;
 	padding: 30px 20px 30px 20px;
+}
+
+#blog a:hover,
+#blog a:focus {
+	outline: none;
 }
 
 [role="contentinfo"] {
