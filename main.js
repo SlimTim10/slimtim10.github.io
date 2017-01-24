@@ -2,7 +2,10 @@
   "use strict";
 
   var setInnerHTML = function(elementId, html) {
-    document.getElementById(elementId).innerHTML = html;
+    var el = document.getElementById(elementId);
+    if (el) {
+      el.innerHTML = html;
+    }
   };
   
   var setContent = function(contentId, contentFile) {
@@ -27,5 +30,6 @@
   };
 
   setContent("footer", "footer.html");
+  setContent("banner", "banner.html");
   setContent("header", "header.html");
 }());

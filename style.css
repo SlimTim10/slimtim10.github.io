@@ -13,6 +13,11 @@ body {
 	padding-top: 0.6em;
 }
 
+[role="banner"] a:hover,
+[role="banner"] a:focus {
+	outline: none;
+}
+
 [role="banner"] svg {
 	font-family: 'Raleway', sans-serif;
 	font-size: 7.0rem;
@@ -288,6 +293,20 @@ body {
 }
 
 /* FOOTER */
+
+[role="contentinfo"] nav {
+	position: relative;
+}
+
+[role="contentinfo"] nav:after {
+	content: "";
+	background: #999;
+	position: absolute;
+	bottom: 100%;
+	left: 25%;
+	height: 1px;
+	width: 50%;
+}
 
 [role="contentinfo"] nav a {
 	font-family: "Source Sans Pro", sans-serif;
