@@ -310,11 +310,11 @@ body {
 
 /* FOOTER */
 
-[role="contentinfo"] nav {
+[role="contentinfo"] div {
 	position: relative;
 }
 
-[role="contentinfo"] nav:after {
+[role="contentinfo"] div:after {
 	content: "";
 	background: #999;
 	position: absolute;
@@ -324,7 +324,7 @@ body {
 	width: 50%;
 }
 
-[role="contentinfo"] nav a {
+[role="contentinfo"] div a {
 	font-family: "Source Sans Pro", sans-serif;
 	font-size: 1.2rem;
 	color: white;
@@ -337,8 +337,8 @@ body {
 	letter-spacing: 1px;
 }
 
-[role="contentinfo"] nav a:hover,
-[role="contentinfo"] nav a:focus {
+[role="contentinfo"] div a:hover,
+[role="contentinfo"] div a:focus {
 	outline: none;
 }
 
