@@ -31,5 +31,5 @@
 
   setContent("footer", "footer.html");
   setContent("banner", "banner.html");
-  setContent("header", "header.html");
+  setContent("categories", "categories.html");
 }());
