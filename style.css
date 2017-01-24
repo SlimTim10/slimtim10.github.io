@@ -112,13 +112,13 @@ body {
 	outline: none;
 }
 
-#blog {
+#blog-link {
 	flex: 1 1 30%;
 	display: flex;
 	align-items: center;
 }
 
-#blog a {
+#blog-link a {
 	border-radius: 30px;
 	font-family: "PT Sans Narrow", sans-serif;
 	font-weight: 700;
@@ -132,14 +132,14 @@ body {
 	padding 0.5s;
 }
 
-#blog a:hover {
+#blog-link a:hover {
 	background: #555;
 	color: white;
 	padding: 30px 20px 30px 20px;
 }
 
-#blog a:hover,
-#blog a:focus {
+#blog-link a:hover,
+#blog-link a:focus {
 	outline: none;
 }
 
