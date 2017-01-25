@@ -40,46 +40,44 @@ body {
 	flex-flow: column;
 }
 
-.column {
-	flex: 1;
-}
-
-.flex-order-1 {
-	order: 1;
-}
-
-.flex-order-2 {
-	order: 2;
-}
-
-.flex-order-3 {
-	order: 3;
-}
-
 .vertical-center {
 	align-items: center;
 }
 
 #about-me {
 	flex: 1 0 100%;
+	order: 1;
 }
 
 #about-me p {
 	font-family:  "Open Sans", sans-serif;
-	font-size: 1.2em;
+	font-size: 1.0em;
+	font-size: calc(1.0em + 1vmin);
 	color: white;
-	line-height: 1.4;
 	padding-bottom: 10px;
 }
 
 #categories {
-	flex: 1 0 100%;
 	display: flex;
+}
+
+.categories-home {
+	flex: 1 0 100%;
+	order: 2;
+	align-items: center;
 	margin-top: 8%;
 }
 
+.categories-alt {
+	order: 1;
+}
+
 #categories nav {
-	width: 100%;
+	margin: 0 auto;
+}
+
+.categories-home nav {
+	width: 80%;
 }
 
 #categories ol {
@@ -87,13 +85,22 @@ body {
 }
 
 #categories li {
-	margin-bottom: 20px;
-	margin-left: 10%;
 	font-family:  "PT Sans Narrow", sans-serif;
 	font-weight: 700;
 	font-size: 1.4em;
+	font-size: calc(1.4em + 1vmin);
 	color: white;
 	transition: color 0.2s;
+}
+
+.categories-home li {
+	margin-bottom: 20px;
+	margin-left: 10%;
+}
+
+.categories-alt li {
+	margin-bottom: 20px;
+	margin-left: 0;
 }
 
 #categories li:before {
@@ -129,6 +136,8 @@ body {
 #blog-link {
 	flex: 1 0 100%;
 	display: flex;
+	order: 3;
+	align-items: center;
 	margin: 8% auto 0;
 }
 
@@ -137,6 +146,7 @@ body {
 	font-family: "PT Sans Narrow", sans-serif;
 	font-weight: 700;
 	font-size: 1.8em;
+	font-size: calc(1.8em + 1vmin);
 	color: black;
 	background: white;
 	padding: 10px 20px 10px 20px;
@@ -159,13 +169,14 @@ body {
 
 #projects {
 	flex: 1 0 70%;
+	order: 2;
 	display: flex;
 	flex-wrap: wrap;
 }
 
 .project {
-	flex: 0 0 auto;
-	margin: 0 10px 0 10px;
+	flex: 0 0 0%;
+	margin: 0 auto 1em;
 	text-align: center;
 }
 
@@ -193,7 +204,8 @@ body {
 
 .project figcaption {
 	font-family: "Source Sans Pro", sans-serif;
-	font-size: 2.2rem;
+	font-size: 1.4em;
+	font-size: calc(1.4em + 1vmin);
 }
 
 /* FOOTER */
@@ -203,7 +215,7 @@ body {
 	overflow: hidden;
 	padding: 1em 0 0.8em;
 	text-align: center;
-	width: 70%;
+	width: 100%;
 }
 
 [role="contentinfo"] div {
@@ -222,7 +234,8 @@ body {
 
 [role="contentinfo"] div a {
 	font-family: "Source Sans Pro", sans-serif;
-	font-size: 1.0rem;
+	font-size: 1.0em;
+	font-size: calc(1.0em + 1vmin);
 	color: white;
 	text-decoration: none;
 	position: relative;
