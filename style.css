@@ -170,14 +170,13 @@ body {
 #projects {
 	flex: 1 0 70%;
 	order: 2;
-	display: flex;
-	flex-wrap: wrap;
+	margin: 0 auto;
 }
 
 .project {
-	flex: 0 0 0%;
-	margin: 0 auto 1em;
 	text-align: center;
+	margin: 2em 0 2em;
+	position: relative;
 }
 
 .project a {
@@ -195,17 +194,22 @@ body {
 }
 
 .project img {
-	width: 300px;
-	height: auto;
-	border-radius: 4px;
-	border: 2px solid #999;
-	border-radius: 10px;
+	display: block;
+	margin: 0 auto;
 }
 
 .project figcaption {
 	font-family: "Source Sans Pro", sans-serif;
 	font-size: 1.4em;
 	font-size: calc(1.4em + 1vmin);
+	position: absolute;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	width: 300px;
+	margin: 0 auto;
+	background-color: black;
+	opacity: 0.6;
 }
 
 /* FOOTER */

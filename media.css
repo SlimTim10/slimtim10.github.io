@@ -15,6 +15,19 @@
 	}
 }
 
+@media screen and (min-width: 41.25em) {
+	#projects {
+		margin: 0;
+		display: flex;
+		flex-flow: row wrap;
+		justify-content: center;
+	}
+
+	.project {
+		margin: 0;
+	}
+}
+
 @media screen and (min-width: 43.75em) {
 	#content {
 		flex-flow: row wrap;
@@ -36,6 +49,7 @@
 	}
 
 	#content {
+		margin: 3em auto 0;
 		width: 85%;
 		flex-flow: row;
 	}
@@ -68,9 +82,8 @@
 		display: inline-block;
 	}
 
-	#content {
-		width: 85%;
-		flex-flow: row;
+	#projects {
+		justify-content: flex-start;
 	}
 
 	[role="contentinfo"] div:after {
@@ -82,12 +95,10 @@
 
 @media screen and (min-width: 104em) {
 	#content {
-		margin: 3em auto 0;
 		width: 70%;
 	}
 	
 	#categories {
-		margin-left: 50px;
 		margin-top: 0;
 	}
 
