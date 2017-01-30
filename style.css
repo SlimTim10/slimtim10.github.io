@@ -1,9 +1,6 @@
-/* Colours based on Solarized */
-/* http://ethanschoonover.com/solarized */
-
 body {
 	background-color: #000000;
-	background-image: url("black-linen-2.png");
+	background-image: url("fabric-of-squares.png"); /* https://www.transparenttextures.com/ */
 }
 
 /* HEADER */
@@ -26,7 +23,7 @@ body {
 	font-weight: 700;
 	text-transform: uppercase;
 	background-color: #000000;
-	background-image: url("black-linen-2.png");
+	background-image: url("fabric-of-squares.png"); /* https://www.transparenttextures.com/ */
 	width: 15.625rem;
 	height: auto;
 }
