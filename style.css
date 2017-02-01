@@ -1,6 +1,6 @@
 body {
 	background-color: #000000;
-	background-image: url("fabric-of-squares.png"); /* https://www.transparenttextures.com/ */
+	background-image: url("images/background/fabric-of-squares.png"); /* https://www.transparenttextures.com/ */
 }
 
 /* HEADER */
@@ -23,7 +23,7 @@ body {
 	font-weight: 700;
 	text-transform: uppercase;
 	background-color: #000000;
-	background-image: url("fabric-of-squares.png"); /* https://www.transparenttextures.com/ */
+	background-image: url("images/background/fabric-of-squares.png"); /* https://www.transparenttextures.com/ */
 	width: 15.625rem;
 	height: auto;
 }
