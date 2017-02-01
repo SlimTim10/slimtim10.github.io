@@ -237,9 +237,9 @@ body {
 	font-family: "Source Sans Pro", sans-serif;
 	font-size: 1.4em;
 	font-size: calc(1.4em + 1vmin);
-	position: absolute;
+	position: relative;
 	right: 0;
-	bottom: 0;
+	bottom: 0.9em;
 	left: 0;
 	width: 300px;
 	margin: 0 auto;
