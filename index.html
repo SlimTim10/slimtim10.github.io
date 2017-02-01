@@ -13,8 +13,49 @@
 	</header>
 	<div role="main" id="content">
 	  <section id="about-me">
-		<p>Fringilla est ullamcorper eget nulla facilisi etiam dignissim diam quis enim lobortis scelerisque fermentum dui faucibus in ornare quam viverra orci. Pellentesque habitant morbi tristique senectus et netus et malesuada.</p>
-		<p>Sit amet cursus sit amet, dictum. Enim blandit volutpat maecenas volutpat blandit aliquam etiam erat velit, scelerisque in dictum non, consectetur a erat nam at lectus urna duis convallis convallis. Habitant morbi tristique senectus et netus. Gravida dictum fusce ut placerat orci nulla pellentesque dignissim enim, sit amet venenatis urna cursus eget nunc scelerisque viverra mauris, in aliquam sem fringilla.</p>
+		<div class="location">
+		  <p>Location: Toronto, Ontario</p>
+		</div>
+		<div class="expertise">
+		  <p>Expertise:</p>
+		  <ul class="outer-list">
+			<li class="clickable" onclick="toggleList(this)">Embedded systems
+			  <ul class="inner-list">
+				<li>8-bit, 16-bit, and ARM microcontrollers</li>
+				<li>Firmware development</li>
+				<li>Schematic design</li>
+				<li>PCB design</li>
+				<li>Arduino</li>
+			  </ul>
+			</li>
+			<li class="clickable" onclick="toggleList(this)">Software development
+			  <ul class="inner-list">
+				<li>C</li>
+				<li>C++</li>
+				<li>JavaScript</li>
+				<li>Python</li>
+				<li>Assembly</li>
+				<li>Emacs Lisp</li>
+				<li>Unity3D</li>
+			  </ul>
+			</li>
+			<li class="clickable" onclick="toggleList(this)">Web development
+			  <ul class="inner-list">
+				<li>HTML, CSS</li>
+				<li>JavaScript</li>
+				<li>PHP</li>
+				<li>MySQL</li>
+				<li>AngularJS</li>
+				<li>Node.js</li>
+				<li>Apache</li>
+				<li>WordPress</li>
+			</ul></li>
+			<li>Teaching</li>
+		  </ul>
+		</div>
+		<div class="hobbies">
+		  <p>Hobbies: rock climbing, gongfu tea, piano</p>
+		</div>
 	  </section>
 	  <section id="categories" class="categories-home">
 	  </section>
@@ -25,5 +66,6 @@
 	<footer role="contentinfo" id="footer">
 	</footer>
 	<script type="text/javascript" src="main.js"></script>
+	<script type="text/javascript" src="util.js"></script>
   </body>
 </html>

@@ -37,8 +37,8 @@ body {
 	flex-flow: column;
 }
 
-.vertical-center {
-	align-items: center;
+.clickable {
+	cursor: pointer;
 }
 
 #about-me {
@@ -46,12 +46,50 @@ body {
 	order: 1;
 }
 
+#about-me .location,
+#about-me .expertise {
+	padding-bottom: 10px;
+}
+
+#about-me .hobbies {
+	display: none;
+}
+
 #about-me p {
 	font-family:  "Open Sans", sans-serif;
 	font-size: 1.0em;
 	font-size: calc(1.0em + 1vmin);
 	color: white;
+}
+
+#about-me ul.outer-list > li {
+	font-family:  "Open Sans", sans-serif;
+	font-size: 0.8em;
+	font-size: calc(0.8rem + 1vmin);
+	color: white;
+}
+
+#about-me ul.outer-list > li:before {
+	content: "+";
+	padding-right: 5px;
+}
+
+#about-me ul.inner-list {
+	display: none;
 	padding-bottom: 10px;
+}
+
+#about-me ul.inner-list > li {
+	font-family:  "Open Sans", sans-serif;
+	font-size: 0.7em;
+	font-size: calc(0.7rem + 1vmin);
+	color: white;
+}
+
+#about-me ul.inner-list > li:before {
+	content: "-";
+	padding-right: 5px;
+	padding-left: 5px;
 }
 
 #categories {
