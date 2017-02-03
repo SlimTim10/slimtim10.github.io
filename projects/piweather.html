@@ -1,32 +1,66 @@
 <h1>piweather</h1>
-<p class="center-text"><a href="https://github.com/SlimTim10/piweather">Project source on GitHub</a></p>
-<img alt="piweather photo 1" src="/images/piweather/1.jpg"/>
-<img alt="piweather photo 2" src="/images/piweather/2.jpg"/>
-<p>This is a small project intended to show the current weather on a LCD character display with a Raspberry Pi.</p>
-<p>The entire source code is in a <a href="https://github.com/SlimTim10/piweather/blob/master/piweather.py">single Python file</a> (Python 2).</p>
-<p>I made this project with the idea that the implementation could be reused for similar cases where a Raspberry Pi is involved. The 3 key features being:
+<p><a href="https://github.com/SlimTim10/piweather">Project source on GitHub</a></p>
+<!-- <img alt="piweather photo 1" src="/images/piweather/1.jpg"/> -->
+<!-- <img alt="piweather photo 2" src="/images/piweather/2.jpg"/> -->
+<p class="sidenote">NOTE: This project no longer works due to the weather page changing their layout. I could update it by tweaking the web scraping, but I simply don't use it anymore. I'm writing about it so that myself or others may use parts of the implementation for other projects.</p>
+<p>This is a small project intended to show the current weather on a LCD character display with a Raspberry Pi running <a href="https://www.raspbian.org/">Raspbian</a>. The entire source code is in a <a href="https://github.com/SlimTim10/piweather/blob/master/piweather.py">single Python file</a> (Python 2).</p>
+<p>I made this project with the idea that the implementation could be reused for similar cases where a Raspberry Pi is involved. The 3 key features being:</p>
   <ol>
 	<li>Wi-Fi</li>
 	<li>LCD</li>
 	<li>Web scraping</li>
   </ol>
-</p>
 <h2>Wi-Fi</h2>
 <p>Fortunately, there are lots of cheap <a href="https://www.sparkfun.com/products/13677">USB wireless adapters</a> available that make it very easy to add Wi-Fi to any Raspberry Pi. The one I used (from an Amazon seller) was a bit unreliable, needing to reconnect sporadically, though this may have been due to the distance to the router.</p>
-<p>The challenge was getting Wi-Fi to connect on boot. The following commands worked for me on Raspbian:</p>
+<p>The challenge was getting Wi-Fi to connect on boot. In Raspbian, I installed and launched the <a href="https://wiki.archlinux.org/index.php/wicd">Wicd</a> network manager:</p>
 <pre><code class="language-bash">sudo apt-get update
 sudo apt-get install wicd-curses
-sudo wicd-curses
-
-Press 'P' for preferences
-Set Wireless Interface: wlan0
-Press F10 to save
-Press 'R' to refresh
-Navigate to your network
-Press right arrow to configure
-Select 'Automatically connect to this network'
-Set Key: &lt;wireless password&gt;
-Press F10 to save
-Press 'C' to connect
-
-Edit /etc/network/interfaces to include: auto wlan0</code></pre>
+sudo wicd-curses</code></pre>
+<p>Then configured Wicd:</p>
+<ul>
+  <li>Press 'P' for preferences</li>
+  <li>Set Wireless Interface: wlan0</li>
+  <li>Press F10 to save</li>
+  <li>Press 'R' to refresh</li>
+  <li>Navigate to your network</li>
+  <li>Press right arrow to configure</li>
+  <li>Select 'Automatically connect to this network'</li>
+  <li>Set Key: &lt;wireless password&gt;</li>
+  <li>Press F10 to save</li>
+  <li>Press 'C' to connect</li>
+  <li>Edit /etc/network/interfaces to include: auto wlan0</li>
+</ul>
+<h2>LCD</h2>
+<p>For this project, I used a <a href="http://www.newhavendisplay.com/nhd0208azrnybw33v-p-5156.html">2x8 character display</a>. The LCD's built-in <a href="http://www.newhavendisplay.com/app_notes/ST7066U.pdf">ST7066U controller</a> makes interfacing with it fairly easy. I used line 1 to show the current and high temperature for the day, and line 2 to show the weather conditions. Long lines can be shown with some simple text scrolling:</p>
+<pre><code class="language-python">while True:
+    ...
+    # Line 2 shows current condition and later (today) condition
+    # (e.g., "Now: Cloudy. Later: Showers.")
+    line2 = conditions
+    if len(line2) &gt; 8:
+        tmp = line2
+        write(2, tmp[:8])
+        while tmp:
+            tmp = tmp[1:]
+            write(2, tmp[:8])
+            time.sleep(0.2) # Adjust for scrolling speed
+    else:
+        write(2, line2)</code></pre>
+<h2>Web Scraping</h2>
+<p>Using regular expressions to extract information from web pages is fun and can be applied in so many ways. For this project, I wanted to get weather data. But not just from any source; specifically from the <a href="https://weather.gc.ca/city/pages/on-143_metric_e.html">Government of Canada</a>. Sure, I could a service like <a href="http://www.accuweather.com">AccuWeather</a> that provides an <a href="http://apidev.accuweather.com/developers/">API</a> which makes getting the data straightforward, but it's not as accurate a source for my location and there isn't always an API available for whatever data we may be looking for.</p>
+<p>The essential bits of Python 2 code I used to accomplish web scraping are as follows.</p>
+<p>Import the necessary libraries:</p>
+<pre><code class="language-python">import urllib
+import re</code></pre>
+<p>Get the weather web page:</p>
+<pre><code class="language-python">page = urllib.urlopen("http://weather.gc.ca/city/pages/on-143_metric_e.html").read()</code></pre>
+<p>Get the current temperature by scraping the page using a regular expression:</p>
+<pre><code class="language-python">curtemp = re.search("&lt;p class=\"temperature\"&gt;(.+)&amp;deg;", page).group(1) # Current temperature</code></pre>
+<p>Get the high temperature of the week:</p>
+<pre><code class="language-python">m = re.findall("&lt;li class=\"high\".*&gt;(.*)&amp;.*;", page) # High temperatures of the week
+hitemp = m[0] # High of today. Other days should be m[1:8]</code></pre>
+<p>Get the weather condition:</p>
+<pre><code class="language-python">conditions = re.findall("weathericons.*alt=\"(.*)\" title", page) # Conditions of the week
+conditions = "Now: " + conditions[0] + ". Later: " + conditions[1] + "." # Today's condition (current and later)</code></pre>
+<h2>That's all!</h2>
+<p>Head to the <a href="https://github.com/SlimTim10/piweather">GitHub project</a> to see the wiring connections and full source code.</p>
