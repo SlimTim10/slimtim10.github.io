@@ -270,6 +270,7 @@ body {
 
 #article p {
 	line-height: 1.2em;
+	margin-top: 1em;
 }
 
 #article a:link {
