@@ -273,6 +273,10 @@ body {
 	margin-top: 1em;
 }
 
+#article p.sidenote {
+	font-style: italic;
+}
+
 #article a:link {
 	color: white;
 	border-bottom: 0.1em solid rgba(255, 255, 255, 0.5);
