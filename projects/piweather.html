@@ -1,0 +1,32 @@
+<h1>piweather</h1>
+<p class="center-text"><a href="https://github.com/SlimTim10/piweather">Project source on GitHub</a></p>
+<img alt="piweather photo 1" src="/images/piweather/1.jpg"/>
+<img alt="piweather photo 2" src="/images/piweather/2.jpg"/>
+<p>This is a small project intended to show the current weather on a LCD character display with a Raspberry Pi.</p>
+<p>The entire source code is in a <a href="https://github.com/SlimTim10/piweather/blob/master/piweather.py">single Python file</a> (Python 2).</p>
+<p>I made this project with the idea that the implementation could be reused for similar cases where a Raspberry Pi is involved. The 3 key features being:
+  <ol>
+	<li>Wi-Fi</li>
+	<li>LCD</li>
+	<li>Web scraping</li>
+  </ol>
+</p>
+<h2>Wi-Fi</h2>
+<p>Fortunately, there are lots of cheap <a href="https://www.sparkfun.com/products/13677">USB wireless adapters</a> available that make it very easy to add Wi-Fi to any Raspberry Pi. The one I used (from an Amazon seller) was a bit unreliable, needing to reconnect sporadically, though this may have been due to the distance to the router.</p>
+<p>The challenge was getting Wi-Fi to connect on boot. The following commands worked for me on Raspbian:</p>
+<pre><code class="language-bash">sudo apt-get update
+sudo apt-get install wicd-curses
+sudo wicd-curses
+
+Press 'P' for preferences
+Set Wireless Interface: wlan0
+Press F10 to save
+Press 'R' to refresh
+Navigate to your network
+Press right arrow to configure
+Select 'Automatically connect to this network'
+Set Key: &lt;wireless password&gt;
+Press F10 to save
+Press 'C' to connect
+
+Edit /etc/network/interfaces to include: auto wlan0</code></pre>
