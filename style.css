@@ -297,10 +297,9 @@ body {
 }
 
 #article img {
-	width: 100%;
-	max-width: 25em;
+	max-width: 100%;
 	display: block;
-	margin: 0 auto;
+	margin: 1.0em auto;
 }
 
 #article ol,
