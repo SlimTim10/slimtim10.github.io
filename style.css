@@ -63,6 +63,7 @@ body {
 	font-size: 0.8em;
 	font-size: calc(0.8em + 1vmin);
 	color: white;
+	margin: 0.5em 0;
 }
 
 #about-me ul.outer-list > li:before {
@@ -72,7 +73,6 @@ body {
 
 #about-me ul.inner-list {
 	display: none;
-	padding-bottom: 10px;
 }
 
 #about-me ul.inner-list > li {
