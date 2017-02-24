@@ -45,13 +45,32 @@ body {
 }
 
 #about-me .location,
-#about-me .expertise {
+#about-me .expertise,
+#about-me .photos{
 	padding-bottom: 10px;
 	margin-left: 10%;
 }
 
 #about-me .hobbies {
 	display: none;
+}
+
+#about-me .photos li {
+	display: inline-block;
+	border: 2px solid white;
+	width: 4.2em;
+	height: 4.2em;
+	position: relative;
+}
+
+#about-me .photos li img {
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	margin: auto;
+	max-width: 90%;
 }
 
 #about-me p {
