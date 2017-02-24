@@ -40,11 +40,14 @@ body {
 #about-me {
 	flex: 1 0 100%;
 	order: 1;
+	width: 80%;
+	margin: 0 auto;
 }
 
 #about-me .location,
 #about-me .expertise {
 	padding-bottom: 10px;
+	margin-left: 10%;
 }
 
 #about-me .hobbies {
@@ -53,8 +56,8 @@ body {
 
 #about-me p {
 	font-family:  "Open Sans", sans-serif;
-	font-size: 1.0em;
-	font-size: calc(1.0em + 1vmin);
+	font-size: 0.8em;
+	font-size: calc(0.8em + 1vmin);
 	color: white;
 }
 
@@ -66,9 +69,17 @@ body {
 	margin: 0.5em 0;
 }
 
+#about-me ul.outer-list > li:hover {
+	color: #999;
+}
+
 #about-me ul.outer-list > li:before {
 	content: "+";
 	padding-right: 5px;
+}
+
+#about-me ul.outer-list > li:hover:before {
+	color: #999;
 }
 
 #about-me ul.inner-list {
@@ -76,9 +87,6 @@ body {
 }
 
 #about-me ul.inner-list > li {
-	font-family:  "Open Sans", sans-serif;
-	font-size: 0.7em;
-	font-size: calc(0.7em + 1vmin);
 	color: white;
 }
 
@@ -116,8 +124,7 @@ body {
 }
 
 #categories li {
-	font-family:  "PT Sans Narrow", sans-serif;
-	font-weight: 700;
+	font-family:  "Source Sans Pro", sans-serif;
 	font-size: 1.4em;
 	font-size: calc(1.4em + 1vmin);
 	color: white;
@@ -176,8 +183,8 @@ body {
 	border-radius: 30px;
 	font-family: "PT Sans Narrow", sans-serif;
 	font-weight: 700;
-	font-size: 1.8em;
-	font-size: calc(1.8em + 1vmin);
+	font-size: 1.6em;
+	font-size: calc(1.6em + 1vmin);
 	color: black;
 	background: white;
 	padding: 10px 20px 10px 20px;
