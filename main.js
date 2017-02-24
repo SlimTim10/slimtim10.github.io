@@ -2,7 +2,7 @@
   "use strict";
 
   var fillHead = function() {
-    document.head.innerHTML += '<link href="https://fonts.googleapis.com/css?family=Raleway:700|Source+Sans+Pro:400|Open+Sans:400|PT+Sans+Narrow:700" rel="stylesheet">';
+    document.head.innerHTML += '<link href="https://fonts.googleapis.com/css?family=Raleway:700|Source+Sans+Pro:200,400|Open+Sans:400|PT+Sans+Narrow:700" rel="stylesheet">';
   };
 
   var setInnerHTML = function(elementId, html, callback) {

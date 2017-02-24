@@ -259,6 +259,7 @@ body {
 	font-family: "Source Sans Pro", sans-serif;
 	font-size: 1.4em;
 	font-size: calc(1.4em + 1vmin);
+	font-weight: 200;
 	position: relative;
 	right: 0;
 	bottom: 0.9em;
@@ -272,29 +273,31 @@ body {
 #article {
 	width: 100%;
 	margin: 0 auto;
-	font-family:  "Open Sans", sans-serif;
-	font-size: 1.0rem;
-	font-size: calc(1.0rem + 1vmin);
 	color: white;
 }
 
 #article h1 {
-	font-size: 2.0em;
-	font-size: calc(2.0em + 1vmin);
+	font-family:  "Source Sans Pro", sans-serif;
+	font-size: 2.6em;
+	font-size: calc(2.6em + 1vmin);
+	font-weight: 200;
 	text-align: center;
-	text-decoration: underline;
 	margin-bottom: 20px;
 }
 
 #article h2 {
-	font-size: 1.4em;
-	font-size: calc(1.4em + 1vmin);
+	font-family:  "Open Sans", sans-serif;
+	font-size: 1.3em;
+	font-size: calc(1.3em + 1vmin);
 	text-decoration: none;
 	margin-top: 0.8em;
 	margin-bottom: 0.2em;
 }
 
 #article p {
+	font-family:  "Open Sans", sans-serif;
+	font-size: 0.6em;
+	font-size: calc(0.6em + 1vmin);
 	line-height: 1.2em;
 	margin-top: 1em;
 }
