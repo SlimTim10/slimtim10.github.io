@@ -144,8 +144,8 @@ body {
 
 #categories li {
 	font-family:  "Source Sans Pro", sans-serif;
-	font-size: 1.4em;
-	font-size: calc(1.4em + 1vmin);
+	font-size: 1.3em;
+	font-size: calc(1.3em + 1vmin);
 	color: white;
 	transition: color 0.2s;
 }
