@@ -192,10 +192,9 @@ body {
 
 #blog-link {
 	flex: 1 0 100%;
-	display: flex;
 	order: 3;
-	align-items: center;
-	margin: 1.5em auto 0;
+	align-self: center;
+	margin: 1.5em auto 1.5em;
 }
 
 #blog-link a {
