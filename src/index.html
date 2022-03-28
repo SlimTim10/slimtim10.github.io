@@ -6,17 +6,40 @@ title: "Hello, world!"
 ---
 
 <header>
-  <h1>Tim Johns</h1>
+  <a id="title" href="#">
+	<p>Tim Johns</p>
+  </a>
+  <nav>
+	<a href="#">
+	  <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+		<path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
+	  </svg>
+	</a>
+  </nav>
 </header>
 <main>
+  <section id="hero">
+	<img alt="headshot" src="./images/me.jpg" />
+	<p>Hi, I’m Tim. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+  </section>
+  <section id="cta">
+	<div>
+	  <p>Are you looking to start a new career in tech?</p>
+	  <a href="#" class="btn-primary">learn</a>
+	</div>
+	<div>
+	  <p>Are you looking for a talented programmer? Check out my portfolio.</p>
+	  <a href="#" class="btn-primary">projects</a>
+	</div>
+  </section>
   <section>
     <h2>Blog Posts</h2>
     <ul>
       $for(posts)$
-        <li>
-          <div><a href=".$url$">$title$</a></div>
-          <small>$date$</small>
-        </li>
+      <li>
+        <div><a href=".$url$">$title$</a></div>
+        <small>$date$</small>
+      </li>
       $endfor$
     </ul>
   </section>
