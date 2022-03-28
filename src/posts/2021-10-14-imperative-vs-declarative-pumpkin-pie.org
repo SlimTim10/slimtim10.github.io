@@ -1,0 +1,141 @@
+---
+title: Imperative vs Declarative With Pumpkin Pie
+desc: "I announce myself to the world"
+image: "./images/waiheke-stony-batter.jpg"
+keywords: "hello, announcement"
+---
+
+The discussion of *imperative* vs *declarative* programming comes up a lot. The difference between the two paradigms can be confusing. I often see examples that introduce imperative code or sentences, then show a declarative version that is simply a short declaration, letting the receiver handle the process. But this is an unfair comparison. The declarative paradigm is not about conveying less information; that's *abstraction*. Instead, it's about conveying information in a different way.
+
+Although this topic may be interesting only to programmers, I'm not going to use programming languages in my explanation. Instead, let's look at a plain English example, using delicious pumpkin pie.
+
+* Pumpkin Pie
+
+** Ingredients
+
+- 3 egg yolks
+- 1 large egg
+- 1/2 teaspoon salt
+- 2 teaspoons ground cinnamon
+- 1 teaspoon ground ginger
+- 1/4 teaspoon ground nutmeg
+- 1/4 teaspoon ground cloves
+- 1 (15 ounce) can of pumpkin puree
+- 1 (12 oz.) can of evaporated milk
+- 1 frozen pie crust
+
+** Imperative Recipe
+
+1. Preheat oven to 425 degrees F (220 degrees C).
+
+2. Whisk together pumpkin puree, egg yolks, and egg in a large bowl. Add evaporated milk, cinnamon, ginger, cloves, nutmeg, and salt; whisk until thoroughly combined.
+
+3. Fit pie crust in a 9-inch pie plate and crimp edges.
+
+4. Pour filling into the pie shell and lightly tap on the work surface to release any air bubbles.
+
+5. Bake in the preheated oven for 15 minutes.
+
+6. Reduce heat to 350 degrees F (175 degrees C) and bake until just set in the middle, 30 to 40 more minutes. A knife inserted into the filling, 1 inch from the crust, should come out clean. Allow to cool completely before serving.
+
+** Declarative Recipe
+
+- The base is the pumpkin puree, egg yolks, and egg whisked together in a large bowl.
+- The filling is evaporated milk, cinnamon, ginger, cloves, nutmet, and salt whisked into the base until thoroughly combined.
+- The pie shell is the pie crust fit in a 9-inch pie plate with crimped edges.
+- The raw pie is the pie shell with the filling poured in and lightly tapped to release any air bubbles.
+- The semi-cooked pie is the raw pie baked in an oven preheated at 425 degrees F for 15 minutes.
+- The cooked pie is the semi-cooked pie baked at 350 degrees F for 30 to 40 minutes.
+- A knife inserted into the cooked pie's filling, 1 inch from the crust, should come out clean.
+- The cooked pie can be served after being allowed to cool completely.
+
+* What's the difference?
+
+As you can see, the imperative recipe is a set of step-by-step instructions. They must be followed in the written order or you won't end up with pumpkin pie. In contrast, the declarative recipe is a set of declarations. They each simply state a fact about the pumpkin pie. The declarations can be rearranged and read in any order.
+
+#+begin_quote
+*Declarative Recipe (Rearranged)*
+
+- The cooked pie can be served after being allowed to cool completely.
+- The raw pie is the pie shell with the filling poured in and lightly tapped to release any air bubbles.
+- The base is the pumpkin puree, egg yolks, and egg whisked together in a large bowl.
+- The pie shell is the pie crust fit in a 9-inch pie plate with crimped edges.
+- A knife inserted into the cooked pie's filling, 1 inch from the crust, should come out clean.
+- The cooked pie is the semi-cooked pie baked at 350 degrees F for 30 to 40 minutes.
+- The semi-cooked pie is the raw pie baked in an oven preheated at 425 degrees F for 15 minutes.
+- The filling is evaporated milk, cinnamon, ginger, cloves, nutmet, and salt whisked into the base until thoroughly combined.
+#+end_quote
+
+If you want to end up with a finished pie, you will end up reading each declaration anyway because of how they depend on each other for information. These dependencies are the key to forcing some kind of order. In fact, you will end up doing the steps in the same order as the imperative recipe.
+
+Something interesting to notice is that the declarative recipe does not force the baker to start by preheating the oven. It would still work to preheat the oven after making the raw pie, but we would miss out on the potential time savings by preheating the oven as the first step and multitasking. This is similar to optimizations that programming compilers do; things that programmers shouldn't need to worry about anyway.
+
+* So which one is better?
+
+One is not necessarily better than the other, but it's fun to think about how they are different depending on the context.
+
+An important distinction is the difference in goals between recipes and programming. For cooking recipes, the goal is to give instructions to a human to follow. Imperative recipes are naturally easier because we need to perform step-by-step actions in the end. For programming, the goal is not to tell the computer what steps to take to solve a problem. The goal is to write a solution to a problem and have the computer execute it, however it may. The fact that computers run imperatively at their lowest level doesn't matter because it is abstracted away by the compiler, so the solutions we write can be in any paradigm, imperative or declarative.
+
+One difference when we write things in a declarative way is that it becomes easier to *break a problem down*, which is extremely helpful in both finding and verifying a solution. Looking at the declarative recipe, we can see each declaration as its own small piece of the recipe. And each of those can be broken down further into smaller pieces if necessary. When each declaration is very small, it's easy to look at it and see that it is correct, thus it becomes easy to verify that the entire solution is correct. At the same time, the dependency structure of the declarations can be analyzed to verify that the entire solution makes sense and is not missing any pieces.
+
+Another consequence of this breaking down of problems is the ability to *reuse* the pieces. An individual declaration might be pulled apart from the solution as a whole and be reused to solve another problem. For example, the declarative pumpkin pie talks about the filling. Maybe we want to use a blueberry filling instead. If we have a similar declarative recipe for blueberry pie, we can simply swap in the blueberry pie's filling and leave the rest the same. Now we have a blueberry pie recipe! (This won't actually work for the given pumpkin pie recipe because it's too different from making blueberry pie, but I hope the point still stands.)
+
+* What about abstraction?
+
+Even though the declarative paradigm does not force abstraction, it does seem to lend itself better to it. That's why so many other examples comparing imperative and declarative unfairly involve abstraction; it's hard to avoid it! And that's a good thing. It lets us focus on what's important and hide the rest. I don't know about you, but I can only keep so much information in my head before feeling overwhelmed.
+
+As an example, let's say you are familiar with making pumpkin pies. In the declarative recipe, we can remove some declarations that you don't need and leave only the ones you find hard to remember. This is harder to do with the imperative recipe where the dependencies aren't clear.
+
+#+begin_quote
+*Declarative Recipe (Trimmed)*
+
+- The pie shell is the pie crust fit in a 9-inch pie plate with crimped edges.
+- The raw pie is the pie shell with the filling poured in and lightly tapped to release any air bubbles.
+- The semi-cooked pie is the raw pie baked in an oven preheated at 425 degrees F for 15 minutes.
+- The cooked pie is the semi-cooked pie baked at 350 degrees F for 30 to 40 minutes.
+#+end_quote
+
+Related to abstraction, the declarative recipe also lets us identify what's important. With the imperative recipe, it's hard to tell where things are headed. What's the point of whisking together the ingredients in a bowl? Are we making a soup at the same time? In the declarative recipe, it's clear that whisking together the ingredients makes a base, which is then used to make the filling.
+
+# * Fair comparisons in modern JavaScript
+
+# #+begin_src js
+# const nums = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+
+# const even = x => x % 2 === 0;
+
+# // Even numbers -- imperative
+# let evensImperative = [];
+# for (const num of nums) {
+#   if (even(num)) evensImperative.push(num);
+# }
+# // [ 2, 4, 6, 8, 10 ]
+# console.log('evensImperative:', evensImperative);
+
+# // Even numbers -- declarative
+# const evensDeclarative = nums.filter(num => even(num));
+# // [ 2, 4, 6, 8, 10 ]
+# console.log('evensDeclarative:', evensDeclarative);
+
+# // Double each number -- imperative
+# let doublesImperative = [];
+# for (const num of nums) doublesImperative.push(num * 2);
+# // [ 2,  4,  6,  8, 10, 12, 14, 16, 18, 20 ]
+# console.log('doublesImperative:', doublesImperative);
+
+# // Double each number -- declarative
+# const doublesDeclarative = nums.map(num => num * 2);
+# // [ 2,  4,  6,  8, 10, 12, 14, 16, 18, 20 ]
+# console.log('doublesDeclarative:', doublesDeclarative);
+
+# // Sum -- imperative
+# let sumImperative = 0;
+# for (const num of nums) sumImperative += num;
+# // 55
+# console.log('sumImperative:', sumImperative);
+
+# // Sum -- declarative
+# const sumDeclarative = nums.reduce((acc, num) => acc + num, 0);
+# // 55
+# console.log('sumDeclarative:', sumDeclarative);
+# #+end_src

@@ -21,12 +21,10 @@ import Text.Pandoc.Highlighting (Style, breezeDark, styleToCss)
 -- CONFIG
 
 root :: String
-root =
-  "https://my-site.com"
+root = "https://timjohns.ca"
 
 siteName :: String
-siteName =
-  "My Site Name"
+siteName = "Tim Johns"
 
 config :: Configuration
 config =
@@ -215,10 +213,10 @@ feedCompiler renderer =
 feedConfiguration :: FeedConfiguration
 feedConfiguration =
   FeedConfiguration
-    { feedTitle = "My Site"
-    , feedDescription = "My Site Description"
-    , feedAuthorName = "My Name"
-    , feedAuthorEmail = "me@myemail.com"
+    { feedTitle = "Tim Johns"
+    , feedDescription = "Writing"
+    , feedAuthorName = "Tim Johns"
+    , feedAuthorEmail = "johns.timf@gmail.com"
     , feedRoot = root
     }
 
