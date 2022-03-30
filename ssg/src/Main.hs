@@ -76,7 +76,7 @@ main = hakyllWith config $ do
       posts <- recentFirst =<< loadAll "posts/*"
 
       let indexCtx =
-            listField "posts" postCtx (return posts)
+            listField "posts" postCtx (return . take 3 $ posts)
               <> constField "root" root
               <> constField "siteName" siteName
               <> defaultContext
@@ -84,6 +84,19 @@ main = hakyllWith config $ do
       getResourceBody
         >>= applyAsTemplate indexCtx
         >>= loadAndApplyTemplate "templates/default.html" indexCtx
+
+  match "about.html" $ do
+    route idRoute
+    compile $ do
+      
+      let aboutCtx =
+            constField "root" root
+            <> constField "siteName" siteName
+            <> defaultContext
+
+      getResourceBody
+        >>= applyAsTemplate aboutCtx
+        >>= loadAndApplyTemplate "templates/default.html" aboutCtx
 
   match "templates/*" $
     compile templateBodyCompiler
@@ -128,15 +141,20 @@ makeStyle =
 feedCtx :: Context String
 feedCtx =
   titleCtx
-    <> postCtx
-    <> bodyField "description"
+  <> postCtx
+  <> bodyField "description"
+
+pageCtx :: Context String
+pageCtx =
+  constField "root" root
+  <> constField "siteName" siteName
+  <> defaultContext
 
 postCtx :: Context String
 postCtx =
-  constField "root" root
-    <> constField "siteName" siteName
-    <> dateField "date" "%Y-%m-%d"
-    <> defaultContext
+  pageCtx
+  <> dateField "date" "%b %_d, %Y"
+  <> defaultContext
 
 titleCtx :: Context String
 titleCtx =

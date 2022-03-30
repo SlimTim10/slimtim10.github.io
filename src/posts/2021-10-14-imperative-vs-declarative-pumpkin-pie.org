@@ -1,7 +1,7 @@
 ---
 title: Imperative vs Declarative With Pumpkin Pie
 desc: "I announce myself to the world"
-image: "./images/waiheke-stony-batter.jpg"
+image: "./images/me.jpg"
 keywords: "hello, announcement"
 ---
 
