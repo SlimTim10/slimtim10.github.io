@@ -53,12 +53,17 @@ header {
   background: #155915;
   color: white;
   display: flex;
+  flex-direction: column;
   padding: 1rem;
-  justify-content: space-between;
-  align-items: center;
 }
 
-header a {
+header > div {
+  display: flex;
+  justify-content: space-between;
+}
+
+header a,
+header button {
   color: white;
   text-decoration: none;
 }
@@ -68,8 +73,37 @@ header #title {
   font-weight: 300;
 }
 
-header nav {
+header #toggle-menu-open,
+header #toggle-menu-close {
   width: 2.5em;
+}
+
+header nav {
+  overflow: hidden;
+  transition: max-height 1s ease-out;
+  height: auto;
+  max-height: 11em;
+}
+
+header nav.collapsed {
+  max-height: 0;
+}
+
+header nav li {
+  border-bottom: 1px solid #ffffff50;
+}
+
+header nav li:last-child {
+  border-bottom: none;
+}
+
+header nav li a {
+  display: block;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  text-transform: uppercase;
+  font-weight: 500;
+  font-size: 0.8em;
 }
 
 .btn-primary {
