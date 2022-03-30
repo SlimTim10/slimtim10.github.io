@@ -1,0 +1,19 @@
+section#about {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+section#about img {
+  width: 200px;
+}
+@media screen and (min-width: 900px) {
+  section#about img {
+	width: 400px;
+  }
+}
+
+section#about p {
+  max-width: 60rem;
+}

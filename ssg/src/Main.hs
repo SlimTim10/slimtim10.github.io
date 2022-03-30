@@ -77,26 +77,17 @@ main = hakyllWith config $ do
 
       let indexCtx =
             listField "posts" postCtx (return . take 3 $ posts)
-              <> constField "root" root
-              <> constField "siteName" siteName
-              <> defaultContext
+              <> pageCtx
 
       getResourceBody
         >>= applyAsTemplate indexCtx
         >>= loadAndApplyTemplate "templates/default.html" indexCtx
 
-  match "about.html" $ do
-    route idRoute
-    compile $ do
-      
-      let aboutCtx =
-            constField "root" root
-            <> constField "siteName" siteName
-            <> defaultContext
-
-      getResourceBody
-        >>= applyAsTemplate aboutCtx
-        >>= loadAndApplyTemplate "templates/default.html" aboutCtx
+  mapM_ simplePage
+    [ "about.html"
+    , "learn.html"
+    , "projects.html"
+    ]
 
   match "templates/*" $
     compile templateBodyCompiler
@@ -126,6 +117,15 @@ main = hakyllWith config $ do
   create ["css/code.css"] $ do
     route idRoute
     compile (makeStyle pandocHighlightStyle)
+
+  where
+    simplePage pattern = do
+      match pattern $ do
+        route idRoute
+        compile $ do
+          getResourceBody
+            >>= applyAsTemplate pageCtx
+            >>= loadAndApplyTemplate "templates/default.html" pageCtx
 
 
 --------------------------------------------------------------------------------
