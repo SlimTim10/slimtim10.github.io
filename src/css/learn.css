@@ -35,12 +35,6 @@ section#private-mentoring div {
   gap: 1rem;
 }
 
-section#private-mentoring p a {
-  text-decoration: none;
-  font-weight: 600;
-  color: #155915;
-}
-
 section#private-mentoring ul {
   list-style: disc;
   margin-left: 1rem;
@@ -102,12 +96,6 @@ section#curriculum h4::before {
 section#curriculum h4 {
   display: flex;
   align-items: center;
-}
-
-section#curriculum a {
-  text-decoration: none;
-  color: #155915;
-  font-weight: 700;
 }
 
 section#curriculum > ul > li > ul > li > pre {

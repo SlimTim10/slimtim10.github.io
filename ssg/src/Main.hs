@@ -87,6 +87,7 @@ main = hakyllWith config $ do
     [ "about.html"
     , "learn.html"
     , "projects.html"
+    , "contact.html"
     ]
 
   match "templates/*" $
