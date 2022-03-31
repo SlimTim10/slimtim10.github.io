@@ -41,6 +41,11 @@ section#private-mentoring p a {
   color: #155915;
 }
 
+section#private-mentoring ul {
+  list-style: disc;
+  margin-left: 1rem;
+}
+
 section#intuitive-js {
   background: rgba(210, 180, 140, 0.25);
 }
@@ -107,7 +112,6 @@ section#curriculum a {
 
 section#curriculum > ul > li > ul > li > pre {
   margin-left: 1.5rem;
-  font-size: 0.8rem;
   line-height: 1.25rem;
   white-space: pre-wrap;
 }
