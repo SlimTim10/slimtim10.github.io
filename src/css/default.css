@@ -10,7 +10,7 @@ body {
 }
 
 html {
-  font-size: 22px;
+  font-size: 16px;
 }
 
 body {
@@ -18,27 +18,37 @@ body {
   font-weight: 300;
   color: #282828;
   background: white;
+  line-height: 1.75rem;
 }
 
 h1 {
-  font-size: 2em;
-  font-weight: 400;
+  /* font-size: 2em; */
+  
+  font-size: 2.25rem;
+  font-weight: 300;
 }
 
 h2 {
-  font-size: 1.5em;
+  /* font-size: 1.5em; */
+  
+  font-size: 1.75rem;
+  font-weight: 400;
 }
 
 h3 {
-  font-size: 1.2em;
+  /* font-size: 1.2em; */
+  
+  font-size: 1.5rem;
+  font-weight: 500;
 }
 
-.small {
-  font-size: 0.8em;
+h4 {
+  font-size: 1.125rem;
+  font-weight: 500;
 }
 
-p {
-  line-height: 1.2em;
+small {
+  font-size: 0.8rem;
 }
 
 strong {
@@ -60,6 +70,7 @@ header {
 header > div {
   display: flex;
   justify-content: space-between;
+  align-items: center;
 }
 
 header a {
@@ -79,9 +90,9 @@ header #toggle-menu svg {
 
 header nav {
   overflow: hidden;
-  transition: max-height 1s ease-out;
+  transition: max-height 0.75s ease;
   height: auto;
-  max-height: 13em;
+  max-height: 18em;
 }
 
 header nav.collapsed {
@@ -102,18 +113,16 @@ header nav li a {
   padding-bottom: 0.6rem;
   text-transform: uppercase;
   font-weight: 500;
-  font-size: 0.8em;
 }
 
 .btn-primary {
-  padding: 1.2rem;
+  padding: 0.75rem 1rem;
   background: #155915;
   color: white;
   font-family: 'Inter', sans-serif;
   font-weight: 500;
   text-transform: uppercase;
   text-decoration: none;
-  width: fit-content;
 }
 
 section, footer {
@@ -145,6 +154,11 @@ footer .social-icons svg {
 .pointer {
   cursor: pointer;
 }
+
+section.writing {
+  font-family: 'Libre Baskerville', serif;
+}
+
 
 /* Nav menu button */
 .line {

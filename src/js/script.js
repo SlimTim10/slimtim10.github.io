@@ -1,7 +1,6 @@
 const mobileMenu = () => {
   const button = document.querySelector('header #toggle-menu')
   const menu = document.querySelector('header nav')
-  menu.classList.add('collapsed')
   button.onclick = () => {
     menu.classList.toggle('collapsed')
     button.classList.toggle('opened')

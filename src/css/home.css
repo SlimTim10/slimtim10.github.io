@@ -2,7 +2,7 @@ section#hero {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1rem;
+  gap: 2rem;
 }
 
 section#hero img {
@@ -28,15 +28,11 @@ section#cta {
   gap: 4rem;
 }
 
-section#cta p {
-  font-weight: 400;
-  text-align: center;
-}
-
 section#cta div {
   display: flex;
   flex-direction: column;
   align-items: center;
+  text-align: center;
   gap: 2rem;
 }
 @media screen and (min-width: 900px) {
@@ -59,7 +55,6 @@ section#latest-posts {
   flex-direction: column;
   align-items: center;
   gap: 2rem;
-  font-family: 'Libre Baskerville', serif;
 }
 
 section#latest-posts ul {
@@ -86,7 +81,6 @@ section#latest-posts li div {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 1rem;
 }
 
 section#latest-posts li a {

@@ -11,24 +11,28 @@ title: "Home"
   </section>
   <section id="cta">
 	<div>
-	  <p>Are you looking to start a new career in tech?</p>
+	  <h4>
+		Thinking about starting a new career in tech?
+	  </h4>
 	  <a href="/learn.html" class="btn-primary">Learn</a>
 	</div>
 	<div>
-	  <p>Are you looking for a talented programmer? Browse through my work.</p>
+	  <h4>
+		Looking for a talented programmer? Explore my work.
+	  </h4>
 	  <a href="/projects.html" class="btn-primary">Projects</a>
 	</div>
   </section>
-  <section id="latest-posts">
+  <section id="latest-posts" class="writing">
     <h2>Latest Posts</h2>
     <ul>
       $for(posts)$
       <li>
 		<div>
-          <a href=".$url$"><h3><img alt="pumpkin pie" src="$image$"/></h3></a>
+          <a href=".$url$"><img alt="pumpkin pie" src="$image$"/></a>
 		</div>
 		<div>
-          <a href=".$url$"><h3>$title$</h3></a>
+          <a href=".$url$"><h4>$title$</h4></a>
           <small>$date$</small>
 		</div>
       </li>
