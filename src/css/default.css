@@ -7,6 +7,8 @@
 html,
 body {
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 html {
@@ -115,6 +117,10 @@ header nav li a {
   font-weight: 500;
 }
 
+main {
+  flex-grow: 1;
+}
+
 .btn-primary {
   padding: 0.75rem 1rem;
   background: #155915;
@@ -164,4 +170,10 @@ footer .social-icons svg {
 
 section.writing {
   font-family: 'Libre Baskerville', serif;
+}
+
+.h-center {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
 }
