@@ -1,0 +1,36 @@
+section#writing {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+section#writing ul {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+section#writing li {
+  display: flex;
+  gap: 1rem;
+}
+
+section#writing li img {
+  width: 96px;
+}
+@media screen and (min-width: 900px) {
+  section#writing li img {
+	width: 128px;
+  }
+}
+
+section#writing li div {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+section#writing li a {
+  color: #282828;
+  text-decoration: none;
+}

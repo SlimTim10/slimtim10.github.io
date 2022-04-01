@@ -83,6 +83,19 @@ main = hakyllWith config $ do
         >>= applyAsTemplate indexCtx
         >>= loadAndApplyTemplate "templates/default.html" indexCtx
 
+  match "writing.html" $ do
+    route idRoute
+    compile $ do
+      posts <- recentFirst =<< loadAll "posts/*"
+
+      let indexCtx =
+            listField "posts" postCtx (return posts)
+              <> pageCtx
+
+      getResourceBody
+        >>= applyAsTemplate indexCtx
+        >>= loadAndApplyTemplate "templates/default.html" indexCtx
+
   mapM_ simplePage
     [ "about.html"
     , "learn.html"
