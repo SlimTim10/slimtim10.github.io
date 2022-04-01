@@ -4,13 +4,13 @@ section {
   gap: 2rem;
 }
 
-section#tagline {
+main > header {
   background: rgba(21, 89, 21, 0.1);
   flex-direction: row;
   justify-content: flex-end;
 }
 
-section#tagline p {
+main > header p {
   font-weight: 700;
   font-size: 1.5rem;
   text-align: right;

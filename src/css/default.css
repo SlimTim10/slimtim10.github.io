@@ -61,7 +61,7 @@ pre.sourceCode {
   padding: 2rem 1.5rem;
 }
 
-header {
+body > header {
   background: #155915;
   color: white;
   display: flex;
@@ -69,47 +69,47 @@ header {
   padding: 1rem;
 }
 
-header > div {
+body > header > div {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-header a {
+body > header a {
   color: white;
   text-decoration: none;
 }
 
-header #title {
+body > header #title {
   font-size: 2em;
   font-weight: 300;
 }
 
-header #toggle-menu svg {
+body > header #toggle-menu svg {
   width: 2.5em;
   height: 2.5em;
 }
 
-header nav {
+body > header nav {
   overflow: hidden;
   transition: max-height 0.75s ease;
   height: auto;
   max-height: 18em;
 }
 
-header nav.collapsed {
+body > header nav.collapsed {
   max-height: 0;
 }
 
-header nav li {
+body > header nav li {
   border-bottom: 1px solid #ffffff50;
 }
 
-header nav li:last-child {
+body > header nav li:last-child {
   border-bottom: none;
 }
 
-header nav li a {
+body > header nav li a {
   display: block;
   padding-top: 0.6rem;
   padding-bottom: 0.6rem;
@@ -131,11 +131,13 @@ main {
   text-decoration: none;
 }
 
-section, footer {
+main > header,
+section,
+footer {
   padding: 2rem 1rem;
 }
 
-section#title {
+main > header {
   background: rgba(21, 89, 21, 0.1);
   display: flex;
   flex-direction: row;

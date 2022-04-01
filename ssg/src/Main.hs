@@ -68,7 +68,7 @@ main = hakyllWith config $ do
       pandocCompilerCustom
         >>= loadAndApplyTemplate "templates/post.html" ctx
         >>= saveSnapshot "content"
-        >>= loadAndApplyTemplate "templates/default.html" ctx
+        >>= loadAndApplyTemplate "templates/default.html" (ctx <> constField "stylesheet" "writing")
 
   match "index.html" $ do
     route idRoute
@@ -88,13 +88,13 @@ main = hakyllWith config $ do
     compile $ do
       posts <- recentFirst =<< loadAll "posts/*"
 
-      let indexCtx =
+      let writingCtx =
             listField "posts" postCtx (return posts)
               <> pageCtx
 
       getResourceBody
-        >>= applyAsTemplate indexCtx
-        >>= loadAndApplyTemplate "templates/default.html" indexCtx
+        >>= applyAsTemplate writingCtx
+        >>= loadAndApplyTemplate "templates/default.html" writingCtx
 
   mapM_ simplePage
     [ "about.html"

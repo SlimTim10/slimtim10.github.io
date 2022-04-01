@@ -1,36 +1,36 @@
-section#writing {
+main > section {
   display: flex;
   flex-direction: column;
   gap: 2rem;
 }
 
-section#writing ul {
+main > section ul {
   display: flex;
   flex-direction: column;
   gap: 2rem;
 }
 
-section#writing li {
+main > section li {
   display: flex;
   gap: 1rem;
 }
 
-section#writing li img {
+main > section li img {
   width: 96px;
 }
 @media screen and (min-width: 900px) {
-  section#writing li img {
+  main > section li img {
 	width: 128px;
   }
 }
 
-section#writing li div {
+main > section li div {
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
 
-section#writing li a {
+main > section li a {
   color: #282828;
   text-decoration: none;
 }
