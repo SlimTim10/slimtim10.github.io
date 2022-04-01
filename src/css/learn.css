@@ -73,10 +73,6 @@ section#curriculum h3 {
   margin-bottom: 0.5rem;
 }
 
-section#curriculum > ul > li {
-  margin-bottom: 2rem;
-}
-
 section#curriculum > ul > li > ul {
   margin-left: 1rem;
 }
