@@ -68,7 +68,7 @@ main = hakyllWith config $ do
       pandocCompilerCustom
         >>= loadAndApplyTemplate "templates/post.html" ctx
         >>= saveSnapshot "content"
-        >>= loadAndApplyTemplate "templates/default.html" (ctx <> constField "stylesheet" "writing")
+        >>= loadAndApplyTemplate "templates/default.html" (ctx <> constField "stylesheet" "post")
 
   match "index.html" $ do
     route idRoute

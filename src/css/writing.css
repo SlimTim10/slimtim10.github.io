@@ -34,7 +34,3 @@ main > section li a {
   color: #282828;
   text-decoration: none;
 }
-
-main > article > header {
-  flex-direction: column;
-}
