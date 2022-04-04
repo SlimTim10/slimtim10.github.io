@@ -7,7 +7,15 @@ title: "Home"
 <main>
   <section id="hero">
 	<img alt="headshot" src="./images/me.jpg" />
-	<p>(rough) Hi, I’m Tim. I've been programming for a long time and teaching as well. I love both of them. My preferred mode of teaching is mentoring 1-on-1 because I feel like I can make the most impact that way. I am passionate about programming and I like to dive deep into the mathematics and philosophy behind it, like functional programming.</p>
+	<p>
+	  Hi, I'm Tim. I help people enter or advance in the field of <strong>software development</strong> by <strong>remote mentoring</strong>.
+	</p>
+	<p>
+	  I first fell down the rabbit hole of <strong>programming</strong> in 2005 and I don't plan to ever get out. It's taken me to the strange and interesting places of software security, embedded systems design, web development, functional programming, mathematical logic, and many more.
+	</p>
+	<p>
+	  With over <strong>7 years</strong> of experience teaching programming, my specialty is making people feel comfortable. Learning something challenging and embarking on a new path can be stressful. Everything will be OK. You're going to make it and I'm going to help you get there. I've been called "the Bob Ross of coding".
+	</p>
   </section>
   <section id="cta">
 	<div>
@@ -18,7 +26,13 @@ title: "Home"
 	</div>
 	<div>
 	  <h4>
-		Looking for a talented programmer? Explore my work.
+		Not getting proper mentorship at your job?
+	  </h4>
+	  <a href="/learn.html#upskill" class="btn-primary">Upskill</a>
+	</div>
+	<div>
+	  <h4>
+		Check out some things I've built!
 	  </h4>
 	  <a href="/projects.html" class="btn-primary">Projects</a>
 	</div>
@@ -29,7 +43,7 @@ title: "Home"
       $for(posts)$
       <li>
 		<div>
-          <a href=".$url$"><img alt="pumpkin pie" src="$image$"/></a>
+          <a href=".$url$"><img alt="$imageAlt$" src="$image$"/></a>
 		</div>
 		<div>
           <a href=".$url$"><h4>$title$</h4></a>

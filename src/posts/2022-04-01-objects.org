@@ -2,6 +2,7 @@
 title: Objects
 desc: "I announce myself to the world"
 image: "./images/me.jpg"
+imageAlt: ""
 keywords: "hello, announcement"
 ---
 
