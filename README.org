@@ -1,0 +1,3 @@
+* My Website
+
+Based off of [[https://github.com/rpearce/hakyll-nix-template][hakyll-nix-template]]
