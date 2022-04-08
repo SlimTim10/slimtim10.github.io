@@ -9,6 +9,7 @@ title: "Projects"
 	<h1>$title$</h1>
   </header>
   <section>
+	$if(ready)$
 	<article class="project">
 	  <img alt="project image" src="./images/me.jpg" />
 	  <h3>Project Name</h3>
@@ -28,5 +29,8 @@ title: "Projects"
 		See other projects on my <a href="https://github.com/SlimTim10" target="_blank">GitHub</a>.
 	  </h4>
 	</article>
+	$else$
+	<p>Under construction...</p>
+	$endif$
   </section>
 </main>

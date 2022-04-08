@@ -9,6 +9,7 @@ title: "Writing"
 	<h1>$title$</h1>
   </header>
   <section class="writing">
+	$if(ready)$
     <ul>
       $for(posts)$
       <li>
@@ -22,5 +23,8 @@ title: "Writing"
       </li>
       $endfor$
     </ul>
+	$else$
+	<p>Check back soon...</p>
+	$endif$
   </section>
 </main>
