@@ -64,12 +64,12 @@ section#curriculum h3.expanded::before {
   content: "-";
 }
 
-section#curriculum h3,
 section#curriculum h4 {
   font-weight: 500;
 }
 
 section#curriculum h3 {
+  font-weight: 400;
   margin-bottom: 0.5rem;
 }
 
