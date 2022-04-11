@@ -1,21 +1,30 @@
 section#hero {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2rem;
+  justify-content: center;
+  padding: 0;
+  background: rgba(21, 89, 21, 0.1);
 }
 
 section#hero img {
-  width: 200px;
+  width: 100%;
 }
-@media screen and (min-width: 900px) {
+@media screen and (min-width: 500px) {
   section#hero img {
 	width: 400px;
   }
 }
 
-section#hero p {
+section#intro {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  font-size: 1.125rem;
+}
+
+section#intro p {
   max-width: 60rem;
+  width: 100%;
 }
 
 section#cta {
@@ -28,26 +37,32 @@ section#cta {
   gap: 4rem;
 }
 
-section#cta div {
+section#cta article {
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
   gap: 2rem;
+  max-width: 60rem;
 }
 @media screen and (min-width: 900px) {
-  section#cta div:first-child {
+  section#cta article:nth-child(odd) {
 	flex-direction: row;
   }
 
-  section#cta div:nth-child(2) {
+  section#cta article:nth-child(even) {
 	flex-direction: row-reverse;
   }
+}
 
-  section#cta div {
-	justify-content: space-between;
-	width: 30rem;
-  }
+section#cta article > div {
+  display: flex;
+  flex-direction: column;
+  width: min-content;
+}
+
+section#cta article > div > h3 {
+  width: max-content;
 }
 
 section#latest-posts {
