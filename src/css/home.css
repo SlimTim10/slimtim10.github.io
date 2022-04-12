@@ -45,15 +45,6 @@ section#cta article {
   gap: 2rem;
   max-width: 60rem;
 }
-@media screen and (min-width: 900px) {
-  section#cta article:nth-child(odd) {
-	flex-direction: row;
-  }
-
-  section#cta article:nth-child(even) {
-	flex-direction: row-reverse;
-  }
-}
 
 section#cta article > div {
   display: flex;
@@ -62,7 +53,21 @@ section#cta article > div {
 }
 
 section#cta article > div > h3 {
-  width: max-content;
+  width: 95vw;
+}
+
+@media screen and (min-width: 900px) {
+  section#cta article:nth-child(odd) {
+	flex-direction: row;
+  }
+
+  section#cta article:nth-child(even) {
+	flex-direction: row-reverse;
+  }
+
+  section#cta article > div > h3 {
+	width: max-content;
+  }
 }
 
 section#latest-posts {
