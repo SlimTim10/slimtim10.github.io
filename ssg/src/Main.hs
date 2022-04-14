@@ -76,8 +76,9 @@ main = hakyllWith config $ do
       posts <- recentFirst =<< loadAll "posts/*"
 
       let indexCtx =
-            listField "posts" postCtx (return . take 3 $ posts)
-              <> pageCtx
+            boolField "page-home" (const True)
+            <> listField "posts" postCtx (return . take 3 $ posts)
+            <> pageCtx
 
       getResourceBody
         >>= applyAsTemplate indexCtx
@@ -89,18 +90,19 @@ main = hakyllWith config $ do
       posts <- recentFirst =<< loadAll "posts/*"
 
       let writingCtx =
-            listField "posts" postCtx (return posts)
-              <> pageCtx
+            boolField "page-writing" (const True)
+            <> listField "posts" postCtx (return posts)
+            <> pageCtx
 
       getResourceBody
         >>= applyAsTemplate writingCtx
         >>= loadAndApplyTemplate "templates/default.html" writingCtx
 
   mapM_ simplePage
-    [ "about.html"
-    , "learn.html"
-    , "projects.html"
-    , "contact.html"
+    [ ("about.html", "about")
+    , ("learn.html", "learn")
+    , ("projects.html", "projects")
+    , ("contact.html", "contact")
     ]
 
   match "templates/*" $
@@ -133,13 +135,16 @@ main = hakyllWith config $ do
     compile (makeStyle pandocHighlightStyle)
 
   where
-    simplePage pattern = do
+    simplePage (pattern, name) = do
       match pattern $ do
+        -- e.g., "page-about"
+        let nameField = boolField ("page-" ++ name) (const True)
+        let ctx = nameField <> pageCtx
         route idRoute
         compile $ do
           getResourceBody
-            >>= applyAsTemplate pageCtx
-            >>= loadAndApplyTemplate "templates/default.html" pageCtx
+            >>= applyAsTemplate ctx
+            >>= loadAndApplyTemplate "templates/default.html" ctx
 
 
 --------------------------------------------------------------------------------
@@ -167,6 +172,7 @@ pageCtx =
 postCtx :: Context String
 postCtx =
   pageCtx
+  <> boolField "page-writing" (const True)
   <> dateField "date" "%b %_d, %Y"
   <> defaultContext
 

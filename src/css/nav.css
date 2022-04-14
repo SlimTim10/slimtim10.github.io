@@ -30,6 +30,36 @@ body > header nav li a {
   font-weight: 500;
 }
 
+@media screen and (min-width: 730px) {
+  #toggle-menu {
+	display: none;
+  }
+
+  body > header {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+  }
+
+  body > header nav.collapsed {
+	max-height: initial;
+  }
+
+  body > header nav ul {
+	display: flex;
+	gap: 1rem;
+  }
+
+  body > header nav li {
+	border-bottom: none;
+  }
+
+  body > header nav li .active {
+	border-bottom: 2px solid white;
+  }
+}
+
 /* Nav menu button */
 #toggle-menu .line {
   fill: none;
