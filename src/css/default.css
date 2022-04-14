@@ -85,38 +85,6 @@ body > header #title {
   font-weight: 300;
 }
 
-body > header #toggle-menu svg {
-  width: 2.5em;
-  height: 2.5em;
-}
-
-body > header nav {
-  overflow: hidden;
-  transition: max-height 0.75s ease;
-  height: auto;
-  max-height: 18em;
-}
-
-body > header nav.collapsed {
-  max-height: 0;
-}
-
-body > header nav li {
-  border-bottom: 1px solid #ffffff50;
-}
-
-body > header nav li:last-child {
-  border-bottom: none;
-}
-
-body > header nav li a {
-  display: block;
-  padding-top: 0.6rem;
-  padding-bottom: 0.6rem;
-  text-transform: uppercase;
-  font-weight: 500;
-}
-
 main {
   flex-grow: 1;
 }
@@ -132,10 +100,13 @@ main {
 }
 
 main > header,
-main > article > header,
-section,
-footer {
+main > article > header {
   padding: 1rem;
+}
+
+main > section,
+body > footer {
+  padding: 2rem 1rem;
 }
 
 main > header,
