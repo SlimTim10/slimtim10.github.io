@@ -37,10 +37,22 @@ section#cta {
   padding-top: 1rem;
   padding-left: 2rem;
   padding-right: 2rem;
-  gap: 4rem;
+  gap: 8rem;
 }
 
 section#cta article {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+}
+
+section#cta article img {
+  width: 70%;
+  max-width: 20rem;
+}
+
+section#cta article .body {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -49,26 +61,26 @@ section#cta article {
   max-width: 60rem;
 }
 
-section#cta article > div {
+section#cta article .text {
   display: flex;
   flex-direction: column;
   width: min-content;
 }
 
-section#cta article > div > h3 {
+section#cta article .text > h3 {
   width: 95vw;
 }
 
 @media screen and (min-width: 900px) {
-  section#cta article:nth-child(odd) {
+  section#cta article:nth-child(odd) .body {
 	flex-direction: row;
   }
 
-  section#cta article:nth-child(even) {
+  section#cta article:nth-child(even) .body {
 	flex-direction: row-reverse;
   }
 
-  section#cta article > div > h3 {
+  section#cta article .text > h3 {
 	width: max-content;
   }
 }
