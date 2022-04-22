@@ -42,7 +42,7 @@ Although this topic may be interesting only to programmers, I'm not going to use
 ** Declarative Recipe
 
 - The base is the pumpkin puree, egg yolks, and egg whisked together in a large bowl.
-- The filling is evaporated milk, cinnamon, ginger, cloves, nutmet, and salt whisked into the base until thoroughly combined.
+- The filling is evaporated milk, cinnamon, ginger, cloves, nutmeg, and salt whisked into the base until thoroughly combined.
 - The pie shell is the pie crust fit in a 9-inch pie plate with crimped edges.
 - The raw pie is the pie shell with the filling poured in and lightly tapped to release any air bubbles.
 - The semi-cooked pie is the raw pie baked in an oven preheated at 425 degrees F for 15 minutes.
@@ -64,7 +64,7 @@ As you can see, the imperative recipe is a set of step-by-step instructions. The
 - A knife inserted into the cooked pie's filling, 1 inch from the crust, should come out clean.
 - The cooked pie is the semi-cooked pie baked at 350 degrees F for 30 to 40 minutes.
 - The semi-cooked pie is the raw pie baked in an oven preheated at 425 degrees F for 15 minutes.
-- The filling is evaporated milk, cinnamon, ginger, cloves, nutmet, and salt whisked into the base until thoroughly combined.
+- The filling is evaporated milk, cinnamon, ginger, cloves, nutmeg, and salt whisked into the base until thoroughly combined.
 #+end_quote
 
 If you want to end up with a finished pie, you will end up reading each declaration anyway because of how they depend on each other for information. These dependencies are the key to forcing some kind of order. In fact, you will end up doing the steps in the same order as the imperative recipe.
