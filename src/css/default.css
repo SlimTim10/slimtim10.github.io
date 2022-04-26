@@ -85,6 +85,13 @@ body > header #title {
   font-weight: 300;
 }
 
+@media screen and (min-width: 730px) {
+  body > header {
+	padding-left: 2rem;
+	padding-right: 2rem;
+  }
+}
+
 main {
   flex-grow: 1;
   display: flex;
@@ -109,6 +116,19 @@ main > article > header {
 main > section,
 body > footer {
   padding: 2rem 1rem;
+}
+
+@media screen and (min-width: 730px) {
+  main > header {
+	padding-left: 2rem;
+	padding-right: 2rem;
+  }
+  
+  main > section,
+  body > footer {
+	padding-left: 2rem;
+	padding-right: 2rem;
+  }
 }
 
 main > header,
