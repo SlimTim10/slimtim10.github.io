@@ -11,6 +11,7 @@ section#hero img {
 @media screen and (min-width: 500px) {
   section#hero img {
 	width: 400px;
+	max-width: 25rem;
   }
 }
 
