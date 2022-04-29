@@ -3,3 +3,9 @@ main > section {
   flex-direction: column;
   gap: 1rem;
 }
+
+section .content {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}

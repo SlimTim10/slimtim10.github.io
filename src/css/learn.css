@@ -34,6 +34,10 @@ section h2 {
   line-height: 1.25rem;
 }
 
+section#private-mentoring .content {
+  gap: 4rem;
+}
+
 section#private-mentoring article {
   display: flex;
   flex-direction: column;

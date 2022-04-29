@@ -108,6 +108,12 @@ main {
   text-decoration: none;
 }
 
+section img {
+  align-self: center;
+  width: 70%;
+  max-width: 20rem;
+}
+
 main > header,
 main > article > header {
   padding: 1rem;

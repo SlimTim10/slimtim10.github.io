@@ -47,11 +47,6 @@ section#cta article {
   gap: 2rem;
 }
 
-section#cta article img {
-  width: 70%;
-  max-width: 20rem;
-}
-
 section#cta article .body {
   display: flex;
   flex-direction: column;
