@@ -1,14 +1,42 @@
 ---
 title: Imperative vs Declarative With Pumpkin Pie
-desc: "I announce myself to the world"
+desc: "Explaining the difference between imperative and declarative programming with plain English examples."
 image: "./images/me.jpg"
 imageAlt: "drawing of pumpkin pie"
 keywords: "hello, announcement"
 ---
 
-The discussion of *imperative* vs *declarative* programming comes up a lot. The difference between the two paradigms can be confusing. I often see examples that introduce imperative code or sentences, then show a declarative version that is simply a short declaration, letting the receiver handle the process. But this is an unfair comparison. The declarative paradigm is not about conveying less information; that's *abstraction*. Instead, it's about conveying information in a different way.
+The discussion of *imperative* vs *declarative* programming comes up a lot. The difference between the two paradigms can be confusing. I often see examples that present an unfair comparison or are plain wrong. It's time to set the record straight. The declarative paradigm is not about conveying less information; that's *abstraction* (more about that later). It's about conveying information in a different way.
 
-Although this topic may be interesting only to programmers, I'm not going to use programming languages in my explanation. Instead, let's look at a plain English example, using delicious pumpkin pie.
+* Definitions
+
+** Declarative
+
+*Declarative* clauses most commonly function as *statements*. The usual word order is: subject, then verb, then other elements. Declaratives can be affirmative or negative. They make statements about how things are and how they are not.[fn:1]
+
+Examples:
+- I saw them last week.
+- Some courses begin in January.
+- The door was left open.
+- Those are not the only tickets left.
+- You could pass me the spoon.
+- I am happy.
+- x is equal to 5.
+
+** Imperative
+
+*Imperative* clauses most commonly function as *commands*, *instructions*, or *orders*. They usually begin with a verb. We do not usually include the subject in an imperative clause.[fn:1] In the context of programming, the implied subject is the computer running the code.
+
+Examples:
+- Go see them!
+- Don't begin a course in january.
+- Don't leave the door open.
+- Get the last tickets.
+- Pass me the spoon.
+- Be happy.
+- Set x to 5.
+
+Before we get to code comparisons, let's look at a plain English example using delicious pumpkin pie.
 
 * Pumpkin Pie
 
@@ -28,15 +56,10 @@ Although this topic may be interesting only to programmers, I'm not going to use
 ** Imperative Recipe
 
 1. Preheat oven to 425 degrees F (220 degrees C).
-
 2. Whisk together pumpkin puree, egg yolks, and egg in a large bowl. Add evaporated milk, cinnamon, ginger, cloves, nutmeg, and salt; whisk until thoroughly combined.
-
 3. Fit pie crust in a 9-inch pie plate and crimp edges.
-
 4. Pour filling into the pie shell and lightly tap on the work surface to release any air bubbles.
-
 5. Bake in the preheated oven for 15 minutes.
-
 6. Reduce heat to 350 degrees F (175 degrees C) and bake until just set in the middle, 30 to 40 more minutes. A knife inserted into the filling, 1 inch from the crust, should come out clean. Allow to cool completely before serving.
 
 ** Declarative Recipe
@@ -50,9 +73,9 @@ Although this topic may be interesting only to programmers, I'm not going to use
 - A knife inserted into the cooked pie's filling, 1 inch from the crust, should come out clean.
 - The cooked pie can be served after being allowed to cool completely.
 
-* What's the difference?
+** What's the difference?
 
-As you can see, the imperative recipe is a set of step-by-step instructions. They must be followed in the written order or you won't end up with pumpkin pie. In contrast, the declarative recipe is a set of declarations. They each simply state a fact about the pumpkin pie. The declarations can be rearranged and read in any order.
+As you can see, the imperative recipe is a set of step-by-step instructions. They are intended to be followed in the written order. In contrast, the declarative recipe is a set of statements. They each simply state a fact about the pumpkin pie, or some part of it. The statements can be rearranged and read in any order.
 
 #+begin_quote
 *Declarative Recipe (Rearranged)*
@@ -67,25 +90,101 @@ As you can see, the imperative recipe is a set of step-by-step instructions. The
 - The filling is evaporated milk, cinnamon, ginger, cloves, nutmeg, and salt whisked into the base until thoroughly combined.
 #+end_quote
 
-If you want to end up with a finished pie, you will end up reading each declaration anyway because of how they depend on each other for information. These dependencies are the key to forcing some kind of order. In fact, you will end up doing the steps in the same order as the imperative recipe.
+If you want to end up with a finished pie, you will end up reading every statement in the end because of how they depend on each other for information. These dependencies are the key to forcing some kind of order. In fact, you will end up doing the steps in the same order as the imperative recipe.
 
-Something interesting to notice is that the declarative recipe does not force the baker to start by preheating the oven. It would still work to preheat the oven after making the raw pie, but we would miss out on the potential time savings by preheating the oven as the first step and multitasking. This is similar to optimizations that programming compilers do; things that programmers shouldn't need to worry about anyway.
+Something interesting to notice is that the declarative recipe does not force the baker to start by preheating the oven. It would still work to preheat the oven after making the raw pie, but we would miss out on the potential time savings by preheating the oven as the first step and multitasking. This is similar to optimizations that programming compilers do; things that programmers shouldn't need to worry about.
+
+* Programming (JavaScript)
+
+The difference between imperative and declarative programming is defined by the concept of state.[fn:2][fn:3] Imperative programming involves the use of explicit state, which is information that gets remembered over time.[fn:4] Declarative programming is described as stateless. We can use recursion in (functional) declarative programming, which can be thought of as keeping implicit state, but really the context changes with each recursive call of a function so there isn't an explicit state that is persisting over the entire operation.
+
+Now let's compare imperative and declarative code. I'm choosing to use JavaScript because the language caters to both imperative and declarative ways of writing code.
+
+** Get even numbers, imperative
+
+The goal is to get all the even numbers from a given list of numbers.
+
+#+begin_src js
+const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+
+const even = x => x % 2 === 0;
+
+let evensImperative = [];
+for (const num of numbers) {
+  if (even(num)) {
+    evensImperative.push(num);
+  }
+}
+console.log(evensImperative);
+#+end_src
+
+The explicit state is ~evensImperative~, which changes its value over time, accumulating all the even numbers.
+
+** Get even numbers, declarative version 1
+
+The same goal, using (functional) declarative programming.
+
+#+begin_src js
+const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+
+const even = x => x % 2 === 0;
+
+const getEvens = (xs, acc) => (
+  (xs.length === 0) ? acc
+    : even(xs[0]) ? getEvens(xs.slice(1), [...acc, xs[0]])
+    : getEvens(xs.slice(1), acc)
+);
+const evensDeclarative = getEvens(numbers, []);
+console.log(evensDeclarative);
+#+end_src
+
+I consider this version to be the most fair comparison. To accomplish the task, we define a function that uses recursion to build a new list of only even numbers from the given list. Any version which refines the code to use the help of other functions is using the principal of abstraction. It would not be /more declarative/, but rather more abstract.
+
+** Get even numbers, declarative version 2
+
+Using ~reduce~ is a refinement on the previous version, a step up in abstraction. Reduce is a more specific, yet still quite expressive, function to transform an array into something new.
+
+#+begin_src js
+const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+
+const even = x => x % 2 === 0;
+
+const evensDeclarative = numbers.reduce((acc, x) => (
+  even(x) ? [...acc, x] : acc
+), []);
+console.log(evensDeclarative);
+#+end_src
+
+** Get even numbers, declarative version 3
+
+For even more refinement, the most idiomatic functional solution to this problem is to use a filtering function, which is commonly provided in functional languages.
+
+#+begin_src js
+const numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+
+const even = x => x % 2 === 0;
+
+const evensDeclarative = numbers.filter(even);
+console.log(evensDeclarative);
+#+end_src
 
 * So which one is better?
 
 One is not necessarily better than the other, but it's fun to think about how they are different depending on the context.
 
-An important distinction is the difference in goals between recipes and programming. For cooking recipes, the goal is to give instructions to a human to follow. Imperative recipes are naturally easier because we need to perform step-by-step actions in the end. For programming, the goal is not to tell the computer what steps to take to solve a problem. The goal is to write a solution to a problem and have the computer execute it, however it may. The fact that computers run imperatively at their lowest level doesn't matter because it is abstracted away by the compiler, so the solutions we write can be in any paradigm, imperative or declarative.
+An important distinction is the difference in goals between recipes and programming. For cooking recipes, the goal is to give instructions to a human to follow. Imperative recipes are naturally easier because we need to perform step-by-step actions in the end. Trying to bake a pumpkin pie based on the declarative recipe would involve translating the statements into a sequence of steps, making us do extra work. However, in programming, the goal is not to tell the computer what steps to take to solve a problem. The goal is to write a solution to a problem and have the computer execute it, however it may. The fact that computers run imperatively at their lowest level doesn't matter because it is abstracted away by the compiler, so the solutions we write can be in any paradigm, imperative or declarative.
 
-One difference when we write things in a declarative way is that it becomes easier to *break a problem down*, which is extremely helpful in both finding and verifying a solution. Looking at the declarative recipe, we can see each declaration as its own small piece of the recipe. And each of those can be broken down further into smaller pieces if necessary. When each declaration is very small, it's easy to look at it and see that it is correct, thus it becomes easy to verify that the entire solution is correct. At the same time, the dependency structure of the declarations can be analyzed to verify that the entire solution makes sense and is not missing any pieces.
+One difference when we write things in a declarative way is that it becomes easier to *break the problem down*, which is extremely helpful in both finding and verifying a solution. Looking at the declarative recipe, we can see each statement as its own small piece of the recipe. And each of those can be broken down further into smaller pieces if necessary. When each statement is very small, it's easy to look at it and see that it is correct, thus it becomes easy to verify that the entire solution is correct. At the same time, the dependency structure of the statements can be analyzed to verify that the entire solution makes sense and is not missing any pieces.
 
-Another consequence of this breaking down of problems is the ability to *reuse* the pieces. An individual declaration might be pulled apart from the solution as a whole and be reused to solve another problem. For example, the declarative pumpkin pie talks about the filling. Maybe we want to use a blueberry filling instead. If we have a similar declarative recipe for blueberry pie, we can simply swap in the blueberry pie's filling and leave the rest the same. Now we have a blueberry pie recipe! (This won't actually work for the given pumpkin pie recipe because it's too different from making blueberry pie, but I hope the point still stands.)
+Another consequence of this breaking down of problems is the ability to *reuse* the pieces. An individual statement might be pulled apart from the solution as a whole and be reused to solve another problem. For example, the declarative pumpkin pie talks about the filling. Maybe we want to use a blueberry filling instead. If we have a similar declarative recipe for blueberry pie, we can simply swap in the blueberry pie's filling and leave the rest the same. Now we have a blueberry pie recipe! (This won't actually work for the given pumpkin pie recipe because it's too different from making blueberry pie, but I hope the point still stands.)
+
+To make all of this more clear, imagine you're the pumpkin pie baker and you have 3 helpers. It's your job to assign each helper their own tasks so all your jobs are easier. With the imperative recipe, you would need to have a good idea of the all the steps before you can decide how to assign tasks to your helpers. You can't simply say to one, "It's your job to pour the filling into the pie shell" without also explaining when that needs to happen and what the filling is. With the declarative recipe, you can assign the task "Make the raw pie" to one helper, with the relevant statement "The raw pie is the pie shell with the filling poured in and lightly tapped to release any air bubbles." When the helper asks, "What is the filling?" you can simply direct them to the helper who has the task of making the filling. All of the statements can be assigned as tasks to whoever you want and the information will sort itself out.
 
 * What about abstraction?
 
-Even though the declarative paradigm does not force abstraction, it does seem to lend itself better to it. That's why so many other examples comparing imperative and declarative unfairly involve abstraction; it's hard to avoid it! And that's a good thing. It lets us focus on what's important and hide the rest. I don't know about you, but I can only keep so much information in my head before feeling overwhelmed.
+Even though the declarative paradigm does not force abstraction[fn:5], it does seem to lend itself better to it. That's why so many other examples comparing imperative and declarative unfairly involve abstraction; it's hard to avoid it! And that's a good thing. Abstraction is what lets us focus on what's important and ignore the rest. I don't know about you, but I can only keep so much information in my head before feeling overwhelmed.
 
-As an example, let's say you are familiar with making pumpkin pies. In the declarative recipe, we can remove some declarations that you don't need and leave only the ones you find hard to remember. This is harder to do with the imperative recipe where the dependencies aren't clear.
+As an example, let's say you are already familiar with making pumpkin pies. In the declarative recipe, we can remove some statements that you don't need and leave only the ones you find hard to remember. This is harder to do with the imperative recipe where the dependencies aren't clear.
 
 #+begin_quote
 *Declarative Recipe (Trimmed)*
@@ -98,45 +197,73 @@ As an example, let's say you are familiar with making pumpkin pies. In the decla
 
 Related to abstraction, the declarative recipe also lets us identify what's important. With the imperative recipe, it's hard to tell where things are headed. What's the point of whisking together the ingredients in a bowl? Are we making a soup at the same time? In the declarative recipe, it's clear that whisking together the ingredients makes a base, which is then used to make the filling.
 
-# * Fair comparisons in modern JavaScript
+In programming, abstraction is even more clear. Whenever we substitute a bunch of code for a function, we're replacing that code with an abstract blob that we don't need to look inside. In the even numbers example above, each subsequent declarative version is an abstraction on the previous one. This is easy to do in declarative programming because we can pick any statement and abstract it since we know what things depends on or not. Each statement is like its own bundle of stuff that can be put in a box and closed up. This is very useful and happens /a lot/ in programming.
 
-# #+begin_src js
-# const nums = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+* Appendix: Correcting Misinformation
 
-# const even = x => x % 2 === 0;
+** Book: "Essential LINQ"
 
-# // Even numbers -- imperative
-# let evensImperative = [];
-# for (const num of nums) {
-#   if (even(num)) evensImperative.push(num);
-# }
-# // [ 2, 4, 6, 8, 10 ]
-# console.log('evensImperative:', evensImperative);
+#+begin_quote
+Imperative programming requires developers to define step by step how code should be executed. To give directions in an imperative fashion, you say, “Go to 1st Street, turn left onto Main, drive two blocks, turn right onto Maple, and stop at the third house on the left.” The declarative version might sound something like this: “Drive to Sue’s house.” One says how to do something; the other says what needs to be done.
 
-# // Even numbers -- declarative
-# const evensDeclarative = nums.filter(num => even(num));
-# // [ 2, 4, 6, 8, 10 ]
-# console.log('evensDeclarative:', evensDeclarative);
+(Calvert, C., & Kulkarni, D. (2009). Essential LINQ. Addison-Wesley Professional)
+#+end_quote
 
-# // Double each number -- imperative
-# let doublesImperative = [];
-# for (const num of nums) doublesImperative.push(num * 2);
-# // [ 2,  4,  6,  8, 10, 12, 14, 16, 18, 20 ]
-# console.log('doublesImperative:', doublesImperative);
+"Drive to Sue's house" is a command, so this example is clearly wrong. Not to mention the information provided in the two versions isn't the same. Sue isn't even mentioned in the imperative directions.
 
-# // Double each number -- declarative
-# const doublesDeclarative = nums.map(num => num * 2);
-# // [ 2,  4,  6,  8, 10, 12, 14, 16, 18, 20 ]
-# console.log('doublesDeclarative:', doublesDeclarative);
+** [[https://ui.dev/imperative-vs-declarative-programming][Imperative vs Declarative Programming]], post by Tyler McGinnis
 
-# // Sum -- imperative
-# let sumImperative = 0;
-# for (const num of nums) sumImperative += num;
-# // 55
-# console.log('sumImperative:', sumImperative);
+#+begin_quote
+"Imperative programming is like how you do something, and declarative programming is more like what you do."
+#+end_quote
 
-# // Sum -- declarative
-# const sumDeclarative = nums.reduce((acc, num) => acc + num, 0);
-# // 55
-# console.log('sumDeclarative:', sumDeclarative);
-# #+end_src
+I don't find that definition helpful because "what you do" seems confusing or plain wrong. Declarative programming is something that people do, but that can't be what it means. Maybe it means "what you tell the computer to do", but that sounds like a command which makes it imperative. I don't know how to interpret this. I know this definition isn't meant to be taken seriously, but I think it makes things even less clear.
+
+#+begin_quote
+An imperative approach (HOW): "I see that table located under the Gone Fishin' sign is empty. My husband and I are going to walk over there and sit down."
+
+A declarative approach (WHAT): "Table for two, please."
+#+end_quote
+
+Is it just me or are these backwards? The first one is a couple of statements (declarative) and the second one is a command (imperative).
+
+Sorry Tyler, I'm a fan of your work, but I think you got this concept wrong. To be honest, I think the only part of the post that is right is the collection of definitions at the end, which the rest of the post doesn't properly take into consideration.
+
+** Stack Overflow accepted answer to "Difference between declarative and imperative in React.js?"
+
+https://stackoverflow.com/a/33656983
+
+#+begin_quote
+Imagine you have a butler, who is kind of a metaphor for a framework. And you would like to make dinner. In an imperative world, you would tell them step by step how to make dinner. You have to provide these instructions:
+
+#+begin_example
+Go to the kitchen
+Open fridge
+Remove chicken from fridge
+...
+Bring food to the table
+#+end_example
+
+In a declarative world, you would simply describe what you want
+
+#+begin_example
+I want dinner with chicken.
+#+end_example
+#+end_quote
+
+A more fair declarative version would be "I want chicken from the fridge which is in the kitchen, and I want to eat it at the table."
+
+#+begin_quote
+If your butler doesn't know how to make chicken, then you cannot operate in a declarative style.
+#+end_quote
+
+This doesn't make sense. As we've seen, we can easily translate an imperative recipe to a collection of statements, which the butler can be told.
+
+
+
+[fn:1] [[https://dictionary.cambridge.org/grammar/british-grammar/clause-types][Cambridge Dictionary]]
+[fn:2] [[https://sci-hub.hkvisa.net/10.1007/978-3-642-01862-6_29][Fahland, D., Lübke, D., Mendling, J., Reijers, H., Weber, B., Weidlich, M., & Zugal, S. (2009). Declarative versus Imperative Process Modeling Languages: The Issue of Understandability. Lecture Notes in Business Information Processing, 353–366.]]
+[fn:3] Roy, P.V., Haridi, S.: Concepts, Techniques, and Models of Computer Program-
+ming. MIT Press, Cambridge (2004)
+[fn:4] https://www.info.ucl.ac.be/~pvr/paradigms.html
+[fn:5] As far as I can tell, this is true in general terms. However, in computing, declarative programming is an abstraction on low-level machine code which is imperative. But high-level imperative programming languages are far abstracted from machine code as well. So let's compare apples to apples and leave the low-level oranges to the machine... or something.
