@@ -58,7 +58,7 @@ strong {
 }
 
 pre.sourceCode {
-  padding: 2rem 1.5rem;
+  padding: 0.3rem 0.5rem;
 }
 
 body > header {
@@ -175,7 +175,7 @@ footer .social-icons svg {
   font-family: 'Libre Baskerville', serif;
 }
 
-.h-center {
+.h-center, .center {
   display: flex;
   flex-direction: row;
   justify-content: center;

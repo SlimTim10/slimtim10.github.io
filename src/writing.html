@@ -8,13 +8,12 @@ title: "Writing"
   <header>
 	<h1>$title$</h1>
   </header>
-  $if(ready)$
   <section class="writing">
     <ul>
       $for(posts)$
       <li>
 		<div>
-          <a href=".$url$"><img alt="pumpkin pie" src="$image$"/></a>
+          <a href=".$url$"><img alt="$imageAlt$" src="$image$"/></a>
 		</div>
 		<div>
           <a href=".$url$"><h4>$title$</h4></a>
@@ -24,10 +23,4 @@ title: "Writing"
       $endfor$
     </ul>
   </section>
-  $else$
-  <section class="writing" style="display: flex; flex-direction: column; align-items: center; justify-content: center; flex-grow: 1;">
-	<img alt="" src="./images/undraw_book_reading_re_fu2c.svg" style="max-width: 30rem;"/>
-	<h3>Check back soon...</h3>
-  </section>
-  $endif$
 </main>

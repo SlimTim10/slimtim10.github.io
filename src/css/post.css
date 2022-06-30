@@ -1,16 +1,24 @@
-main > article > header {
+main > article {
+  display: flex;
   flex-direction: column;
 }
 
+main > article > header {
+  flex-direction: column;
+  align-items: center;
+}
+
+main > article > section {
+  margin-top: 2rem;
+}
+
 main > article > section > * {
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
 }
 
 main > article > section > h1,
-main > article > section > h2,
-main > article > section > h3,
-main > article > section > h4 {
-  padding-top: 1rem;
+main > article > section > h2 {
+  margin-top: 2rem;
 }
 
 main > article > section ul {
@@ -26,6 +34,12 @@ main > article > section ol {
   margin-left: 2rem;
 }
 
+main > article > section blockquote {
+  margin: 1.5rem 10px;
+  padding: 0.5rem 10px;
+  background: #F9F9F9;
+  border-left: 10px solid #CCC;
+}
 
 main > article > section strong {
   font-weight: bold;
@@ -33,6 +47,11 @@ main > article > section strong {
 
 main > article > section code {
   font-family: 'Inconsolata', monospace;
+}
+
+main > article > section p > code,
+main > article > section li > code {
+  background: #EAEAEA;
 }
 
 main > article > section table {

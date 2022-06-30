@@ -4,15 +4,13 @@
       <h1>
         <a href=".$url$">$title$</a>
       </h1>
-      <div>
-        <small>$date$</small>
-        $if(updated)$
-        <small>(updated: $updated$)</small>
-        $endif$
-      </div>
+      <p>$date$</p>
+      $if(updated)$
+      <p>(Updated $updated$)</p>
+      $endif$
     </header>
-    <section>
-      $body$
+    <section class="content">
+	  $body$
     </section>
   </article>
 </main>

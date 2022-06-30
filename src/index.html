@@ -65,7 +65,6 @@ title: "Home"
   </section>
   <section id="latest-posts" class="writing">
     <h2>Latest Posts</h2>
-	$if(ready)$
     <ul>
       $for(posts)$
       <li>
@@ -80,8 +79,5 @@ title: "Home"
       $endfor$
     </ul>
 	<a href="/writing.html" class="btn-primary">Read More</a>
-	$else$
-	<p>Check back soon...</p>
-	$endif$
   </section>
 </main>

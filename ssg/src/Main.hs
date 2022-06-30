@@ -113,11 +113,12 @@ main = hakyllWith config $ do
     compile $ do
       posts <- recentFirst =<< loadAll "posts/*"
 
-      let pages = posts
-          sitemapCtx =
-            constField "root" root
-              <> constField "siteName" siteName
-              <> listField "pages" postCtx (return pages)
+      let
+        pages = posts
+        sitemapCtx =
+          constField "root" root
+          <> constField "siteName" siteName
+          <> listField "pages" postCtx (return pages)
 
       makeItem ("" :: String)
         >>= loadAndApplyTemplate "templates/sitemap.xml" sitemapCtx
