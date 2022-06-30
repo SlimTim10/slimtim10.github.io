@@ -3,12 +3,13 @@ title: Imperative vs Declarative With Pumpkin Pie
 desc: "Explaining the difference between imperative and declarative programming with plain English examples."
 image: "./images/me.jpg"
 imageAlt: "drawing of pumpkin pie"
-keywords: "hello, announcement"
 ---
 
 The discussion of *imperative* vs *declarative* programming comes up a lot. The difference between the two paradigms can be confusing. I often see examples that present an unfair comparison or are plain wrong. It's time to set the record straight. The declarative paradigm is not about conveying less information; that's *abstraction* (more about that later). It's about conveying information in a different way.
 
 * Definitions
+
+First, an introduction or reminder of what defines declarative and imperative clauses in plain English.
 
 ** Declarative
 
@@ -36,9 +37,9 @@ Examples:
 - Be happy.
 - Set x to 5.
 
-Before we get to code comparisons, let's look at a plain English example using delicious pumpkin pie.
-
 * Pumpkin Pie
+
+Before we get to code comparisons, let's look at a plain English example using delicious pumpkin pie.
 
 ** Ingredients
 
@@ -94,9 +95,9 @@ If you want to end up with a finished pie, you will end up reading every stateme
 
 Something interesting to notice is that the declarative recipe does not force the baker to start by preheating the oven. It would still work to preheat the oven after making the raw pie, but we would miss out on the potential time savings by preheating the oven as the first step and multitasking. This is similar to optimizations that programming compilers do; things that programmers shouldn't need to worry about.
 
-* Programming (JavaScript)
+* Programming comparison (JavaScript)
 
-The difference between imperative and declarative programming is defined by the concept of state.[fn:2][fn:3] Imperative programming involves the use of explicit state, which is information that gets remembered over time.[fn:4] Declarative programming is described as stateless. We can use recursion in (functional) declarative programming, which can be thought of as keeping implicit state, but really the context changes with each recursive call of a function so there isn't an explicit state that is persisting over the entire operation.
+The difference between imperative and declarative programming is defined by the concept of state.[fn:2] [fn:3] Imperative programming involves the use of explicit state, which is information that gets remembered over time.[fn:4] Declarative programming is described as stateless. We can use recursion in (functional) declarative programming, which can be thought of as keeping implicit state, but since the context changes with each recursive call of a function there isn't an explicit state that is persisting over the entire operation.
 
 Now let's compare imperative and declarative code. I'm choosing to use JavaScript because the language caters to both imperative and declarative ways of writing code.
 
@@ -199,14 +200,16 @@ Related to abstraction, the declarative recipe also lets us identify what's impo
 
 In programming, abstraction is even more clear. Whenever we substitute a bunch of code for a function, we're replacing that code with an abstract blob that we don't need to look inside. In the even numbers example above, each subsequent declarative version is an abstraction on the previous one. This is easy to do in declarative programming because we can pick any statement and abstract it since we know what things depends on or not. Each statement is like its own bundle of stuff that can be put in a box and closed up. This is very useful and happens /a lot/ in programming.
 
-* Appendix: Correcting Misinformation
+* Correcting the misinformation
+
+I said I've seen many examples that don't do a good job of showing the difference between imperative and declarative programming. Let's look at a few of them and where they went wrong.
 
 ** Book: "Essential LINQ"
 
+(Calvert, C., & Kulkarni, D. (2009). Essential LINQ. Addison-Wesley Professional)
+
 #+begin_quote
 Imperative programming requires developers to define step by step how code should be executed. To give directions in an imperative fashion, you say, “Go to 1st Street, turn left onto Main, drive two blocks, turn right onto Maple, and stop at the third house on the left.” The declarative version might sound something like this: “Drive to Sue’s house.” One says how to do something; the other says what needs to be done.
-
-(Calvert, C., & Kulkarni, D. (2009). Essential LINQ. Addison-Wesley Professional)
 #+end_quote
 
 "Drive to Sue's house" is a command, so this example is clearly wrong. Not to mention the information provided in the two versions isn't the same. Sue isn't even mentioned in the imperative directions.
@@ -237,16 +240,19 @@ https://stackoverflow.com/a/33656983
 Imagine you have a butler, who is kind of a metaphor for a framework. And you would like to make dinner. In an imperative world, you would tell them step by step how to make dinner. You have to provide these instructions:
 
 #+begin_example
+
 Go to the kitchen
 Open fridge
 Remove chicken from fridge
 ...
 Bring food to the table
+
 #+end_example
 
 In a declarative world, you would simply describe what you want
 
 #+begin_example
+
 I want dinner with chicken.
 #+end_example
 #+end_quote
@@ -263,7 +269,6 @@ This doesn't make sense. As we've seen, we can easily translate an imperative re
 
 [fn:1] [[https://dictionary.cambridge.org/grammar/british-grammar/clause-types][Cambridge Dictionary]]
 [fn:2] [[https://sci-hub.hkvisa.net/10.1007/978-3-642-01862-6_29][Fahland, D., Lübke, D., Mendling, J., Reijers, H., Weber, B., Weidlich, M., & Zugal, S. (2009). Declarative versus Imperative Process Modeling Languages: The Issue of Understandability. Lecture Notes in Business Information Processing, 353–366.]]
-[fn:3] Roy, P.V., Haridi, S.: Concepts, Techniques, and Models of Computer Program-
-ming. MIT Press, Cambridge (2004)
+[fn:3] Roy, P.V., Haridi, S.: Concepts, Techniques, and Models of Computer Programming. MIT Press, Cambridge (2004)
 [fn:4] https://www.info.ucl.ac.be/~pvr/paradigms.html
 [fn:5] As far as I can tell, this is true in general terms. However, in computing, declarative programming is an abstraction on low-level machine code which is imperative. But high-level imperative programming languages are far abstracted from machine code as well. So let's compare apples to apples and leave the low-level oranges to the machine... or something.
