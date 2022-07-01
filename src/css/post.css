@@ -10,10 +10,13 @@ main > article > header {
 
 main > article > section {
   margin-top: 2rem;
+  width: 100%;
 }
 
 main > article > section > * {
   margin-bottom: 1rem;
+  padding-left: 1rem;
+  padding-right: 1rem;
 }
 
 main > article > section > h1,
