@@ -61,7 +61,7 @@ Before we get to code comparisons, let's look at a plain English example using d
 3. Fit pie crust in a 9-inch pie plate and crimp edges.
 4. Pour filling into the pie shell and lightly tap on the work surface to release any air bubbles.
 5. Bake in the preheated oven for 15 minutes.
-6. Reduce heat to 350 degrees F (175 degrees C) and bake until just set in the middle, 30 to 40 more minutes. A knife inserted into the filling, 1 inch from the crust, should come out clean. Allow to cool completely before serving.
+6. Reduce heat to 350 degrees F (175 degrees C) and bake until just set in the middle, 30 to 40 more minutes. Allow to cool completely before serving.
 
 ** Declarative Recipe
 
@@ -71,7 +71,6 @@ Before we get to code comparisons, let's look at a plain English example using d
 - The raw pie is the pie shell with the filling poured in and lightly tapped to release any air bubbles.
 - The semi-cooked pie is the raw pie baked in an oven preheated at 425 degrees F for 15 minutes.
 - The cooked pie is the semi-cooked pie baked at 350 degrees F for 30 to 40 minutes.
-- A knife inserted into the cooked pie's filling, 1 inch from the crust, should come out clean.
 - The cooked pie can be served after being allowed to cool completely.
 
 ** What's the difference?
@@ -85,7 +84,6 @@ As you can see, the imperative recipe is a set of step-by-step instructions. The
 - The raw pie is the pie shell with the filling poured in and lightly tapped to release any air bubbles.
 - The base is the pumpkin puree, egg yolks, and egg whisked together in a large bowl.
 - The pie shell is the pie crust fit in a 9-inch pie plate with crimped edges.
-- A knife inserted into the cooked pie's filling, 1 inch from the crust, should come out clean.
 - The cooked pie is the semi-cooked pie baked at 350 degrees F for 30 to 40 minutes.
 - The semi-cooked pie is the raw pie baked in an oven preheated at 425 degrees F for 15 minutes.
 - The filling is evaporated milk, cinnamon, ginger, cloves, nutmeg, and salt whisked into the base until thoroughly combined.
