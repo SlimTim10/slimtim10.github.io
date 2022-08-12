@@ -1,0 +1,25 @@
+---
+title: Experiment
+desc: "An experiment in comparing languages."
+image: "./images/pumpkin_pie.jpg"
+imageAlt: "drawing of pumpkin pie"
+---
+
+An experiment to compare the experience of developing a project using different programming languages. The objective was to complete the same project in the 4 languages to be compared: JavaScript, TypeScript, Elixir, and Haskell. All 4 languages were used in a functional programming style. I wanted to see how the experience differs based on the design of the languages.
+
+| Language   | Types System Expressiveness | Dynamic or Static Types | Compiled | Immutable Variables |
+|------------+-----------------------------+-------------------------+----------+---------------------|
+| JavaScript | Weak                        | Dynamic                 | No       | Optional            |
+| TypeScript | Moderate                    | Static                  | Yes      | Optional            |
+| Elixir     | Moderate/Strong             | Dynamic                 | Yes      | Yes                 |
+| Haskell    | Strong                      | Static                  | Yes      | Yes                 |
+
+I didn't include Scala because it's too similar to Haskell. Though it would be interesting to see how the experience compares.
+
+* The Project
+
+Genetic algorithm.
+
+* Results
+** JavaScript
+Right off the bat, I knew I had to use Ramda to have a reasonable FP experience. From the start, developing the project in JavaScript was a struggle. I had to decide how to represent bits, genes, and chromosomes. I decided that bits would be the numbers 0 or 1, genes would be an array of 4 bits, and chromosomes would be an array of bits (of arbitrary length, but hopefully divisible by 4). Since there are no static types but these were important decisions, I wrote them as comments near the top of the file. The tough part was coding the functions while keeping trying to keep track of these representations in my head. "Wait, did I make chromosomes an array of genes or an array of bits? Let me go check my comment." I continually checked that my code worked correctly by writing some tests. Whenever I was satisfied that a function was working as it should, I was afraid to refactor the code and risk introducing new bugs. Did I write enough tests? Would they catch mistakes? The really hard part was trying to implement chromosome decoding. Without a static type system to help with 
