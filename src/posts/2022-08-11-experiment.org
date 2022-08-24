@@ -5,21 +5,67 @@ image: "./images/pumpkin_pie.jpg"
 imageAlt: "drawing of pumpkin pie"
 ---
 
-An experiment to compare the experience of developing a project using different programming languages. The objective was to complete the same project in the 4 languages to be compared: JavaScript, TypeScript, Elixir, and Haskell. All 4 languages were used in a functional programming style. I wanted to see how the experience differs based on the design of the languages.
 
-| Language   | Types System Expressiveness | Dynamic or Static Types | Compiled | Immutable Variables |
-|------------+-----------------------------+-------------------------+----------+---------------------|
-| JavaScript | Weak                        | Dynamic                 | No       | Optional            |
-| TypeScript | Moderate                    | Static                  | Yes      | Optional            |
-| Elixir     | Moderate/Strong             | Dynamic                 | Yes      | Yes                 |
-| Haskell    | Strong                      | Static                  | Yes      | Yes                 |
 
-I didn't include Scala because it's too similar to Haskell. Though it would be interesting to see how the experience compares.
+What am I even comparing??? I wrote all the code as if I were writing Haskell.
+
+
+
+Refactoring is when we change code with the purpose of making it easier to read and understand, while keeping the functionality the same. Sort of like if we have ~2/6 + 6/9 = 12/12~ and rewrite is as ~1/3 + 2/3 = 1~. They both mean the same thing, but the second one is easier to understand. Refactoring is different from optimization, where the goal is to change the code to use less memory or run faster. It's also different from adding a new feature, where the resulting functionality is meant to be different.
+
+All of these tasks require changing code, but refactoring is the most dreaded. Why is that? It's difficult to measure the benefit of refactoring (how do you determine that the code is easier to understand?), whereas the benefits of optimization can be measured (benchmarking speed or memory usage) and the benefits of adding a feature are paramount. So, if there is any worry that changing the code will break existing functionality, it's only worth it when the benefits outweigh the breakages. In the case of refactoring, it's hard to justify.
+
+I learned Haskell years ago. A big difference I've noticed in writing Haskell vs other languages I've used (C, JavaScript, Lisp, Python, etc.) is that refactoring is a pleasant experience in Haskell. In other languages, I would dread refactoring, worrying that I would break something along the way and end up having more work to do in the end. But in Haskell, I actually look forward to it! It feels like a nice process in which I decide on a new way to structure code and the compiler helps guide me along the way until I'm done; the code is cleaner and nothing is broken. It turns out I'm not alone in feeling this way. So lately I've been wondering, why is it so much nicer? What aspects of the language contribute to this pleasant refactoring experience?
+
+My first thought was that immutability plays a big part. When you're dealing with variables that are all immutable, you have real equality: left side equals right side. Then refactoring mostly comes down to simply substituting one thing for another. 
+
+I came up with an experiment to compare the experience of developing and refactoring a project using different programming languages. My idea was to complete the same project in 4 different languages: JavaScript, TypeScript, Elixir, and Haskell. All 4 languages were to be used in a functional programming style. I wanted to see how the experience differs based on the design of the languages. I do strongly believe in functional programming, and that may have a lot to do with the overall experience, but in this case I wanted to compare languages and not paradigms.
+
+| Language   | Type System | Static or Dynamic Types | Compiled | Immutability |
+|------------+-------------+-------------------------+----------+--------------|
+| JavaScript | Weak        | Dynamic                 | No       | Optional     |
+| TypeScript | Moderate    | Static                  | Yes      | Optional     |
+| Elixir     | Moderate    | Dynamic                 | Yes      | Yes          |
+| Haskell    | Strong      | Static                  | Yes      | Yes          |
+
+I didn't include Scala because it's too similar to Haskell.
+
+How do each of these properties contribute to the development experience?
+
+* Type System
+Programming languages each adhere to some sort of type system. When an expression or statement is evaluated, the values take on some type. Type systems are often described in strength, as in weak or strong. Part of the strength strength of a type system comes from its strictness, which essentially means the language plays fast-and-loose with matching types or is very strict. There's also the expressiveness of the type system, where the type system can allow us to express what's in our head in an abstract way, or it uses types more closely related to how the machine works and not how we think (like an unsigned 8-bit integer, or ~uint8_t~ in C).
+
+- JavaScript has a weak type system because it is not strict or expressive.
+- TypeScript has a moderate type system because it is somewhat strict, and not very expressive. We can define a type ~Bit = 0 | 1~ but then the value 0 can belong to the predefined ~Number~ type or our ~Bit~ type, so values don't belong to one type.
+- Elixir has a moderate type system because it is somewhat strict, and not very expressive. 
+
+A strong type system lets you plan a good refactor, like generalizing a function. You can start by thinking at the type level and then the code follows.
+
+* Static or Dynamic Types
+You can easily tell whether a language has static or dynamic types by looking at whether type names appear in the code or not. In statically typed languages, a variable is assigned a type and its type can't change. In dynamically typed languages, a variable may appear to have a certain type in one place but be treated as a different type in a different part of the code.
+
+With static types, you can see where the pieces fit together like a puzzle.
+
+* Compiled
+Programming languages can either be compiled or interpreted. With a compiled language, there's a step before you can run your program where all the code gets compiled into a lower-level language (typically machine code). With an interpreted language, you can't compile your program without running it as well.
+
+With a compiled language, you ???. This means you can typically write fewer tests because the compiler will catch errors in parts of your code that wouldn't run. While you're doing a refactor, the compiler will let you know when you're done or if you missed anything.
 
 * The Project
 
-Genetic algorithm.
+[[http://www.ai-junkie.com/ga/intro/gat1.html][Genetic Algorithms in Plain English]]
+
+This is a fun project I've practiced with years ago. It's a relatively small project, but it's not exactly tiny, although the code can fit comfortably in a single file.
 
 * Results
 ** JavaScript
 Right off the bat, I knew I had to use Ramda to have a reasonable FP experience. From the start, developing the project in JavaScript was a struggle. I had to decide how to represent bits, genes, and chromosomes. I decided that bits would be the numbers 0 or 1, genes would be an array of 4 bits, and chromosomes would be an array of bits (of arbitrary length, but hopefully divisible by 4). Since there are no static types but these were important decisions, I wrote them as comments near the top of the file. The tough part was coding the functions while keeping trying to keep track of these representations in my head. "Wait, did I make chromosomes an array of genes or an array of bits? Let me go check my comment." I continually checked that my code worked correctly by writing some tests. Whenever I was satisfied that a function was working as it should, I was afraid to refactor the code and risk introducing new bugs. Did I write enough tests? Would they catch mistakes? The really hard part was trying to implement chromosome decoding. Without a static type system to help with 
+
+
+
+Refactoring is the same as the part of the development process where you've planned your solution and you're translating that plan into code.
+
+
+Snapshot of the code as of writing this post.
+[[https://github.com/SlimTim10/genetic-algorithm/tree/9e21b7841c08e7bfccde436e96bf378a19e04db3][main]]
+[[https://github.com/SlimTim10/genetic-algorithm/tree/06bf44f05892b91a0bfd938afcec63d7b5fdfcac][chromosome-with-fitness]]
