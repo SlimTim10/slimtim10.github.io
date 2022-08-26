@@ -1,0 +1,222 @@
+---
+title: Breaking the Order | Coding Challenge & Analysis 1
+desc: "Solving the coding challenge: Breaking the order."
+image: "./images/coding_challenge_1.jpg"
+imageAlt: "drawing of coding challenge"
+---
+
+* Coding Challenge: Breaking the Order
+
+Given an array of numbers, find the last index before the ordering breaks. Indexing should begin with 0. If the numbers start by increasing, find last index where the numbers are increasing. If the numbers start by decreasing, find the last index where they are decreasing. If there is no break in the ordering, return -1. The array will contain at least 3 numbers and the first two will be increasing or decreasing.
+
+For example, given the array ~[10, 9, 8, 7, 9, 10]~, the result should be 3, because the 7 at index 3 is the last index where the numbers are decreasing.
+
+More examples:
+
+#+begin_example
+[1, 2, 4, 7, 2, 3, 1] -> 3
+[1, 2, 3, 4, 5] -> -1
+[10, 11, 12, 12, 13] -> 2
+#+end_example
+
+If you want to give this challenge a try, stop reading here and go do that now. For my solution and analysis, continue on.
+
+* Solution
+
+There are lots of ways to approach this challenge. My first thought was to use ~findIndex~, since the goal is to find the index of a number based on something. However, it's not as straightforward as it first seems. Take the example array ~[10, 9, 8, 7, 9, 10]~. If we're to look at each value individually, as ~findIndex~ allows, we don't actually have enough information to deduce the break in the ordering. After all, it's not a number by itself (e.g., 9) that indicates a break in the ordering; it's the fact that a 9 came after a 7. So really, we're looking between the numbers, or at the *pairs* of numbers. We could still use ~findIndex~ and use its second argument, each index of the array, and work things out looking at the current number and one ahead, but then we also have to make sure the index is in bounds and it's just not as elegant as dealing with pairs.
+
+To get the right pairs, we can make a helper function called ~zip~. This is something I use a lot in Haskell and it's a shame that JavaScript doesn't have such a useful function in its standard library. But it's easy to make. The goal of ~zip~ is to take in two arrays and "zip" them together, making an array of pairs, where each pair has an element from the first array and an element from the second array. For example, if we zip ~[1, 2, 3, 4]~ and ~[7, 8, 9, 10]~, we should get ~[ [1, 7], [2, 8], [3, 9], [4, 10] ]~. Disregarding special cases where the arrays are different sizes, we can make zip using ~map~.
+
+#+begin_src js
+const zip = (xs, ys) => xs.map((_, i) => [ xs[i], ys[i] ])
+#+end_src
+
+Now, what do we want to zip together? Well, from the array ~[10, 9, 8, 7, 9, 10]~, it would be nice to have the consecutive numbers as pairs ~[ [10, 9], [9, 8], [8, 7], [7, 9], [9, 10] ]~. Then we can just get the index of the pair where the numbers stop decreasing and we're done! So, the two arrays we need to zip are: ~[10, 9, 8, 7, 9]~ and ~[9, 8, 7, 9, 10]~. The first array is the original, without the last element. The second array is the original, without the first element.
+
+#+begin_src js
+const arr = [10, 9, 8, 7, 9, 10]
+const init = arr.slice(0, -1)
+const tail = arr.slice(1)
+#+end_src
+
+All that's left is to find the index where the ordering is broken. Although, we still need to know how to code where "the ordering is broken". We can't just assume the array will start off increasing or decreasing. The first thing that comes to mind is a conditional based on the start of the array. If the first pair is increasing, then find the index where the pairs stop increasing, and repeat the logic for decreasing. We can put this all together and include the tests.
+
+#+begin_src js
+const zip = (xs, ys) => xs.map((_, i) => [ xs[i], ys[i] ])
+
+const breakingTheOrder = arr => {
+  const init = arr.slice(0, -1)
+  const tail = arr.slice(1)
+  const pairs = zip(init, tail)
+  return pairs.findIndex(([x, y]) => {
+    const [firstX, firstY] = pairs[0]
+    return firstX < firstY
+      ? !(x < y)
+      : !(x > y)
+  })
+}
+
+console.log(breakingTheOrder([10, 9, 8, 7, 9, 10]) === 3)
+console.log(breakingTheOrder([1, 2, 4, 7, 2, 3, 1]) === 3)
+console.log(breakingTheOrder([1, 2, 3, 4, 5]) === -1)
+console.log(breakingTheOrder([10, 11, 12, 12, 13]) === 2)
+#+end_src
+
+* Abstracting the Ordering
+
+Something that came to my mind after coming up with the solution is that the change in ordering doesn't have to be thought of as a condition; it can be a value itself. This also comes from Haskell, which has an ~Ordering~ type whose values are ~LT~, ~EQ~, and ~GT~. With this idea in mind, what we really care about is finding the first pair whose ordering value is different from the first pair's ordering value. All we need is a ~compare~ function that returns an ordering value given two numbers.
+
+#+begin_src js
+const compare = (x, y) => (
+  x < y ? 'LT'
+    : x > y ? 'GT'
+    : 'EQ'
+)
+#+end_src
+
+We can now use this function in the final solution.
+
+#+begin_src js
+const zip = (xs, ys) => xs.map((_, i) => [ xs[i], ys[i] ])
+
+const compare = (x, y) => (
+  x < y ? 'LT'
+    : x > y ? 'GT'
+    : 'EQ'
+)
+
+const breakingTheOrder = arr => {
+  const init = arr.slice(0, -1)
+  const tail = arr.slice(1)
+  const pairs = zip(init, tail)
+  return pairs.findIndex(([x, y]) => {
+    const [firstX, firstY] = pairs[0]
+    return compare(x, y) !== compare(firstX, firstY)
+  })
+}
+
+console.log(breakingTheOrder([10, 9, 8, 7, 9, 10]) === 3)
+console.log(breakingTheOrder([1, 2, 4, 7, 2, 3, 1]) === 3)
+console.log(breakingTheOrder([1, 2, 3, 4, 5]) === -1)
+console.log(breakingTheOrder([10, 11, 12, 12, 13]) === 2)
+#+end_src
+
+* Imperative Solution
+
+For fun, I wanted to try the same solution idea using a more old-school imperative programming style. So, instead of ~zip~ and ~findIndex~, we can use a ~for~ loop.
+
+The first time I wrote this imperative solution, I had a mistake in it. Can you spot it?
+
+#+begin_src js
+const breakingTheOrder = arr => {
+  for (let i = 0; i < arr.length; i++) {
+    if (compare(arr[i], arr[i+1]) !== compare(arr[0], arr[1])) {
+      return i
+    }
+  }
+  return -1
+}
+
+console.log(breakingTheOrder([10, 9, 8, 7, 9, 10]) === 3) // -> true
+console.log(breakingTheOrder([1, 2, 4, 7, 2, 3, 1]) === 3) // -> true
+console.log(breakingTheOrder([1, 2, 3, 4, 5]) === -1) // -> false
+console.log(breakingTheOrder([10, 11, 12, 12, 13]) === 2) // -> true
+#+end_src
+
+The mistake is in the indexing. In the last iteration of the loop, ~arr[i+1]~ is out of bounds (thus ~undefined~). To correct this, the loop should stop one index earlier.
+
+#+begin_src js
+const breakingTheOrder = arr => {
+  for (let i = 0; i < arr.length - 1; i++) {
+    if (compare(arr[i], arr[i+1]) !== compare(arr[0], arr[1])) {
+      return i
+    }
+  }
+  return -1
+}
+
+console.log(breakingTheOrder([1, 2, 3, 4, 5]) === -1) // -> true
+#+end_src
+
+But Tim, you could have made the same mistake in the functional code! True, let's see if it plays out differently. Let's say I made the mistake of using the entire array as the first one.
+
+#+begin_src js
+const breakingTheOrder = arr => {
+  const init = arr // should be arr.slice(0, -1)
+  const tail = arr.slice(1)
+  const pairs = zip(init, tail)
+  return pairs.findIndex(([x, y]) => {
+    const [firstX, firstY] = pairs[0]
+    return compare(x, y) !== compare(firstX, firstY)
+  })
+}
+
+console.log(breakingTheOrder([1, 2, 3, 4, 5]) === -1) // -> false
+#+end_src
+
+Now that the code fails in the same way, how would I discover this mistake and debug it? Well, I could easily print out the list of pairs to see if it looks right.
+
+#+begin_src js
+const breakingTheOrder = arr => {
+  const init = arr
+  const tail = arr.slice(1)
+  const pairs = zip(init, tail)
+  console.log('pairs:', pairs)
+  return pairs.findIndex(([x, y]) => {
+    const [firstX, firstY] = pairs[0]
+    return compare(x, y) !== compare(firstX, firstY)
+  })
+}
+
+console.log(breakingTheOrder([1, 2, 3, 4, 5]) === -1) // -> false
+// pairs: [ [ 1, 2 ], [ 2, 3 ], [ 3, 4 ], [ 4, 5 ], [ 5, undefined ] ]
+#+end_src
+
+From here, I can easily tell the last pair shouldn't be there, so the arrays need to be the same length to fix it.
+
+In contrast, how would I debug the imperative code?
+
+#+begin_src js
+const breakingTheOrder = arr => {
+  for (let i = 0; i < arr.length; i++) { // should be: i < arr.length - 1
+    if (compare(arr[i], arr[i+1]) !== compare(arr[0], arr[1])) {
+      return i
+    }
+  }
+  return -1
+}
+
+console.log(breakingTheOrder([1, 2, 3, 4, 5]) === -1) // -> false
+#+end_src
+
+For me, this code is much more difficult to debug. It's hard to decide what to print first: ~i~, ~arr[i]~, or ~arr[i+1]~. And then I have to sift through the many lines in the console because the printing is inside a loop.
+
+Now, you may be wondering why the imperative code is shorter than the functional code. Make no mistake, this is not inherent to the paradigm; I simply decided to use more variables in the functional code and wrote the imperative version idiomatically. Here is a more similar comparison:
+
+#+begin_src js
+const zip = (xs, ys) => xs.map((_, i) => [ xs[i], ys[i] ])
+
+const compare = (x, y) => (
+  x < y ? 'LT'
+    : x > y ? 'GT'
+    : 'EQ'
+)
+
+const breakingTheOrderFunctional = arr => (
+  zip(arr.slice(0, -1), arr.slice(1))
+    .findIndex(([x, y]) => compare(x, y) !== compare(arr[0], arr[1]))
+)
+
+const breakingTheOrderImperative = arr => {
+  for (let i = 0; i < arr.length - 1; i++) {
+    if (compare(arr[i], arr[i+1]) !== compare(arr[0], arr[1])) {
+      return i
+    }
+  }
+  return -1
+}
+#+end_src
+
+* Final Thoughts
+
+I mentioned Haskell a few times, because it always comes to mind when I'm solving coding challenges like this. When I first learned Haskell and started practicing with challenges on [[https://www.codewars.com/][Codewars]], it felt really different from any other language I had used--in fact it often felt like cheating. Haskell's built-in library is so well-equipped that you really feel handicapped when you go back to other languages. And this has to do with the power of functional programming, which comes from abstracting patterns and recognizing these patterns in the wild. Once you harness that ability, solving problems becomes really easy. You get to know which functions and techniques come up a lot and how to recognize the situations to use them. Like the concept of zipping a list together with its shifted self (I never would have thought of it before using Haskell!).
