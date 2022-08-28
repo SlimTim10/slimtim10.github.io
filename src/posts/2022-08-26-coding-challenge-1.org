@@ -5,7 +5,7 @@ image: "./images/coding_challenge_1.jpg"
 imageAlt: "drawing of coding challenge"
 ---
 
-* Coding Challenge: Breaking the Order
+* JavaScript Coding Challenge: Breaking the Order
 
 Given an array of numbers, find the last index before the ordering breaks. Indexing should begin with 0. If the numbers start by increasing, find last index where the numbers are increasing. If the numbers start by decreasing, find the last index where they are decreasing. If there is no break in the ordering, return -1. The array will contain at least 3 numbers and the first two will be increasing or decreasing.
 
@@ -220,3 +220,43 @@ const breakingTheOrderImperative = arr => {
 * Final Thoughts
 
 I mentioned Haskell a few times, because it always comes to mind when I'm solving coding challenges like this. When I first learned Haskell and started practicing with challenges on [[https://www.codewars.com/][Codewars]], it felt really different from any other language I had used--in fact it often felt like cheating. Haskell's built-in library is so well-equipped that you really feel handicapped when you go back to other languages. And this has to do with the power of functional programming, which comes from abstracting patterns and recognizing these patterns in the wild. Once you harness that ability, solving problems becomes really easy. You get to know which functions and techniques come up a lot and how to recognize the situations to use them. Like the concept of zipping a list together with its shifted self (I never would have thought of it before using Haskell!).
+
+With all this talk about Haskell, it's only fair to show the equivalent Haskell solution.
+
+** Haskell Solution
+
+#+begin_src haskell
+import Data.List (findIndex)
+import Data.Maybe (fromMaybe)
+
+breakingTheOrder :: [Int] -> Int
+breakingTheOrder lst =
+  fromMaybe (-1)
+  $ findIndex ( \(x, y) -> compare x y /= compare (lst !! 0) (lst !! 1) )
+  $ zip (init lst) (tail lst)
+
+main :: IO ()
+main = do
+  print $ breakingTheOrder [10, 9, 8, 7, 9, 10] == 3
+  print $ breakingTheOrder [1, 2, 4, 7, 2, 3, 1] == 3
+  print $ breakingTheOrder [1, 2, 3, 4, 5] == -1
+  print $ breakingTheOrder [10, 11, 12, 12, 13] == 2
+#+end_src
+
+However, if this were really a problem to solve in a Haskell mindset, the problem should be tweaked a bit. Instead of returning ~-1~ in the case where the ordering doesn't break, we can use a ~Maybe~ type of value. So, return an index number where the ordering breaks, or nothing. This is naturally what Haskell's ~findIndex~ function is built around; maybe finding an index. The new solution is even simpler:
+
+#+begin_src haskell
+import Data.List (findIndex)
+
+breakingTheOrder :: [Int] -> Maybe Int
+breakingTheOrder lst =
+  findIndex ( \(x, y) -> compare x y /= compare (lst !! 0) (lst !! 1) )
+  $ zip (init lst) (tail lst)
+
+main :: IO ()
+main = do
+  print $ breakingTheOrder [10, 9, 8, 7, 9, 10] == Just 3
+  print $ breakingTheOrder [1, 2, 4, 7, 2, 3, 1] == Just 3
+  print $ breakingTheOrder [1, 2, 3, 4, 5] == Nothing
+  print $ breakingTheOrder [10, 11, 12, 12, 13] == Just 2
+#+end_src
