@@ -34,3 +34,8 @@ main > section li a {
   color: #282828;
   text-decoration: none;
 }
+
+section#writing {
+  max-width: 60rem;
+  align-self: center;
+}
