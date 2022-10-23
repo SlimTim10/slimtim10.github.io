@@ -36,6 +36,6 @@ main > section li a {
 }
 
 section#writing {
-  max-width: 60rem;
+  max-width: 50rem;
   align-self: center;
 }
