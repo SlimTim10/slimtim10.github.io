@@ -78,3 +78,10 @@ main > article > section table td {
   padding: 0.5em;
   border: 1px solid #E0E0E0;
 }
+
+.read-more {
+  margin-top: 4rem;
+  margin-bottom: 4rem;
+  display: flex;
+  justify-content: center;
+}
