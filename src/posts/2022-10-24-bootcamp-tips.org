@@ -9,7 +9,7 @@ I was a mentor and instructor for the Web Development Bootcamp at Lighthouse Lab
 
 * Tip 1. Do the prep work
 
-A bootcamp might market itself as 12 weeks, but in reality it's more like 6 months (or more!). The students who enter the bootcamp with some practice under their belt are the ones who will keep up and excel in the end. You should do a *bare minimum of 2 months of prep work*, and more if you've never been exposed to coding in the first place. *Learning to code takes time to sink in*; there are no shortcuts or hacks to quickly force it into your brain. Taking a bootcamp without first trying to learn the basics on your own would be a big mistake. After the first two weeks, you would be lost and there's no time to catch up.
+A bootcamp might market itself as 12 weeks, but in reality it's more like 6 months (or more!). The students who enter the bootcamp with some practice under their belt are the ones who will keep up and succeed in the end. You should do a *bare minimum of 2 months of prep work*, and more if you've never been exposed to coding in the first place. *Learning to code takes time to sink in*; there are no shortcuts or hacks to quickly force it into your brain. Taking a bootcamp without first trying to learn the basics on your own would be a big mistake. After the first two weeks, you would be lost and there's no time to catch up.
 
 A good bootcamp will have suggestions for prep work materials. It doesn't really matter where you learn from, as long as it's teaching you the basics and you're writing code (not just reading!). Some of my favourites are:
 
