@@ -1,0 +1,61 @@
+---
+title: 6 Tips to Make the Most of a Coding Bootcamp
+desc: "Tips from a former bootcamp teacher."
+image: "./images/bootcamp_tips.jpg"
+imageAlt: "Drawing of boots in front of a camping tent."
+---
+
+I was a mentor and instructor for the Web Development Bootcamp at Lighthouse Labs for over 3 years. I've seen countless students go through the bootcamp, some more successful than others. Many students get to the end of the bootcamp only to struggle to land their first job in the industry. Some never make it at all. I want to share some tips that can help you make sure your time at a coding bootcamp ends in success. As with most things in life, you get out what you put in. If you put in the bare minimum, don't expect great results out of the bootcamp. You need to put in the effort, the more the better.
+
+* Tip 1. Do the prep work
+
+A bootcamp might market itself as 12 weeks, but in reality it's more like 6 months (or more!). The students who enter the bootcamp with some practice under their belt are the ones who will keep up and excel in the end. You should do a *bare minimum of 2 months of prep work*, and more if you've never been exposed to coding in the first place. *Learning to code takes time to sink in*; there are no shortcuts or hacks to quickly force it into your brain. Taking a bootcamp without first trying to learn the basics on your own would be a big mistake. After the first two weeks, you would be lost and there's no time to catch up.
+
+A good bootcamp will have suggestions for prep work materials. It doesn't really matter where you learn from, as long as it's teaching you the basics and you're writing code (not just reading!). Some of my favourites are:
+
+- [[https://www.freecodecamp.org/][freeCodeCamp]]
+- [[https://www.codecademy.com/][Codecademy]]
+- [[https://www.theodinproject.com/][The Odin Project]]
+- [[https://www.udemy.com/][Udemy]]
+- [[https://developer.mozilla.org/en-US/docs/Learn][MDN Guides]]
+- and obviously, [[https://intuitivejs.info/][Intuitive JavaScript]]
+
+* Tip 2. Make connections
+
+This is the same advice you hear about going to college/university. *Talk to your teachers!* They're a great connection to have, but they'll be more inclined to help you outside of the bootcamp if you separate yourself from the herd. Ask them about programming or their hobbies. You may have more in common with them than you think!
+
+Of course, talk to your classmates too. In a way, you're all competing since you're all trying to get jobs in the same industry. But the job pool for developers is huge, so you probably won't end up competing directly with your peers. And more importantly, once you've all moved on from bootcamp your connections in the industry become even more valuable, so it's important to keep in touch. Job openings come up all the time and they're not always public. By knowing the right person at the right time, you can land your dream job before anyone else has a chance to apply.
+
+Don't sleep on networking. It can be the best tool for your career. And remember, it's just *talking to people*.
+
+* Tip 3. Don't fall behind
+
+Bootcamps have a strict, full schedule. That's what makes it a bootcamp. Everything has been planned down to the hour, and whatever time is left over, you should use it to rest. As a result, there's no time in a bootcamp for catching up. The unfortunate reality is, *if you fall behind, you're left behind*. So do everything you can to stay on top, or ahead, of the work.
+
+Of course, life happens and you might have things outside of your control preventing you from keeping up. In that case, you should talk to your bootcamp manager to see what accomodations can be made for you to not be left behind (this usually means rolling over to the next cohort).
+
+* Tip 4. Practice communicating clearly
+
+Communication is a huge part of every job interview. People want to make sure you'll be easy to work with because you communicate well. Effective communication doesn't come naturally to everyone. In a bootcamp, you will have lots of opportunity to practice, but nobody will force you to improve, so it's up to you to put in the effort.
+
+When you ask for help from a mentor or your peers, try your best to explain your problem clearly. If you notice they have trouble understanding how to help you, try to figure out what you can do better and put it to the test with the next assistance.
+
+When it's time to demo your project to the class, *take it seriously*. This is a great skill to have and you'll make use of it on the job more than you think. There will be many times where you're leading the work on a product feature and you need to bring your colleagues up to speed on it. This uses the same communication skills as a project demo.
+
+I can't tell you how many project demos I've seen where I don't understand what the product does or who it's for. Some *visual diagrams* or a *clear explanation* can make a huge difference. When you've spent so much time on your project, it's easy to forget that someone seeing it for the first time doesn't know anything about it. It's your job to educate the audience in a clear manner what the project is, what it's for, and how it works.
+
+Another mistake I've seen countless times is when a presenter reads from a script, in a monotone voice. *Don't do this.* Everyone can tell you're reading a script and they're instantly bored. It's the least engaging way to present, and therefore poor communication. *Have fun with the presentation!* You had fun building your project and you're proud of it, so show it with enthusiasm!
+
+* Tip 5. Be resourceful
+
+Use the resources that your bootcamp recommends. I mean *use them a lot*. More than you probably think. Seriously, developers don't just remember every function name and how it works. We look things up constantly.
+
+Also, use resources *other than the ones your bootcamp recommends*. In /the real world/, developers don't consult a trusted list of books and websites whenever they run into a problem. They simply google the error message and look at whichever results seem useful. Don't even limit yourself to written material; sometimes a video is just right for the occasion. Learning to find relevant results by searching the right terms is a skill in itself, and a surprisingly uncommon one. The solution to your problem won't always be on one of your favourite websites, but it's out there somewhere. You need to know how to find it.
+
+*Discover libraries and frameworks* that the course doesn't mention. I was always impressed when a student would come up to me and say, "I found this library called X and I want to use it in my project. I read the docs and saw some examples, and it seems like a good way to do Y. Do you know how to use it?" My answer was typically, "No, but I can figure it out with you." Those students always did well in the end. Even if you don't end up using what you found, it's good to know what's out there for future projects.
+
+* Tip 6. Immerse yourself
+
+One of the best things a bootcamp has to offer is an environment for *deep immersion*. Take advantage of it! Allow yourself to be immersed in coding. You'll be surprised how much knowledge you can absorb. It's the same reason the fastest way to learn a language is to live in a country where you're surrounded by it.
+
+Spend more time thinking about coding than you thought you could. If you're not having dreams about coding, you're not doing enough.
