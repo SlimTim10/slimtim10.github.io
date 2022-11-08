@@ -1,7 +1,7 @@
 ---
 title: Imperative vs Declarative With Pumpkin Pie
 desc: "Explaining the difference between imperative and declarative programming with plain English examples."
-image: "./images/pumpkin_pie.jpg"
+image: "./images/blog/pumpkin_pie.jpg"
 imageAlt: "drawing of pumpkin pie"
 ---
 
