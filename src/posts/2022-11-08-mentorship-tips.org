@@ -1,0 +1,46 @@
+---
+title: 5 Tips to Make the Most of a Coding Mentorship
+desc: "Tips from a professional coding mentor."
+image: "./images/mentorship_tips.jpg"
+imageAlt: "Drawing of a stick figure helping another up a staircase."
+---
+
+I've been mentoring coding, programming, software development, or whatever you want to call it, for over 7 years. I choose the mentorship model over lecturing because I like to connect with each student and take a quality-over-quantity approach to teaching. If you're interested in having a coding mentor, here are some tips to give you the best chance of success.
+
+* Tip 1. Come up with project ideas
+
+When it comes to coding, most of your real learning is going to come from building projects. And when it comes to deciding on what a project to build, it's best if it's an idea that you came up with. Sure, you can pick from a list of project ideas, make a clone of a popular app, or have your mentor suggest an idea to you, but it's never as good as thinking of a problem /you/ want to solve or an app you wish you had. You get to be *more creative* and you'll be more invested in the result. It's a great feeling when you bring to life an idea you had in your head.
+
+People sometimes find it hard to come up with their own ideas for projects, but trust me, *you can do it!* You have tons of great ideas in you; you just need to find them. If you like games, maybe you can make a different version of a game you like to play. Maybe you're into budgeting and you've always wanted a specific kind of tracker to help you stick to a budget.
+
+*Be ambitious!* Don't worry if you think your project idea might be too big or beyond your skill level. Your mentor can help you decide on features, make sure the scope of the project is manageable, and provide support as you build it.
+
+* Tip 2. Ask lots of questions
+
+In contrast to being a student in a course/class/cohort, when you have a mentor you can *ask as many questions as you want*. Take advantage of it! A mentoring session can be dedicated entirely to one question or a concept you want to delve into; it's all about /you/. Don't be afraid to ask about things outside of your planned learning path, like other libraries or frameworks. *Be curious!*
+
+Many questions will come up as you're doing exercises or building projects.
+
+/Do I understand this concept right?/
+
+/Is there a better way to write this function?/
+
+/What's the difference between Git and GitHub?/
+
+Between sessions with your mentor, as soon as you think of a question you want to ask be sure to *write it down*. You may not remember everything you wanted to ask the next time you meet with your mentor.
+
+* Tip 3. Be honest about your time commitment
+
+*Be honest with yourself and your mentor* about the amount of time you are committing to doing the work between sessions. If you frequently under work, you will not make the progress both of you were expecting and your planned timeline will not be possible. You will likely burn out before you get very far. Diligence will pay off. Put in the hours and you'll do great.
+
+* Tip 4. Put in the work to get a job
+
+If your end goal is to get a job as a developer, there will come a point when you need to apply for jobs. This part you have to do mostly on your own. Your mentor can help you with personal branding, like updating your LinkedIn profile and making a great portfolio, but you're the one who has to *search for jobs*, *send out your resume*, and *make connections*.
+
+Treat it like a full-time job. There's always something you can be doing to improve your chances at finding a job. Set targets for yourself, like sending out 10+ resumes per week. Join online communities centered around programming to meet people in the industry.
+
+* Tip 5. Make sure it's a good fit
+
+A mentorship is a two-way street. You should be making sure it's a good fit just as much as the mentor. Aside from obvious compatibilities like scheduling times and technical knowledge, it's about the *environment your mentor provides* when you're learning. You should feel comfortable to approach your mentor with any question. Your mentor should never make you feel stupid. Your environment should be *constantly supportive*.
+
+Like all people, different mentors will have personalities that will affect how they teach you. Maybe you want someone who's really stern and doesn't let you get away with small mistakes. Or maybe you want someone who's going to hold your hand every step of the way. As for myself, for example, I'm not the kind of mentor to push you to stay on top of the work. If you struggle with self-discipline and you need someone to constantly be on your case about doing the work, I'm probably not the right mentor for you.
