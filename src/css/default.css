@@ -85,7 +85,7 @@ body > header #title {
   font-weight: 300;
 }
 
-@media screen and (min-width: 730px) {
+@media screen and (min-width: 900px) {
   body > header {
 	padding-left: 2rem;
 	padding-right: 2rem;
@@ -124,7 +124,7 @@ body > footer {
   padding: 2rem 1rem;
 }
 
-@media screen and (min-width: 730px) {
+@media screen and (min-width: 900px) {
   main > header {
 	padding-left: 2rem;
 	padding-right: 2rem;

@@ -26,3 +26,67 @@ const collapsibleCurriculum = () => {
 }
 
 collapsibleCurriculum()
+
+const getNextSessionDate = () => {
+  const now = new Date()
+  
+  const nextWeek = new Date()
+  nextWeek.setUTCDate(now.getUTCDate() + 7)
+
+  // Sunday - Saturday : 0 - 6
+  const day = 3 // Wednesday
+  const diff = (day - nextWeek.getUTCDay()) < 0
+        ? (3 - nextWeek.getUTCDay()) + 7
+        : (3 - nextWeek.getUTCDay())
+  
+  const nextSessionDate = new Date()
+  nextSessionDate.setUTCDate(now.getUTCDate() + diff)
+  const hour = 18 + 5 // 18:00 EST = 23:00 UTC-5
+  nextSessionDate.setUTCHours(hour)
+  nextSessionDate.setUTCMinutes(0)
+  nextSessionDate.setUTCSeconds(0)
+  
+  return nextSessionDate
+}
+
+const nextHappyHourText = () => {
+  const nextSessionDate = getNextSessionDate()
+  const now = new Date()
+
+  const diffMillis = nextSessionDate.getTime() - now.getTime()
+  const diffSeconds = Math.floor(diffMillis / 1000)
+  const diffMinutes = Math.floor(diffSeconds / 60)
+  const diffHours = Math.floor(diffMinutes / 60)
+  const diffDays = Math.floor(diffHours / 24)
+
+  const minutesLeft = diffMinutes - (diffHours * 60)
+  const hoursLeft = diffHours - (diffDays * 24)
+  const daysLeft = diffDays < 0
+        ? diffDays + 8
+        : diffDays
+
+  const diffToText = (d, word) => d === 0
+        ? null
+        : (d === 1 ? `1 ${word}` : `${d} ${word}s`)
+  const dayText = diffToText(daysLeft, 'day')
+  const hoursText = diffToText(hoursLeft, 'hour')
+  const minutesText = diffToText(minutesLeft, 'minute')
+  const allParts = [dayText, hoursText, minutesText]
+        .filter(x => x !== null)
+        .join(', ')
+  
+  if (diffHours === -1) {
+    return `The session is currently live! Click the link below to join.`
+  } else {
+    return `Next session starts in ${allParts}.`
+  }
+}
+
+const displayNextHappyHour = () => {
+  const el = document.querySelector('#next-happy-hour')
+  if (el) {
+    el.innerText = nextHappyHourText()
+  }
+}
+
+displayNextHappyHour()

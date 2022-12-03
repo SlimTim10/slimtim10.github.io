@@ -100,9 +100,10 @@ main = hakyllWith config $ do
         >>= loadAndApplyTemplate "templates/default.html" writingCtx
 
   mapM_ simplePage
-    [ ("about.html", "about")
-    , ("learn.html", "learn")
+    [ ("learn.html", "learn")
+    , ("events.html", "events")
     , ("projects.html", "projects")
+    , ("about.html", "about")
     , ("contact.html", "contact")
     ]
 
