@@ -1,8 +1,8 @@
 ---
 title: How to Learn Web Development On Your Own
 desc: "Advice to help you along the way of self-teaching web development."
-image: "./images/blog/bootcamp_tips.jpg"
-imageAlt: "Drawing of boots in front of a camping tent."
+image: "./images/blog/how_to_learn_web_development_one_your_own.jpg"
+imageAlt: "Drawing of a hand holding a balloon."
 ---
 
 *How do you learn a complex skill like web development without going to school or hiring a mentor?*
@@ -35,7 +35,7 @@ Get used to googling things as you're coding. Like, *more than you think*. Profe
 
 The critical skill is learning *how to search*. You'll have to experiment to see what works and what doesn't, but as a quick tip, use quotes when you want to search something literally, like an error message (e.g., ~"psql: could not connect to server: No such file or directory"~). Also, you don't need to click the first link and read the whole page. When I search, I open a few of the results in new tabs, then quickly skim through them to see which one is relevant. I'll often accumulate a whole bunch of tabs (usually 5-10, often more) while I'm trying to solve one problem, then close them all afterwards to make space for the next problem.
 
-Don't think that because you're able to google and solve a problem /eventually/ you don't need to change your process. Good searching skills can make you solve problems ten times faster, literally.
+Even if you're able to google and solve a problem /eventually/, you can always improve your searching process. Good searching skills can make you solve problems ten times faster, literally.
 
 * Build projects
 
