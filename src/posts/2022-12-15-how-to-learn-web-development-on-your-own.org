@@ -1,0 +1,102 @@
+---
+title: How to Learn Web Development On Your Own
+desc: "Advice to help you along the way of self-teaching web development."
+image: "./images/blog/how_to_learn_web_development_one_your_own.jpg"
+imageAlt: "Drawing of a pile of books."
+---
+
+*How do you learn a complex skill like web development without going to school or hiring a mentor?*
+
+Although I've taught programming for a long time, I am primarily self-taught. That's not to say I didn't learn from others along the way, but I didn't have a dedicated mentor or teacher that I learned from, and I don't attribute my knowledge to my school experiences. The tips here are from personal experience and my experience in observing and teaching others.
+
+* Choose good material
+
+There are so many courses and books on programming and web development topics. How do you choose? In the long run, the material you start with doesn't make much difference. But in the shorter term, like the next 1-2 years, taking one path versus another can make a big difference.
+
+One thing to look for is material that emphasizes *foundational concepts*. Web development is very much a trend-based industry. Programming languages, libraries, and frameworks form and disappear like bubbles in boiling water. But programming foundations last for decades. You don't want to focus on a particular trend that goes out of fashion while still having shaky foundational knowledge.
+
+You also want to make sure the material is not spoon-feeding information. For example, I've had students come to me after taking a Udemy course on React, and even after making it through the course and building a final project, they still didn't understand the fundamentals. They couldn't build a new project and couldn't explain how state works (which is a fundamental concept in React). The problem is that the course had them follow along with videos showing what code to write, so it was a lot of "monkey see, monkey do" without helping them understand *why* they were writing things the way they were.
+
+Good material will assign you work that makes you *think and exercise your problem-solving skills*.
+
+Some decisions are more straightforward, like choosing which programming language to learn. Since we're talking about web development, JavaScript is your best bet. It's ubiquitous on the web and the [[https://bootcamp.berkeley.edu/blog/most-in-demand-programming-languages/][most in-demand programming language on the market]]. The second best would be Ruby because the Ruby on Rails framework is very popular for building web applications. Whichever language you pick, learn one language thoroughly before moving on. Once you've grasped the logic of programming in one language, it's much easier to pick up another.
+
+My top recommendations for starting out are:
+
+- [[https://intuitivejs.info/][Intuitive JavaScript]]
+- [[https://www.theodinproject.com/][The Odin Project]]
+- [[https://www.udemy.com/][Udemy]] (depending on the course)
+
+I hesitate to recommend [[https://www.freecodecamp.org/][freeCodeCamp]] and [[https://www.codecademy.com/][Codecademy]] because they do more "monkey see, monkey do" than good teaching.
+
+* Learn to google all the things
+
+Get used to googling things as you're coding. Like, *more than you think*. Professional developers google even the smallest things because it's usually faster than trying to remember the answer or checking your own notes.
+
+The critical skill is learning *how to search*. You'll have to experiment to see what works and what doesn't, but as a quick tip, use quotes when you want to search something literally, like an error message (e.g., ~"psql: could not connect to server: No such file or directory"~). Also, you don't need to click the first link and read the whole page. When I search, I open a few of the results in new tabs, then quickly skim through them to see which one is relevant. I'll often accumulate a whole bunch of tabs (usually 5-10, often more) while I'm trying to solve one problem, then close them all afterwards to make space for the next problem.
+
+Even if you're able to google and solve a problem /eventually/, you can always improve your searching process. Good searching skills can make you solve problems ten times faster, literally.
+
+* Build projects
+
+There are so many good reasons for building projects to learn web development. For one, it's as close as you can get to replicating the *actual work* you would be doing as an engineer on the job, so it's the best way to practice. Another reason is that you will encounter the most *interesting and important problems* when building projects that you can't find in exercises or books. Also, having built projects that you're proud of is the best way to combat *imposter syndrome*, which is too common among software engineers. When you can look back at your projects, you feel a sense of accomplishment and confidence that you have what it takes to do the work. After all, building things is what it's all about.
+
+Of course, if you're starting from scratch, you may not be ready to start building a project. But you'll get there soon. You don't need a lot of coding knowledge to start a project. Once you've learned some of the basics, you can start building a small project right away, like a command-line app.
+
+*How do you choose a project to build?*
+
+Make sure you're not overreaching with what you want the project to do. In other words, make sure the project isn't too complex and doesn't have too many complicated features. Lots of people like to build tools for themselves. Something that makes their life easier. Don't try to make a tool for someone else; that adds a layer of complexity you don't need (trying to understand your client's needs). If you're into games, coding a game can be a great project idea. It can be a simplified clone of a game you like to play.
+
+It's important to choose a project that you're *genuinely interested in building*. Research shows that interest leads to the use of deep comprehension processes, meaning you'll learn better if you're interested.[fn:1]
+
+* Join communities
+
+Even though you're self-teaching, you don't have to be alone. You can join many communities to be surrounded by *people talking about code*. Chatting with people of various backgrounds and experiences can be a great way to *build your network*. When it comes to the job search, one of your new contacts might be just the connection you need. It can also help you feel motivated and accountable to do your work. You'll also learn to talk like an engineer by interacting with actual engineers, which helps with landing a job.
+
+As of writing this article, these are some awesome communities you can join right away:
+
+- [[https://torontojs.com/][TorontoJS]] (Slack)
+  - Local to Toronto, Canada
+  - Try to find a community local to where you live!
+- [[https://www.codebuddies.org/slack][CodeBuddies]] (Slack)
+- [[https://theprogrammershangout.com/about][The Programmer's Hangout]] (Discord)
+- [[https://discord.com/invite/devcord][devcord]] (Discord)
+- [[https://discord.gg/V75WSQG][The Odin Project]] (Discord)
+  - [[https://www.theodinproject.com/lessons/foundations-join-the-odin-community][More information]]
+- [[https://www.reactiflux.com/][Reactiflux]] (Discord)
+  - Tailored to React JS and related technologies
+
+If you need a bigger list of communities, check these out:
+
+- [[https://github.com/mhxion/awesome-discord-communities][Awesome Discord Communities]]
+- [[https://dev.to/htnguy/top-10-discord-servers-for-developers-559o][Top 10 Discord Servers for Developers]]
+- https://careerkarma.com/blog/the-best-discord-servers-to-join-for-javascript/
+- https://discord.me/servers/tag/javascript
+
+* Be consistent
+
+Programming concepts *take time* to sink in. You won't understand every concept the first time you read it. You'll have many moments along the way where you */just don't get it/*, and you need to keep at it. Being consistent in studying will get you to the good moments where things will */click/*, and suddenly it all makes sense.
+
+Just like building muscles at the gym, you need to get your reps in. The difference is your brain doesn't need as much time to recover as your muscles. Do at least a little bit of coding every day. In the long run, being consistent will get you to a high level of proficiency.
+
+* Look at code on GitHub
+
+Being a programmer isn't all about writing code. It's also about *reading code*. On [[https://github.com/][GitHub]], you can find code in virtually any programming language and on any subject. Of course, you don't want to browse random projects on GitHub and start reading any code you come across.
+
+It's not hard to find a project on GitHub similar to something you want to make. From there, you can observe how the code is set up and what approach the author(s) took to solve the project's challenges. You can see how certain features were implemented, perhaps differently from what you imagined. You may start to notice specific patterns you hadn't thought of before that you can adopt in your own code. Keep in mind that GitHub has a very low barrier of entry, so not every project will use best practices (in fact, many projects probably don't even work!). Still, you can learn from bad code as well as good code. As much as picking up new strategies, you may also learn what *not to do*.
+
+Sometimes documentation for a particular library or framework lacks helpful examples, and the only place to find it in use is in a small project on GitHub. I frequently use GitHub in this way.
+
+* Use a mix of resources
+
+Books, websites, forums, blog posts, tutorials, videos... there are so many different places to learn from. Take advantage of the abundance of information!
+
+Don't limit yourself to a single resource or medium when learning a concept. When you don't understand something, you might blame yourself for not being smart enough, but it's probably the case that it just hasn't been presented to you the right way. For instance, you might be stuck with understanding what a REST API is after reading a few articles, then find a great video on YouTube that clears it up in a visual way that no article or book could.
+
+Official documentation, like [[https://reactjs.org/docs/getting-started.html][reactjs.org]] or [[https://nodejs.org/en/docs/][nodejs.org]], is great for being accurate, but it's not always the best for learning. It's often too verbose or lacking in examples. Instead, find a resource that's more accessible and then cross-reference the information with the official documentation if you're worried about correctness or best practices.
+
+If you want to learn from books, be aware that very few programming books are meant to be read from front to back like a novel. Instead, it's better to use books as references, consulting them when you need answers to specific questions.
+
+
+
+[fn:1] [[https://sci-hub.hkvisa.net/10.3102/00346543064001037][Tobias, S. (1994). Interest, Prior Knowledge, and Learning. Review of Educational Research, 64(1), 37–54.]]
