@@ -2,7 +2,7 @@
 title: How to Learn Web Development On Your Own
 desc: "Advice to help you along the way of self-teaching web development."
 image: "./images/blog/how_to_learn_web_development_one_your_own.jpg"
-imageAlt: "Drawing of a hand holding a balloon."
+imageAlt: "Drawing of a pile of books."
 ---
 
 *How do you learn a complex skill like web development without going to school or hiring a mentor?*
