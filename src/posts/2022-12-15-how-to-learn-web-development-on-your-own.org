@@ -58,6 +58,7 @@ As of writing this article, these are some awesome communities you can join righ
 - [[https://torontojs.com/][TorontoJS]] (Slack)
   - Local to Toronto, Canada
   - Try to find a community local to where you live!
+- [[https://womenintechto.com/][Women in Tech]]
 - [[https://www.codebuddies.org/slack][CodeBuddies]] (Slack)
 - [[https://theprogrammershangout.com/about][The Programmer's Hangout]] (Discord)
 - [[https://discord.com/invite/devcord][devcord]] (Discord)
