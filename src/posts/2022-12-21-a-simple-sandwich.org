@@ -37,7 +37,9 @@ For my own take on the problem [what exactly is the problem?], I decided to take
 
 * Error handling
 
-Deciding how to handle errors is a notoriously difficult problem in programming. Before I could write any Haskell solution to the sandwich problem, I had to decide how I would handle errors. After all, there are many things that can go wrong along the way (like attempting to put a knife in a closed jar of peanut butter). Because Haskell is a purely functional language, every function is considered either to be "pure" or in a monad (such as "IO"). Using the concept of a monad is how Haskell gets around the "impure"/side-effect capability while retaining a pure mathematical foundation.
+Deciding how to handle errors is a notoriously difficult problem in programming. We have to think about what kind of errors our code may encounter. Are they logic-breaking errors, in which case we want our app to print a message and quit running when it encounters one? Or are they more like warnings, where we can print a message to the user and allow the rest of the code to run? Should we even handle them at all or just let the program break when it may? Maybe we should mix and match? Can we reduce the possible errors another way (hint, hint...)?
+
+Before I could write any Haskell solution to the sandwich problem, I had to decide how I would handle errors. After all, there are many things that can go wrong along the way (like attempting to put a knife in a closed jar of peanut butter). Because Haskell is a purely functional language, every function is considered either to be "pure" or in a monad (such as "IO"). Using the concept of a monad is how Haskell gets around the "impure"/side-effect capability while retaining a pure mathematical foundation.
 
 One option is to simply break execution and print an error message whenever one happens. In Haskell, this would be done using the built-in ~error~ function. But this comes with caveats:
 
@@ -78,7 +80,7 @@ Now, this presents us with a philosophical problem in the sandwich context. What
 
 In one way, we can say we simply don't care that it doesn't represent the real world accurately and as long as we don't make use of the old objects after we use them, we're not doing anything we couldn't do in reality. We just have to make sure to always use the latest version of each object.
 
-Another way to think about it is that having access to the old objects is like being able to travel through time. We can think of every variable as being in a particular snapshot of the universe, which we can always go back to. However, this idea breaks down when we're able to access both a new object and its older counterpart at the same time, which is kind of like having multiple universes which can interact (Marvel anyone...?).
+Another way to think about it is that having access to the old objects is like being able to travel through time. We can think of every variable as being in a particular snapshot of the universe, which we can always go back to. However, this idea breaks down when we're able to access both a new object and its older counterpart at the same time, which is kind of like having multiple universes which can interact (like the Marvel multiverse).
 
 The most accurate representation of state in a pure functional context is to keep all stateful things in a variable which must be passed as an argument to any function which may update state. This is like passing around the universe (or at least, the important things) so we only have access to one version of it at any point in time. In Haskell, there are [[https://hackage.haskell.org/package/base-4.17.0.0/docs/Control-Concurrent-MVar.html][libraries]] which handle this in a monad. Then we can write code which looks like we're updating state, but anything that involves state must be inside the state monad.
 
@@ -86,7 +88,7 @@ In my code, I opted for the first approach; simply ignore the problem! The code 
 
 * Haskell - OOP translation
 
-Since Haskell is a functional language, the following Haskell code is *not idiomatic*. It is a translation of the object-oriented Ruby solution. Similarly to how we might translate a poem from Portuguese to English word-for-word. The result may have proper grammar and spelling, but the English translation won't read much like a poem would have if it were written in English from the start.
+Since Haskell is a functional language, the following Haskell code is *not idiomatic*. It is a translation of the object-oriented Ruby solution. Similarly to how we might translate a poem from Portuguese to English word-for-word, the result may have proper grammar and spelling, but the English translation won't read much like a poem would have if it were written in English from the start.[grammar?]
 
 ** Condiment.hs
 
@@ -136,7 +138,9 @@ relinquishContents cj@Jar{contents=Just c}
   | otherwise = Right (cj{contents=Nothing}, c)
 #+end_src
 
-Here, the ~newJar~ function acts in parallel to an object constructor in OOP (e.g., Ruby's ~initialize~ method).
+For this OOP translation, a Haskell *record* is defined for each class of its Ruby counterpart. In idiomatic Haskell, records are used frequently, but not to represent classes/objects in such a way. And the small functions like ~isClosed~ correspond to OOP methods or property accessors, which would be replaced by pattern matching in idiomatic Haskell.
+
+In Condiment.hs, the ~newJar~ function acts like an object constructor in OOP (e.g., Ruby's ~initialize~ method). It takes a ~Condiment~ to tell it what the contents of the jar should be and gives back a closed jar full of that condiment.
 
 #+begin_src haskell
 -- Haskell
@@ -147,8 +151,6 @@ let pb = Condiment.newJar "Peanut Butter"
 # Ruby
 pb = CondimentJar.new("Peanut Butter")
 #+end_src
-
-For the OOP translation, a Haskell record is defined for each class in its Ruby counterpart. In idiomatic Haskell, records are used frequently, but not in such a way. And the small functions like ~isClosed~, which correspond to OOP methods, would be replaced by pattern matching.
 
 As stated above about error handling, ~relinquishContents~ returns an ~Either~ type which may either be an error message (~Left String~) or a pair of a new empty jar and a condiment (~Right (Jar, Condiment)~).
 
@@ -184,7 +186,7 @@ loadFrom k cj
     load cj' c = (k {contents=Just c}, cj')
 #+end_src
 
-Interesting to note here is the decision to include ~loadFrom~ in the Knife.hs module. It seemed right to put it here because the OOP version has ~loadFrom~ as a method of the ~Knife~ object. But in this Haskell version, ~loadFrom~ is a function that happens to take a ~Knife~ and a ~Condiment.Jar~ as two arguments, so it doesn't need to belong in any specific module. It would work just as well to put it in Main.hs.
+Interesting to note here is the decision to include ~loadFrom~ in the Knife.hs module. It seemed right to put it here because the OOP version has ~loadFrom~ as a method of the ~Knife~ object. But in this Haskell version, ~loadFrom~ is a pure function that happens to take a ~Knife~ and a ~Condiment.Jar~ as two arguments, so it doesn't need to belong in any specific module. It would work just as well to put it in Main.hs. In fact, the same could be said for any of the functions. The choice to put them in a particular module is somewhat arbitrary; it simply makes sense intuitively to bundle them together based on context. In the case of ~loadFrom~, it would make just as much sense to put it in Condiment.hs or Main.hs.
 
 ** Bread.hs
 
@@ -353,7 +355,29 @@ main = do
     return "Sandwich made!"
 #+end_src
 
+This Main module is where things get more interesting. In Haskell, we always need a ~main~ function which lives in the IO (input/output) monad, otherwise we would never be able to see any results from running our application. All of the functions which may fail by returning an ~Either~ type are also used as a monad themselves. Haskell's ~do~ notation uses monadic operations which end up looking like imperative instructions. It's really just syntactic sugar for doing things sequentially and updating context as it goes. The interesting part is that each code block containing a sandwich-making attempt acts similar to a ~try-catch~ exception handler in other languages. If anything goes wrong, that is, if any function returns a ~Left~ value, it gets printed with "Error: " before it. If all goes right, it prints the result of the block: "Sandwich made!".
+
+Again, there's nothing stopping us from using ~pbKnife~ more than once because we're not keeping track of state, so some care must be taken when making a sandwich.
+
+In the end, I think this version is quite readable (if you know Haskell), though the modules are more verbose than they need to be and the custom types are all records instead of more intuitive types as in the following version.
+
 * Haskell - idiomatic
+
+In this version, I took some liberties to reframe parts of the problem. I noticed in Danny's code he sometimes makes sure we're using a knife where another utensil wouldn't work.
+
+#+begin_src ruby
+def smear!(knife:, surface:)
+    unless knife.is_a?(Knife)
+      raise InvalidKnifeError, "That's not hygienic."
+    end
+# ...
+#+end_src
+
+In my mind, if we're going to be checking that we're using a knife, we may as well include other utensils. Otherwise, the only kind of utensil the program knows about is a knife. In Haskell, we never need to check whether a value is of a certain type; that is made explicit by static typing and the type checking work is done by the compiler.
+
+I took a similar approach to bread. We may as well include different flavours of bread so it's not as boring.
+
+Because this version is idiomatic code, it is also much shorter so I put it all in a single module.
 
 ** Main.hs
 
@@ -489,3 +513,33 @@ main = do
     sw <- makeSandwich bottomSliceWithPB topSliceWithJelly
     return "Sandwich made!"
 #+end_src
+
+In replacement of the ~new~ functions from the OOP-translated version, I included functions like ~fetchCondimentJar~, which act similarly. The reason for the different naming convention is because I started thinking of the instance-creating functions as being analogous to fetching something from the kitchen. When it's time to fetch a condiment jar, we can use ~fetchCondimentJar~ to fetch one of the given condiment. Interestingly, these idiomatic functions still behave much like OOP constructors.
+
+I also merged the previous ~Slice~ and ~Bread~ into a single type, ~SliceOfBread~:
+
+#+begin_src haskell
+data SliceOfBread = SliceOfBread
+  { sobFlavour :: BreadFlavour
+  , sobTop :: Maybe Condiment
+  , sobBottom :: Maybe Condiment
+  }
+#+end_src
+
+A slice of bread has a top and bottom, both of which can either be smeared with a condiment or nothing (hence the ~Maybe Condiment~ type). There's no need for a separate type just for ~Slice~.
+
+Another difference is the type for ~Surface~. Instead of using a record, a surface only needs to represent the top or bottom of a slice of bread so the Haskell ~Surface~ can be a sum type.
+
+#+begin_src haskell
+-- OOP
+data Surface = Surface
+  { contents :: Maybe Condiment.Condiment
+  }
+
+-- Idiomatic
+data Surface = Top | Bottom
+#+end_src
+
+[compare functional programming to OOP]
+
+Now the really interesting part. I left out one approach to error handling. Eliminating potential errors by encoding program flow in the type system. This only works in a statically-typed language, such as Haskell. Using the concepts of *type theory*, we can write code which ensures that the only way for it to run is if none of the errors occur. This safeguard step is done by the compiler, so as a programmer, we can be sure that if our code compiles, it will run without errors.
