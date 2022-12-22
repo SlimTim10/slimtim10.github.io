@@ -35,58 +35,40 @@ For my own take on the problem [what exactly is the problem?], I decided to take
 - Write a Haskell solution using type-level programming
 - Write an Agda solution
 
+* Error handling
+
+Deciding how to handle errors is a notoriously difficult problem in programming. Before I could write any Haskell solution to the sandwich problem, I had to decide how I would handle errors. After all, there are many things that can go wrong along the way (like attempting to put a knife in a closed jar of peanut butter). Because Haskell is a purely functional language, every function is considered either to be "pure" or in a monad (such as "IO"). Using the concept of a monad is how Haskell gets around the "impure"/side-effect capability while retaining a pure mathematical foundation.
+
+One option is to simply break execution and print an error message whenever one happens. In Haskell, this would be done using the built-in ~error~ function. But this comes with caveats:
+
+- We can't know which functions may produce an error by looking at their type signature
+- We can't recover from errors
+
+Another option is to throw exceptions. Then we can catch errors, but it comes with a big caveat:
+
+- Every function that may throw an exception (or include another function that may throw an exception) must be in the IO monad. This means virtually all the code has to live in the IO monad and we don't have any pure functions
+
+A more idiomatic option in Haskell is to use the ~Maybe~ type. Any function that might produce an error returns a ~Maybe a~ value, which is either ~Nothing~ or ~Just a~, where ~a~ is any type. For example,
+
+#+begin_src haskell
+relinquishContents :: Jar -> Maybe (Jar, Condiment)
+#+end_src
+
+This version of ~relinquishContents~ takes a ~Jar~ and returns either ~Nothing~ if it fails (because the jar is closed or empty) or a pair ~(Jar, Condiment)~ of a new empty ~Jar~ and a loaded ~Condiment~. The problem with ~Maybe~ is we don't have any sort of message attached to the error side; we just have ~Nothing~. So we know something went wrong, but we don't know what it is.
+
+Finally, the solution I settled on is the other idiomatic option in Haskell: the ~Either~ type. It's almost the same as ~Maybe~ except it has ~Left a~ and ~Right b~, where ~a~ and ~b~ are any types. This way, we have,
+
+#+begin_src haskell
+relinquishContents :: Jar -> Either String (Jar, Condiment)
+#+end_src
+
+In the error case, ~relinquishContents~ returns a ~Left String~ (such as ~Left "The jar is closed and knife-impermeable."~). In the good case, it returns a ~Right (Jar, Condiment)~. In other words, we *either* have an error message or a good return value.
+
+This means that every function that might produce an error must return an ~Either~ type, which allows us to keep most of the code pure. This also means we have no choice but to write code which handles the errors where they may occur. We can't simply skip over the fact that a function may produce an error; we have to handle both sides of the result: ~Left~ and ~Right~.
+
 * Haskell - OOP translation
 
 Since Haskell is a functional language, the following Haskell code is *not idiomatic*. It is a translation of the object-oriented Ruby solution. Similarly to how we might translate a poem from Portuguese to English word-for-word. The result may have proper grammar and spelling, but the English translation won't read much like a poem would have if it were written in English from the start.
-
-** Bread.hs
-
-#+begin_src haskell
-module Bread where
-
-import qualified Condiment
-import qualified Knife
-
-data Surface = Surface
-  { contents :: Maybe Condiment.Condiment
-  }
-
-newSurface :: Surface
-newSurface = Surface
-  { contents = Nothing
-  }
-
-surfaceIsPlain :: Surface -> Bool
-surfaceIsPlain Surface {contents=Nothing} = True
-surfaceIsPlain _ = False
-
-surfaceIsSmeared :: Surface -> Bool
-surfaceIsSmeared = not . surfaceIsPlain
-
-data Slice = Slice
-  { top :: Surface
-  , bottom :: Surface
-  }
-
-newSlice :: Slice
-newSlice = Slice
-  { top = newSurface
-  , bottom = newSurface
-  }
-
-sliceIsPlain :: Slice -> Bool
-sliceIsPlain Slice {top=t, bottom=b}
-  = surfaceIsPlain t && surfaceIsPlain b
-
-sliceIsSmeared :: Slice -> Bool
-sliceIsSmeared = not . sliceIsPlain
-
-smearSurface :: Knife.Knife -> Surface -> Either String (Knife.Knife, Surface)
-smearSurface k s
-  | surfaceIsSmeared s = Left "This surface was already smeared!"
-  | Knife.isClean k = Left "This knife is too clean to smear with."
-  | otherwise = Right (Knife.clean k, s {contents=Knife.contents k})
-#+end_src
 
 ** Condiment.hs
 
@@ -138,6 +120,18 @@ relinquishContents cj
   | otherwise = Right (cj{empty=True}, condiment cj)
 #+end_src
 
+Here, the ~newJar~ function acts in parallel to an object constructor in OOP (Ruby's ~initialize~ method).
+
+#+begin_src haskell
+-- Haskell
+let pb = Condiment.newJar "Peanut Butter"
+#+end_src
+
+#+begin_src ruby
+# Ruby
+pb = CondimentJar.new("Peanut Butter")
+#+end_src
+
 ** Knife.hs
 
 #+begin_src haskell
@@ -168,6 +162,57 @@ loadFrom k cj
   | otherwise = uncurry load <$> Condiment.relinquishContents cj
   where
     load cj' c = (k {contents=Just c}, cj')
+#+end_src
+
+Interesting to note here is the decision to include ~loadFrom~ in the Knife.hs module. It seemed right to put it here because the OOP version has ~loadFrom~ as a method of the ~Knife~ object. But in this Haskell version, ~loadFrom~ is a function that happens to take a ~Knife~ and a ~Condiment.Jar~ as two arguments, so it doesn't need to belong in any specific module. It would work just as well to put it in Main.hs.
+
+** Bread.hs
+
+#+begin_src haskell
+module Bread where
+
+import qualified Condiment
+import qualified Knife
+
+data Surface = Surface
+  { contents :: Maybe Condiment.Condiment
+  }
+
+newSurface :: Surface
+newSurface = Surface
+  { contents = Nothing
+  }
+
+surfaceIsPlain :: Surface -> Bool
+surfaceIsPlain Surface {contents=Nothing} = True
+surfaceIsPlain _ = False
+
+surfaceIsSmeared :: Surface -> Bool
+surfaceIsSmeared = not . surfaceIsPlain
+
+data Slice = Slice
+  { top :: Surface
+  , bottom :: Surface
+  }
+
+newSlice :: Slice
+newSlice = Slice
+  { top = newSurface
+  , bottom = newSurface
+  }
+
+sliceIsPlain :: Slice -> Bool
+sliceIsPlain Slice {top=t, bottom=b}
+  = surfaceIsPlain t && surfaceIsPlain b
+
+sliceIsSmeared :: Slice -> Bool
+sliceIsSmeared = not . sliceIsPlain
+
+smearSurface :: Knife.Knife -> Surface -> Either String (Knife.Knife, Surface)
+smearSurface k s
+  | surfaceIsSmeared s = Left "This surface was already smeared!"
+  | Knife.isClean k = Left "This knife is too clean to smear with."
+  | otherwise = Right (Knife.clean k, s {contents=Knife.contents k})
 #+end_src
 
 ** Sandwich.hs
