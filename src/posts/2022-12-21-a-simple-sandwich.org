@@ -1,0 +1,426 @@
+---
+title: A Simple Sandwich
+desc: "Correspondence with Danny Fekete"
+image: "./images/blog/pumpkin_pie.jpg"
+imageAlt: "drawing of pumpkin pie"
+---
+
+This is a correspondence(?) with Danny Fekete. Please read his [[https://neckdeep.dev/blog/2022-12-13-a-simple-sandwich-i/][post]] before reading this for context.
+
+* Food for thought
+
+The point of the exercise portrayed in the video is to explain to kids (or any non-programmers) what it's like to write a computer program to solve a task. I used to think this was an accurate analogy/explanation, but now I'm not so sure. It's being said that giving computer instructions to solve a task is challenging because you need to be very precise. The computer is dumb and won't fill in the gaps. It's not going to necessarily do the thing you have in mind if you give it vague instructions. Instead, it does the wrong thing or produces an error. So let's think about this. Why is it different from giving a human vague instructions? They can fill in the blanks. Why? It's because they have the same context as the instruction-giver and both of their minds are abstracting the details. If a human did not have the right context, they would do the task wrong like the dad in the video is showing as a joke. So, the dad is not acting like a computer, but rather a receiver that has improper context *and* is attempting the task anyway. Realistically, if a computer has improper context to perform an instruction, it will produce an error rather than try to do it and fail. In whatever programming language you choose, if you try to run the function "makeSandwich()" and that function doesn't exist, it will produce an error instead of try to make a sandwich (somehow...?).
+
+So really what we're talking about here is *context* and *abstraction*; not necessarily humans vs computers. Now you think I'm being pedantic. True, computers are usually the ones with less context and can't do abstraction on their own. But programmers are the ones deciding what context is needed! If a language is made at a higher level of abstraction than another, it may need less context to accomplish the same task as the other. For example, in Haskell I can write ~putStrLn (unwords ["Hello", "world!"])~, but in C I would have to write a lot more code (giving more context about how to make an array into a sentence of words). The fact is, no programmer writes code *from scratch*. Everyone is building upon other work; even if you're only including the language's standard library.
+
+In the end, if someone (it doesn't matter who) has made a ~makeSandwich~ function (and it makes a sandwich somehow...), I can tell the computer to run that function and I don't need to give it extra information. The same as a human.
+
+Here's another thought. Less about being a programmer and more about giving instructions to a computer. The argument that computers need more detailed instructions than a human isn't even true anymore! Check out ChatGPT. It's a demonstration of a very powerful generalized artificial intelligence that can do spoken language processing that appears to be on par with humans. I can give it a problem to solve, written in plain English, and it will give a solution! Now the dad looks like he's just mocking old, primitive computers.
+
+* Programming a sandwich
+
+All the above being said, let's say we want to demonstrate what it would be like to program the computer to make a sandwich anyway. Danny wrote a great, complete example in Ruby code. After reading through it, it brings up lots of interesting points to talk about:
+
+- Error handling
+- Mutability and state
+- Programming paradigms (OOP, functional)
+- Type theory
+
+Fortunately for me, Danny already handled the hardest part: deciding what functionality to include in sandwich-making code. After all, we can't expect the computer to make a real sandwich in the end, so one has to decide what a working solution entails.
+
+For my own take on the problem [what exactly is the problem?], I decided to take the following steps:
+
+- Translate Danny's OOP solution into Haskell
+- Write an idiomatic Haskell solution
+- Write a Haskell solution using type-level programming
+- Write an Agda solution
+
+* Haskell - OOP translation
+
+Since Haskell is a functional language, the following Haskell code is *not idiomatic*. It is a translation of the object-oriented Ruby solution. Similarly to how we might translate a poem from Portuguese to English word-for-word. The result may have proper grammar and spelling, but the English translation won't read much like a poem would have if it were written in English from the start.
+
+** Bread.hs
+
+#+begin_src haskell
+module Bread where
+
+import qualified Condiment
+import qualified Knife
+
+data Surface = Surface
+  { contents :: Maybe Condiment.Condiment
+  }
+
+newSurface :: Surface
+newSurface = Surface
+  { contents = Nothing
+  }
+
+surfaceIsPlain :: Surface -> Bool
+surfaceIsPlain Surface {contents=Nothing} = True
+surfaceIsPlain _ = False
+
+surfaceIsSmeared :: Surface -> Bool
+surfaceIsSmeared = not . surfaceIsPlain
+
+data Slice = Slice
+  { top :: Surface
+  , bottom :: Surface
+  }
+
+newSlice :: Slice
+newSlice = Slice
+  { top = newSurface
+  , bottom = newSurface
+  }
+
+sliceIsPlain :: Slice -> Bool
+sliceIsPlain Slice {top=t, bottom=b}
+  = surfaceIsPlain t && surfaceIsPlain b
+
+sliceIsSmeared :: Slice -> Bool
+sliceIsSmeared = not . sliceIsPlain
+
+smearSurface :: Knife.Knife -> Surface -> Either String (Knife.Knife, Surface)
+smearSurface k s
+  | surfaceIsSmeared s = Left "This surface was already smeared!"
+  | Knife.isClean k = Left "This knife is too clean to smear with."
+  | otherwise = Right (Knife.clean k, s {contents=Knife.contents k})
+#+end_src
+
+** Condiment.hs
+
+#+begin_src haskell
+module Condiment where
+
+type Condiment = String
+
+data OpenOrClosed = Open | Closed
+  deriving (Eq)
+
+data Jar = Jar
+  { condiment :: Condiment
+  , lid :: OpenOrClosed
+  , empty :: Bool
+  }
+
+newJar :: Condiment -> Jar
+newJar c = Jar
+  { condiment = c
+  , lid = Closed
+  , empty = False
+  }
+
+isEmpty :: Jar -> Bool
+isEmpty Jar{empty=True} = True
+isEmpty _ = False
+
+hasStuff :: Jar -> Bool
+hasStuff = not . isEmpty
+
+isClosed :: Jar -> Bool
+isClosed Jar{lid=Closed} = True
+isClosed _ = False
+
+closeJar :: Jar -> Jar
+closeJar cj = cj {lid=Closed}
+
+isOpen :: Jar -> Bool
+isOpen = not . isClosed
+
+openJar :: Jar -> Jar
+openJar cj = cj {lid=Open}
+
+relinquishContents :: Jar -> Either String (Jar, Condiment)
+relinquishContents cj
+  | isClosed cj = Left "The jar is closed and knife-impermeable."
+  | isEmpty cj = Left "The jar is empty. How disappointing."
+  | otherwise = Right (cj{empty=True}, condiment cj)
+#+end_src
+
+** Knife.hs
+
+#+begin_src haskell
+module Knife where
+
+import qualified Condiment
+
+data Knife = Knife
+  { contents :: Maybe Condiment.Condiment
+  }
+
+new :: Knife
+new = Knife {contents=Nothing}
+
+isClean :: Knife -> Bool
+isClean Knife {contents=Nothing} = True
+isClean _ = False
+
+clean :: Knife -> Knife
+clean k = k {contents=Nothing}
+
+isLoaded :: Knife -> Bool
+isLoaded = not . isClean
+
+loadFrom :: Knife -> Condiment.Jar -> Either String (Knife, Condiment.Jar)
+loadFrom k cj
+  | isLoaded k = Left "This knife is already loaded. Don't mix your condiments!"
+  | otherwise = uncurry load <$> Condiment.relinquishContents cj
+  where
+    load cj' c = (k {contents=Just c}, cj')
+#+end_src
+
+** Sandwich.hs
+
+#+begin_src haskell
+module Sandwich where
+
+import qualified Bread
+import qualified Condiment
+import qualified Knife
+
+import qualified Data.Maybe as Maybe
+import qualified Data.List as L
+
+data Sandwich = Sandwich
+  { slices :: [Bread.Slice]
+  , built :: Bool
+  , isCut :: Bool
+  }
+
+new :: [Bread.Slice] -> Sandwich
+new slices = Sandwich
+  { slices = slices
+  , built = False
+  , isCut = False
+  }
+
+flavours :: Sandwich -> [Condiment.Condiment]
+flavours = concat . map sliceFlavours . slices
+  where
+    sliceFlavours :: Bread.Slice -> [Condiment.Condiment]
+    sliceFlavours = Maybe.catMaybes . map Bread.contents . sequence [Bread.top, Bread.bottom]
+
+showFlavours :: Sandwich -> String
+showFlavours = f . flavours
+  where
+    f :: [Condiment.Condiment] -> String
+    f cs
+      | length cs == 2 = L.intercalate " and " cs
+      | otherwise = L.intercalate ", " (init cs) ++ ", and " ++ last cs
+
+isReadyToEat :: Sandwich -> Bool
+isReadyToEat sw = built sw && isCut sw
+
+build :: Sandwich -> Either String Sandwich
+build sw
+  | built sw = Left "It's already a glorious tower of food!"
+  | length (slices sw) < 2 = Left "Not enough slices"
+  | outsideSmeared = Left "This sandwich would be icky to hold."
+  | tooPlain = Left "This sandwich might actually be a loaf."
+  | otherwise = Right (sw {built=True})
+  where
+    bottomSmeared :: Bool
+    bottomSmeared = Bread.surfaceIsSmeared . Bread.bottom . head $ slices sw
+    
+    topSmeared :: Bool
+    topSmeared = Bread.surfaceIsSmeared . Bread.top . last $ slices sw
+    
+    outsideSmeared :: Bool
+    outsideSmeared = length (slices sw) >= 2 && (bottomSmeared || topSmeared)
+
+    tooPlain :: Bool
+    tooPlain = any Bread.sliceIsPlain . init . tail $ slices sw
+
+cut :: Sandwich -> Knife.Knife -> Either String Sandwich
+cut sw k
+  | (not . built) sw = Left "Build the sandwich and then cut it in one glorious stroke."
+  | Knife.isLoaded k = Left "No! You'll get the edge all yucky with that knife."
+  | isCut sw = Left "One cut will do."
+  | otherwise = Right (sw {isCut=True})
+#+end_src
+
+** Main.hs
+
+#+begin_src haskell
+module Main where
+
+import qualified Condiment
+import qualified Knife
+import qualified Bread
+import qualified Sandwich
+
+main :: IO ()
+main = do
+  let bread = replicate 5 Bread.newSlice
+  let pb = Condiment.newJar "Peanut Butter"
+  let jelly = Condiment.newJar "Jelly"
+  let knife = Knife.new
+
+  -- First attempt. Didn't open the jar of peanut butter.
+  either (\e -> putStrLn $ "Error: " ++ e) putStrLn $ do
+    (pbKnife, pbEmpty) <- knife `Knife.loadFrom` pb -- Problem
+    (usedKnife1, surface1) <- Bread.smearSurface pbKnife . Bread.top . head $ bread
+    (jellyKnife, jellyEmpty) <- knife `Knife.loadFrom` Condiment.openJar jelly
+    (usedKnife2, surface2) <- Bread.smearSurface jellyKnife . Bread.bottom . last $ bread
+    let sw = Sandwich.new bread
+    Sandwich.build sw
+    return "Sandwich made!"
+
+  -- Next attempt. Used too much bread inside.
+  either (\e -> putStrLn $ "Error: " ++ e) putStrLn $ do
+    (pbKnife, pbEmpty) <- knife `Knife.loadFrom` Condiment.openJar pb
+    (usedKnife1, surface1) <- Bread.smearSurface pbKnife . Bread.top . head $ bread
+    (jellyKnife, jellyEmpty) <- knife `Knife.loadFrom` Condiment.openJar jelly
+    (usedKnife2, surface2) <- Bread.smearSurface jellyKnife . Bread.bottom . last $ bread
+    let sw = Sandwich.new bread
+    Sandwich.build sw -- Problem
+    return "Sandwich made!"
+
+  -- Successful sandwich making!
+  either (\e -> putStrLn $ "Error: " ++ e) putStrLn $ do
+    (pbKnife, pbEmpty) <- knife `Knife.loadFrom` Condiment.openJar pb
+    (usedKnife1, surface1) <- Bread.smearSurface pbKnife . Bread.top . head $ bread
+    (jellyKnife, jellyEmpty) <- knife `Knife.loadFrom` Condiment.openJar jelly
+    (usedKnife2, surface2) <- Bread.smearSurface jellyKnife . Bread.bottom . last $ bread
+    let sw = Sandwich.new [head bread, last bread]
+    Sandwich.build sw
+    return "Sandwich made!"
+#+end_src
+
+* Haskell - idiomatic
+
+** Main.hs
+
+#+begin_src haskell
+module Main where
+
+data UtensilShape = Knife | Spoon | Fork
+  deriving (Show, Eq)
+
+data Utensil = Utensil
+  { uShape :: UtensilShape
+  , uCondiment :: Maybe Condiment
+  }
+  deriving (Show)
+
+fetchUtensil :: UtensilShape -> Utensil
+fetchUtensil shape = Utensil
+  { uShape = shape
+  , uCondiment = Nothing
+  }
+
+data Condiment = PeanutButter | Jelly
+  deriving (Show, Eq)
+
+data OpenOrClosed = Open | Closed
+  deriving (Show, Eq)
+
+data CondimentJar = CondimentJar
+  { cjCondiment :: Maybe Condiment
+  , cjLid :: OpenOrClosed
+  }
+  deriving (Show)
+
+fetchCondimentJar :: Condiment -> CondimentJar
+fetchCondimentJar c = CondimentJar
+  { cjCondiment = Just c
+  , cjLid = Closed
+  }
+
+loadFrom :: Utensil -> CondimentJar -> Either String (Utensil, CondimentJar)
+loadFrom _ CondimentJar{cjLid=Closed} = Left "The jar is closed and knife-impermeable."
+loadFrom _ CondimentJar{cjCondiment=Nothing} = Left "The jar is empty. How disappointing."
+loadFrom Utensil{uShape=Fork} _ = Left "Forks aren't the right shape for condiments."
+loadFrom u cj@CondimentJar{cjCondiment=Just c}
+  = Right (u { uCondiment = Just c }, cj { cjCondiment = Nothing })
+
+openJar :: CondimentJar -> CondimentJar
+openJar cj = cj { cjLid = Open }
+
+data BreadFlavour = Sourdough | WholeGrain | White
+  deriving (Show)
+
+data SliceOfBread = SliceOfBread
+  { sobFlavour :: BreadFlavour
+  , sobTop :: Maybe Condiment
+  , sobBottom :: Maybe Condiment
+  }
+  deriving (Show)
+
+fetchSliceOfBread :: BreadFlavour -> SliceOfBread
+fetchSliceOfBread flavour = SliceOfBread
+  { sobFlavour = flavour
+  , sobTop = Nothing
+  , sobBottom = Nothing
+  }
+
+data Surface = Top | Bottom
+  deriving (Show, Eq)
+
+smearSliceOfBread :: Utensil -> Surface -> SliceOfBread -> Either String (SliceOfBread, Utensil)
+smearSliceOfBread u surface slice
+  | uShape u /= Knife = Left "You can't smear with that!"
+  | uCondiment u == Nothing = Left "This knife is too clean to smear with."
+  | surface == Top && sobTop slice /= Nothing = Left "This surface was already smeared!"
+  | surface == Bottom && sobBottom slice /= Nothing = Left "This surface was already smeared!"
+  | otherwise = Right (smearedSlice, cleanUtensil)
+  where
+    smearedSlice
+      | surface == Top = slice { sobTop = uCondiment u }
+      | surface == Bottom = slice { sobBottom = uCondiment u }
+    cleanUtensil = u { uCondiment = Nothing}
+
+data Sandwich = Sandwich
+  { swBottom :: SliceOfBread
+  , swTop :: SliceOfBread
+  , swPieces :: [(SliceOfBread, SliceOfBread)]
+  }
+  deriving (Show)
+
+makeSandwich :: SliceOfBread -> SliceOfBread -> Either String Sandwich
+makeSandwich bottom top
+  | sobTop bottom == Nothing && sobBottom top == Nothing = Left "This sandwich might actually be a loaf."
+  | sobTop top /= Nothing || sobBottom bottom /= Nothing = Left "This sandwich would be icky to hold."
+  | otherwise = Right Sandwich { swBottom = bottom, swTop = top, swPieces = [(bottom, top)] }
+
+-- A sandwich is always cut through all the pieces, doubling them all
+cutSandwich :: Utensil -> Sandwich -> Either String Sandwich
+cutSandwich u sw
+  | uShape u == Fork || uShape u == Spoon = Left "You can't cut a sandwich with that!"
+  | uCondiment u /= Nothing = Left "No! You'll get the edge all yucky with that knife."
+  | otherwise = Right sw { swPieces = newPieces }
+  where
+    newPieces = concat [swPieces sw, swPieces sw]
+
+main :: IO ()
+main = do
+  let knife = fetchUtensil Knife
+  let pb = fetchCondimentJar PeanutButter
+  let jelly = fetchCondimentJar Jelly
+
+  -- First attempt. Didn't open the jar of peanut butter.
+  either (\e -> putStrLn $ "Error: " ++ e) putStrLn $ do
+    (pbKnife, emptyPB) <- knife `loadFrom` pb -- Problem
+    return "Sandwich made!"
+
+  -- Next attempt. Too plain.
+  either (\e -> putStrLn $ "Error: " ++ e) putStrLn $ do
+    (pbKnife, emptyPB) <- knife `loadFrom` openJar pb
+    (jellyKnife, emptyJelly) <- knife `loadFrom` openJar jelly
+    let bottomSlice = fetchSliceOfBread Sourdough
+    let topSlice = fetchSliceOfBread WholeGrain
+    sw <- makeSandwich bottomSlice topSlice
+    return "Sandwich made!"
+
+  -- Successful sandwich making!
+  either (\e -> putStrLn $ "Error: " ++ e) putStrLn $ do
+    (pbKnife, emptyPB) <- knife `loadFrom` openJar pb
+    (jellyKnife, emptyJelly) <- knife `loadFrom` openJar jelly
+    let bottomSlice = fetchSliceOfBread Sourdough
+    let topSlice = fetchSliceOfBread WholeGrain
+    (bottomSliceWithPB, cleanKnife) <- smearSliceOfBread pbKnife Top bottomSlice
+    (topSliceWithJelly, cleanKnife) <- smearSliceOfBread jellyKnife Bottom topSlice
+    sw <- makeSandwich bottomSliceWithPB topSliceWithJelly
+    return "Sandwich made!"
+#+end_src
