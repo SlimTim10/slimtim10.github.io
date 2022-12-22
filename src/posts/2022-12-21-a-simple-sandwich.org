@@ -54,7 +54,7 @@ A more idiomatic option in Haskell is to use the ~Maybe~ type. Any function that
 relinquishContents :: Jar -> Maybe (Jar, Condiment)
 #+end_src
 
-This version of ~relinquishContents~ takes a ~Jar~ and returns either ~Nothing~ if it fails (because the jar is closed or empty) or a pair ~(Jar, Condiment)~ of a new empty ~Jar~ and a loaded ~Condiment~. The problem with ~Maybe~ is we don't have any sort of message attached to the error side; we just have ~Nothing~. So we know something went wrong, but we don't know what it is.
+This version of ~relinquishContents~ takes a ~Jar~ and returns either ~Nothing~ if it fails (because the jar is closed or empty) or a pair ~(Jar, Condiment)~ of a new empty ~Jar~ and a ~Condiment~. The problem with ~Maybe~ is we don't have any sort of message attached to the error side; we just have ~Nothing~. So we know something went wrong, but we don't know what it is.
 
 Finally, the solution I settled on is the other idiomatic option in Haskell: the ~Either~ type. It's almost the same as ~Maybe~ except it has ~Left a~ and ~Right b~, where ~a~ and ~b~ are any types. This way, we have,
 
@@ -65,6 +65,24 @@ relinquishContents :: Jar -> Either String (Jar, Condiment)
 In the error case, ~relinquishContents~ returns a ~Left String~ (such as ~Left "The jar is closed and knife-impermeable."~). In the good case, it returns a ~Right (Jar, Condiment)~. In other words, we *either* have an error message or a good return value.
 
 This means that every function that might produce an error must return an ~Either~ type, which allows us to keep most of the code pure. This also means we have no choice but to write code which handles the errors where they may occur. We can't simply skip over the fact that a function may produce an error; we have to handle both sides of the result: ~Left~ and ~Right~.
+
+* Mutability and state
+
+In OOP, it's common to make an instance of an object which has some properties, and then mutate those properties along the way. For example, we may have a ~CondimentJar~ with a ~contents~ property which start off as some string like "Peanut Butter". When we want to empty the jar, we set its ~contents~ property to ~nil~, effectively *mutating the state* of the jar.
+
+In pure functional code, there's no such thing as mutability. When we have a ~CondimentJar~ with ~contents~ set to "Peanut Butter", we can't simply change that jar. It will always have "Peanut Butter" as its contents. Instead of mutating the jar's state, we can make a new jar which is a copy of the first one, but with its ~contents~ set to a different value.
+
+To people less familiar with the concept of immutability, this may seem like a burden, and sometimes it can be! Really, it's just a different perspective on writing code. Instead of keeping track of every variable and its current state at any point in the code, immutability ensures that no variables can ever change and so we can easily predict their value.
+
+Now, this presents us with a philosophical problem in the sandwich context. What sense does it make to have a jar which is always full of peanut butter and a knife which is always clean, and when we put them to use we have a *new* empty jar and a *new* loaded knife. Does it make sense that we still have access to the old objects? The way I see it, we can think of this in different ways.
+
+In one way, we can say we simply don't care that it doesn't represent the real world accurately and as long as we don't make use of the old objects after we use them, we're not doing anything we couldn't do in reality. We just have to make sure to always use the latest version of each object.
+
+Another way to think about it is that having access to the old objects is like being able to travel through time. We can think of every variable as being in a particular snapshot of the universe, which we can always go back to. However, this idea breaks down when we're able to access both a new object and its older counterpart at the same time, which is kind of like having multiple universes which can interact (Marvel anyone...?).
+
+The most accurate representation of state in a pure functional context is to keep all stateful things in a variable which must be passed as an argument to any function which may update state. This is like passing around the universe (or at least, the important things) so we only have access to one version of it at any point in time. In Haskell, there are [[https://hackage.haskell.org/package/base-4.17.0.0/docs/Control-Concurrent-MVar.html][libraries]] which handle this in a monad. Then we can write code which looks like we're updating state, but anything that involves state must be inside the state monad.
+
+In my code, I opted for the first approach; simply ignore the problem! The code is simpler to understand that way.
 
 * Haskell - OOP translation
 
@@ -81,20 +99,18 @@ data OpenOrClosed = Open | Closed
   deriving (Eq)
 
 data Jar = Jar
-  { condiment :: Condiment
+  { contents :: Maybe Condiment
   , lid :: OpenOrClosed
-  , empty :: Bool
   }
 
 newJar :: Condiment -> Jar
 newJar c = Jar
-  { condiment = c
+  { contents = Just c
   , lid = Closed
-  , empty = False
   }
 
 isEmpty :: Jar -> Bool
-isEmpty Jar{empty=True} = True
+isEmpty Jar{contents=Nothing} = True
 isEmpty _ = False
 
 hasStuff :: Jar -> Bool
@@ -114,13 +130,13 @@ openJar :: Jar -> Jar
 openJar cj = cj {lid=Open}
 
 relinquishContents :: Jar -> Either String (Jar, Condiment)
-relinquishContents cj
+relinquishContents cj@Jar{contents=Just c}
   | isClosed cj = Left "The jar is closed and knife-impermeable."
   | isEmpty cj = Left "The jar is empty. How disappointing."
-  | otherwise = Right (cj{empty=True}, condiment cj)
+  | otherwise = Right (cj{contents=Nothing}, c)
 #+end_src
 
-Here, the ~newJar~ function acts in parallel to an object constructor in OOP (Ruby's ~initialize~ method).
+Here, the ~newJar~ function acts in parallel to an object constructor in OOP (e.g., Ruby's ~initialize~ method).
 
 #+begin_src haskell
 -- Haskell
@@ -131,6 +147,10 @@ let pb = Condiment.newJar "Peanut Butter"
 # Ruby
 pb = CondimentJar.new("Peanut Butter")
 #+end_src
+
+For the OOP translation, a Haskell record is defined for each class in its Ruby counterpart. In idiomatic Haskell, records are used frequently, but not in such a way. And the small functions like ~isClosed~, which correspond to OOP methods, would be replaced by pattern matching.
+
+As stated above about error handling, ~relinquishContents~ returns an ~Either~ type which may either be an error message (~Left String~) or a pair of a new empty jar and a condiment (~Right (Jar, Condiment)~).
 
 ** Knife.hs
 
