@@ -557,7 +557,8 @@ data Sandwich = Sandwich
 Now a sandwich doesn't have a ~built~ property because if an instance of a sandwich exists, it is because it was built. Still, it could be improved. After all, with this definition it's easy to make a sandwich that doesn't make sense:
 
 #+begin_src haskell
--- A sandwich whose top and bottom slices are sourdough but consists of a single piece whose slices are whole grain
+-- A sandwich whose top and bottom slices are sourdough,
+-- but consists of a single piece whose slices are whole grain
 impossibleSandwich = Sandwich
   { swBottom = fetchSliceOfBread Sourdough
   , swTop = fetchSliceOfBread Sourdough
