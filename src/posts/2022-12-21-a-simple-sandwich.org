@@ -72,6 +72,8 @@ This means that every function that might produce an error must return an ~Eithe
 
 In OOP, it's common to make an instance of an object which has some properties, and then mutate those properties along the way. For example, we may have a ~CondimentJar~ with a ~contents~ property which start off as some string like "Peanut Butter". When we want to empty the jar, we set its ~contents~ property to ~nil~, effectively *mutating the state* of the jar.
 
+This can often make code easy to write but harder to read. For example, in the Ruby solution's ~Sandwich~ class, I didn't know what the ~build!~ method was going to mutate when I first saw it. Based on the name, I figured it would build a sandwich and mutate the instance somehow. I didn't know if it would also mutate something inside the sandwich, like the slices of bread. Without reading the rest of the code, how could I know what else might get modified down the line? To discover the function's purpose and result, I had to read its entire body. In Haskell, I only need to read a function's type signature to know exactly what its capabilities are.
+
 In pure functional code, there's no such thing as mutability. When we have a ~CondimentJar~ with ~contents~ set to "Peanut Butter", we can't simply change that jar. It will always have "Peanut Butter" as its contents. Instead of mutating the jar's state, we can make a new jar which is a copy of the first one, but with its ~contents~ set to a different value.
 
 To people less familiar with the concept of immutability, this may seem like a burden, and sometimes it can be! Really, it's just a different perspective on writing code. Instead of keeping track of every variable and its current state at any point in the code, immutability ensures that no variables can ever change and so we can easily predict their value.
@@ -361,6 +363,8 @@ Again, there's nothing stopping us from using ~pbKnife~ more than once because w
 
 In the end, I think this version is quite readable (if you know Haskell), though the modules are more verbose than they need to be and the custom types are all records instead of more intuitive types as in the following version.
 
+Something about the ~Sandwich~ type (or Ruby class) doesn't sit well with me. In my mind, it doesn't make sense for a sandwich to have a ~built~ property that says whether the sandwich is built correctly or not. What would it mean to have a sandwich that is not built? That sounds like something that is /not/ a sandwich, which shouldn't be part of the definition of what /is/ a sandwich. If it is possible to make an instance of a sandwich that is not a proper sandwich, maybe the type/class/definition of sandwich needs more refining. In this definition, a sandwich is allowed to have any number of slices. Wouldn't it make more sense for a sandwich to require at least two slices of bread? Or, even more accurate, a sandwich requires exactly two slices of bread (any inner slices of bread can be considered part of the sandwich, unless that's all it has, in which case it is a loaf). The way I see it, it's part-way to an accurate definition of a sandwich, but stopped short.
+
 * Haskell - idiomatic
 
 In this version, I took some liberties to reframe parts of the problem. I noticed in Danny's code he sometimes makes sure we're using a knife where another utensil wouldn't work.
@@ -540,6 +544,27 @@ data Surface = Surface
 data Surface = Top | Bottom
 #+end_src
 
-[compare functional programming to OOP]
+As for the ~Sandwich~ type and its shortcomings discussed above, it has been updated in this version.
 
-Now the really interesting part. I left out one approach to error handling. Eliminating potential errors by encoding program flow in the type system. This only works in a statically-typed language, such as Haskell. Using the concepts of *type theory*, we can write code which ensures that the only way for it to run is if none of the errors occur. This safeguard step is done by the compiler, so as a programmer, we can be sure that if our code compiles, it will run without errors.
+#+begin_src haskell
+data Sandwich = Sandwich
+  { swBottom :: SliceOfBread
+  , swTop :: SliceOfBread
+  , swPieces :: [(SliceOfBread, SliceOfBread)]
+  }
+#+end_src
+
+Now a sandwich doesn't have a ~built~ property because if an instance of a sandwich exists, it is because it was built. Still, it could be improved. After all, with this definition it's easy to make a sandwich that doesn't make sense:
+
+#+begin_src haskell
+-- A sandwich whose top and bottom slices are sourdough but consists of a single piece whose slices are whole grain
+impossibleSandwich = Sandwich
+  { swBottom = fetchSliceOfBread Sourdough
+  , swTop = fetchSliceOfBread Sourdough
+  , swPieces = [(fetchSliceOfBread WholeGrain, fetchSliceOfBread WholeGrain)]
+  }
+#+end_src
+
+No matter how much error handling we add along the way to making a sandwich, our definition of a sandwich makes it possible to skip the error checks and create an erroneous sandwich. The other approach is to avoid possible errors altogether by using type-safe definitions; making it so a sandwich can only be made when its type is fulfilled. Relating this to the [[https://www.youtube.com/watch?v=FN2RM-CHkuI][video]], the kids are frustrated because their father is failing in ways they didn't expect him to fail. He's doing things they didn't want him to do. On the computer, why would we program the ability to do things we don't want to happen? We don't want it to be possible to attempt to put a knife in a closed jar, so we shouldn't make a function where that can happen. Type systems can help us resolve this.
+
+Now for the really interesting part. I left out one approach to error handling: eliminating all possible errors by encoding program flow into a type system. This only works in a statically-typed language, such as Haskell. Using the concepts of *type theory*, we can write code which ensures that the only way for it to run is if none of the errors occur. This safeguard check is done by the compiler, so as a programmer, we can be sure that if our code compiles, it will run without errors.
