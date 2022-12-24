@@ -5,50 +5,60 @@ image: "./images/blog/pumpkin_pie.jpg"
 imageAlt: "drawing of pumpkin pie"
 ---
 
-This is a correspondence(?) with Danny Fekete. Please read his [[https://neckdeep.dev/blog/2022-12-13-a-simple-sandwich-i/][post]] before reading this for context.
+I wrote this as a result of reading [[https://neckdeep.dev/blog/2022-12-13-a-simple-sandwich-i/][a post by my friend Danny Fekete]]. For any of this to make sense, you need to read his post first. These are my thoughts relating to the ideas Danny brought up as well as Haskell code inspired by Danny's Ruby code.
 
-* Food for thought
+* Food for Thought
 
-The point of the exercise portrayed in the video is to explain to kids (or any non-programmers) what it's like to write a computer program to solve a task. I used to think this was an accurate analogy/explanation, but now I'm not so sure. It's being said that giving computer instructions to solve a task is challenging because you need to be very precise. The computer is dumb and won't fill in the gaps. It's not going to necessarily do the thing you have in mind if you give it vague instructions. Instead, it does the wrong thing or produces an error. So let's think about this. Why is it different from giving a human vague instructions? They can fill in the blanks. Why? It's because they have the same context as the instruction-giver and both of their minds are abstracting the details. If a human did not have the right context, they would do the task wrong like the dad in the video is showing as a joke. So, the dad is not acting like a computer, but rather a receiver that has improper context *and* is attempting the task anyway. Realistically, if a computer has improper context to perform an instruction, it will produce an error rather than try to do it and fail. In whatever programming language you choose, if you try to run the function "makeSandwich()" and that function doesn't exist, it will produce an error instead of try to make a sandwich (somehow...?).
+The point of the "exact instructions challenge" shown in [[https://www.youtube.com/watch?v=FN2RM-CHkuI][this video]] is to explain to kids (or any non-programmers) what it's like to write a computer program to solve a task. I used to think this was a good explanation, but now I've changed my mind. What's being said is that giving a computer instructions to solve a task is challenging because you need to be very precise. The computer is dumb and won't fill in the gaps; it will not necessarily do what you have in mind if you give it vague instructions. Instead, it does the wrong thing or produces an error. So let's think about this. Why is it different from giving a human vague instructions? Well, a human can fill in the blanks. Why? Because they have the same context as the instruction-giver and both minds abstract the details. If a human did not have the proper context, they would do the task wrong, like the dad in the video. So, the dad is not acting specifically like a computer but rather any receiver with improper context that is attempting the task anyway. Realistically, if a computer has improper context to perform an instruction, it will produce an error rather than try to do it and fail. In whatever programming language you choose, if you try to run the function ~makeSandwich~ and that function doesn't exist, it will produce an error instead of trying to make a sandwich (whatever it means for a computer to make a sandwich...).
 
-So really what we're talking about here is *context* and *abstraction*; not necessarily humans vs computers. Now you think I'm being pedantic. True, computers are usually the ones with less context and can't do abstraction on their own. But programmers are the ones deciding what context is needed! If a language is made at a higher level of abstraction than another, it may need less context to accomplish the same task as the other. For example, in Haskell I can write ~putStrLn (unwords ["Hello", "world!"])~, but in C I would have to write a lot more code (giving more context about how to make an array into a sentence of words). The fact is, no programmer writes code *from scratch*. Everyone is building upon other work; even if you're only including the language's standard library.
+So really, what we're talking about here is *context* and *abstraction*, not necessarily humans vs computers. Now you think I'm being pedantic. True, computers are usually the ones with less context and can't do abstraction on their own. But programmers are the ones deciding what context is needed! If a language is made at a higher level of abstraction than another, it may need less context than the other to accomplish the same task. For example, in Haskell, I can write ~putStrLn (unwords ["Hello,", "world!"])~ to print "Hello, world!", but in C, I would have to write a lot more code (giving more context about how to make an array into a sentence of words). The fact is, no programmer writes code *from scratch*. Everyone is building upon other work, even if you're including the language's standard library. In fact, if I take the effort to write the ~unwords~ function in C, then the resulting code is not too different from Haskell: ~printf("%s", unwords((char**){"Hello,", "world!"}, 2));~.
 
-In the end, if someone (it doesn't matter who) has made a ~makeSandwich~ function (and it makes a sandwich somehow...), I can tell the computer to run that function and I don't need to give it extra information. The same as a human.
+In the end, if someone (it doesn't matter who) has made a ~makeSandwich~ function and it makes a sandwich (somehow...), I can tell the computer to run that function and I don't need to give it extra information. The same as telling a human who I trust to make a sandwich, "make me a sandwich".
 
-Here's another thought. Less about being a programmer and more about giving instructions to a computer. The argument that computers need more detailed instructions than a human isn't even true anymore! Check out ChatGPT. It's a demonstration of a very powerful generalized artificial intelligence that can do spoken language processing that appears to be on par with humans. I can give it a problem to solve, written in plain English, and it will give a solution! Now the dad looks like he's just mocking old, primitive computers.
+Now that we have sophisticated AI (demonstrated by tools like [[https://openai.com/blog/chatgpt/][ChatGPT]]), computers actually have as much context as the average person for many problems. The AI can do spoken language processing that appears to be on par with humans. I can give it a problem to solve, written in plain English, and it will give a solution! Many people would be fooled into thinking they're chatting with a human.
 
-* Programming a sandwich
+* Programming a Sandwich
 
-All the above being said, let's say we want to demonstrate what it would be like to program the computer to make a sandwich anyway. Danny wrote a great, complete example in Ruby code. After reading through it, it brings up lots of interesting points to talk about:
+That said, let's say we want to demonstrate what it would be like to program the computer to make a sandwich anyway. In [[https://neckdeep.dev/blog/2022-12-13-a-simple-sandwich-i/][Danny's post]], he wrote a great, complete example in Ruby code. After reading through it, it brings up some interesting points to talk about:
 
 - Error handling
 - Mutability and state
 - Programming paradigms (OOP, functional)
 - Type theory
 
-Fortunately for me, Danny already handled the hardest part: deciding what functionality to include in sandwich-making code. After all, we can't expect the computer to make a real sandwich in the end, so one has to decide what a working solution entails.
+Fortunately for me, Danny already handled the hardest part: deciding what functionality to include in the sandwich-making code. After all, we can't expect the computer to make a real sandwich in the end, so one has to (somewhat arbitrarily) decide what a valid solution requires.
 
-For my own take on the problem [what exactly is the problem?], I decided to take the following steps:
+For my own exploration, I decided to take the following steps:
 
 - Translate Danny's OOP solution into Haskell
 - Write an idiomatic Haskell solution
 - Write a Haskell solution using type-level programming
 - Write an Agda solution
 
-* Error handling
+Before getting to the code, I want to express some thoughts about programming concepts.
 
-Deciding how to handle errors is a notoriously difficult problem in programming. We have to think about what kind of errors our code may encounter. Are they logic-breaking errors, in which case we want our app to print a message and quit running when it encounters one? Or are they more like warnings, where we can print a message to the user and allow the rest of the code to run? Should we even handle them at all or just let the program break when it may? Maybe we should mix and match? Can we reduce the possible errors another way (hint, hint...)?
+* Error Handling
 
-Before I could write any Haskell solution to the sandwich problem, I had to decide how I would handle errors. After all, there are many things that can go wrong along the way (like attempting to put a knife in a closed jar of peanut butter). Because Haskell is a purely functional language, every function is considered either to be "pure" or in a monad (such as "IO"). Using the concept of a monad is how Haskell gets around the "impure"/side-effect capability while retaining a pure mathematical foundation.
+Deciding how to handle errors is a notoriously tricky problem in programming. We have to think about what kind of errors our code may encounter. Are they logic-breaking errors, in which case we want our app to print a message and quit running when it encounters one? Or are they more like warnings, where we can print a message to the user and allow the code to continue running? Should we even handle them at all or just let the program break when it may? Maybe we should mix and match? Can we reduce the possible errors some other way?
 
-One option is to simply break execution and print an error message whenever one happens. In Haskell, this would be done using the built-in ~error~ function. But this comes with caveats:
+Before I could write any Haskell solution to the sandwich-making problem, I had to decide how to handle errors. After all, many things can go wrong along the way, like attempting to put a knife in a closed jar of peanut butter.
 
-- We can't know which functions may produce an error by looking at their type signature
-- We can't recover from errors
+Because Haskell is a purely functional language, every function is considered either to be "pure" or in a monad (such as "IO"). Using the monad concept is how Haskell gets around the "impure" or "side effect" capability while retaining a pure mathematical foundation. It is favourable to keep as many functions pure as possible, so handling errors in a pure way would be ideal.
+
+** Breaking errors
+
+One option to handle errors  is to simply break execution and print an error message whenever one happens. In Haskell, this would be done using the built-in ~error~ function, which can be used in any function. But this comes with caveats:
+
+- We can't know which functions may produce an error by looking at their type signature.
+- We can't recover from errors.
+
+** Exceptions
 
 Another option is to throw exceptions. Then we can catch errors, but it comes with a big caveat:
 
-- Every function that may throw an exception (or include another function that may throw an exception) must be in the IO monad. This means virtually all the code has to live in the IO monad and we don't have any pure functions
+- Every function that may throw an exception (or include another function that may throw an exception) must be in the IO monad. That means virtually all the code has to live in the IO monad, and we don't have any pure functions.
+
+** Maybe
 
 A more idiomatic option in Haskell is to use the ~Maybe~ type. Any function that might produce an error returns a ~Maybe a~ value, which is either ~Nothing~ or ~Just a~, where ~a~ is any type. For example,
 
@@ -56,9 +66,11 @@ A more idiomatic option in Haskell is to use the ~Maybe~ type. Any function that
 relinquishContents :: Jar -> Maybe (Jar, Condiment)
 #+end_src
 
-This version of ~relinquishContents~ takes a ~Jar~ and returns either ~Nothing~ if it fails (because the jar is closed or empty) or a pair ~(Jar, Condiment)~ of a new empty ~Jar~ and a ~Condiment~. The problem with ~Maybe~ is we don't have any sort of message attached to the error side; we just have ~Nothing~. So we know something went wrong, but we don't know what it is.
+This version of ~relinquishContents~ takes a ~Jar~ and returns either ~Nothing~ if it fails (because the jar is closed or empty) or a pair ~(Jar, Condiment)~ of a new empty ~Jar~ and a ~Condiment~. The problem with using ~Maybe~ is we don't have any message attached to the error side; we just have ~Nothing~. So we know something went wrong, but we don't know what it is.
 
-Finally, the solution I settled on is the other idiomatic option in Haskell: the ~Either~ type. It's almost the same as ~Maybe~ except it has ~Left a~ and ~Right b~, where ~a~ and ~b~ are any types. This way, we have,
+** Either
+
+Finally, the solution I settled on is the other idiomatic option in Haskell: the ~Either~ type. It's almost the same as ~Maybe~, except its values are ~Left a~ and ~Right b~, where ~a~ and ~b~ are any types. This way, we have,
 
 #+begin_src haskell
 relinquishContents :: Jar -> Either String (Jar, Condiment)
@@ -66,9 +78,9 @@ relinquishContents :: Jar -> Either String (Jar, Condiment)
 
 In the error case, ~relinquishContents~ returns a ~Left String~ (such as ~Left "The jar is closed and knife-impermeable."~). In the good case, it returns a ~Right (Jar, Condiment)~. In other words, we *either* have an error message or a good return value.
 
-This means that every function that might produce an error must return an ~Either~ type, which allows us to keep most of the code pure. This also means we have no choice but to write code which handles the errors where they may occur. We can't simply skip over the fact that a function may produce an error; we have to handle both sides of the result: ~Left~ and ~Right~.
+Taking this path, every function that might produce an error must return an ~Either~ type, which allows us to keep most of the code pure. Also, we have no choice but to write code which handles the errors where they may occur. We can't simply skip over the fact that a function may produce an error; we have to handle both sides of the result: ~Left~ and ~Right~.
 
-* Mutability and state
+* Mutability and State
 
 In OOP, it's common to make an instance of an object which has some properties, and then mutate those properties along the way. For example, we may have a ~CondimentJar~ with a ~contents~ property which start off as some string like "Peanut Butter". When we want to empty the jar, we set its ~contents~ property to ~nil~, effectively *mutating the state* of the jar.
 
@@ -88,7 +100,7 @@ The most accurate representation of state in a pure functional context is to kee
 
 In my code, I opted for the first approach; simply ignore the problem! The code is simpler to understand that way.
 
-* Haskell - OOP translation
+* Haskell Solution - OOP Translation
 
 Since Haskell is a functional language, the following Haskell code is *not idiomatic*. It is a translation of the object-oriented Ruby solution. Similarly to how we might translate a poem from Portuguese to English word-for-word, the result may have proper grammar and spelling, but the English translation won't read much like a poem would have if it were written in English from the start.[grammar?]
 
@@ -365,7 +377,7 @@ In the end, I think this version is quite readable (if you know Haskell), though
 
 Something about the ~Sandwich~ type (or Ruby class) doesn't sit well with me. In my mind, it doesn't make sense for a sandwich to have a ~built~ property that says whether the sandwich is built correctly or not. What would it mean to have a sandwich that is not built? That sounds like something that is /not/ a sandwich, which shouldn't be part of the definition of what /is/ a sandwich. If it is possible to make an instance of a sandwich that is not a proper sandwich, maybe the type/class/definition of sandwich needs more refining. In this definition, a sandwich is allowed to have any number of slices. Wouldn't it make more sense for a sandwich to require at least two slices of bread? Or, even more accurate, a sandwich requires exactly two slices of bread (any inner slices of bread can be considered part of the sandwich, unless that's all it has, in which case it is a loaf). The way I see it, it's part-way to an accurate definition of a sandwich, but stopped short.
 
-* Haskell - idiomatic
+* Haskell Solution - Idiomatic
 
 In this version, I took some liberties to reframe parts of the problem. I noticed in Danny's code he sometimes makes sure we're using a knife where another utensil wouldn't work.
 
@@ -566,6 +578,7 @@ impossibleSandwich = Sandwich
   }
 #+end_src
 
-No matter how much error handling we add along the way to making a sandwich, our definition of a sandwich makes it possible to skip the error checks and create an erroneous sandwich. The other approach is to avoid possible errors altogether by using type-safe definitions; making it so a sandwich can only be made when its type is fulfilled. To relate this to the [[https://www.youtube.com/watch?v=FN2RM-CHkuI][video]], the kids are frustrated because their father is failing in ways they didn't expect him to fail. He's doing things they didn't want him to do. On the computer, why would we program the ability to do things we don't want to happen? We don't want it to be possible to attempt to put a knife in a closed jar, so we shouldn't make a function where that can happen. Type systems can help us resolve this.
+No matter how much error handling we add along the way to making a sandwich, our definition of a sandwich makes it possible to skip the error checks and create an erroneous sandwich. The other approach is to avoid possible errors altogether by using type-safe definitions; making it so a sandwich can only be made when its type is fulfilled. To relate this to the [[https://www.youtube.com/watch?v=FN2RM-CHkuI][video]], the kids are frustrated because their father is failing in ways they didn't expect him to fail. He's doing things they didn't want him to do. On the computer, why would we program the ability to do things we don't want to happen? We don't want it to be possible to attempt to put a knife in a closed jar, so we shouldn't make a function where that can happen. Type systems can help us resolve this. Stay tuned for the next post...
 
+[Save for next post]
 Now for the really interesting part. I left out one approach to error handling: eliminating all possible errors by encoding data flow into the type system. This only works in a statically-typed language, such as Haskell. Using the concepts of *type theory*, we can write code which ensures that the only way for it to run is if none of the errors occur. This safeguard check is done by the compiler, which means as a programmer, we can be sure that if our code compiles, it will run without errors.
