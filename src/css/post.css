@@ -79,6 +79,10 @@ main > article > section table td {
   border: 1px solid #E0E0E0;
 }
 
+main > article > section a {
+  text-decoration: underline;
+}
+
 .read-more {
   margin-top: 4rem;
   margin-bottom: 4rem;
