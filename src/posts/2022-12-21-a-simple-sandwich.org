@@ -23,14 +23,14 @@ That said, let's say we want to demonstrate what it would be like to program the
 
 - Error handling
 - Mutability and state
-- Programming paradigms (OOP, functional)
+- Programming paradigms (object-oriented programming, functional programming)
 - Type theory
 
 Fortunately for me, Danny already handled the hardest part: deciding what functionality to include in the sandwich-making code. After all, we can't expect the computer to make a real sandwich in the end, so one has to (somewhat arbitrarily) decide what a valid solution requires.
 
 For my own exploration, I decided to take the following steps:
 
-- Translate Danny's OOP solution into Haskell
+- Translate Danny's OOP (object-oriented programming) solution into Haskell
 - Write an idiomatic Haskell solution
 - Write a Haskell solution using type-level programming
 - Write an Agda solution
@@ -82,27 +82,27 @@ Taking this path, every function that might produce an error must return an ~Eit
 
 * Mutability and State
 
-In OOP, it's common to make an instance of an object which has some properties, and then mutate those properties along the way. For example, we may have a ~CondimentJar~ with a ~contents~ property which start off as some string like "Peanut Butter". When we want to empty the jar, we set its ~contents~ property to ~nil~, effectively *mutating the state* of the jar.
+In [[https://en.wikipedia.org/wiki/Object-oriented_programming][OOP]], it's common to make an instance of an object with some properties and then mutate its properties along the way. For example, we may have a ~CondimentJar~ with a ~contents~ property that starts off as some string, like "Peanut Butter". When we want to empty the jar, we set its ~contents~ property to ~nil~, effectively *mutating the state* of the jar.
 
-This can often make code easy to write but harder to read. For example, in the Ruby solution's ~Sandwich~ class, I didn't know what the ~build!~ method was going to mutate when I first saw it. Based on the name, I figured it would build a sandwich and mutate the instance somehow. I didn't know if it would also mutate something inside the sandwich, like the slices of bread. Without reading the rest of the code, how could I know what else might get modified down the line? To discover the function's purpose and result, I had to read its entire body. In Haskell, I only need to read a function's type signature to know exactly what its capabilities are.
+This can often make code easy to write but harder to follow. For example, in the [[https://neckdeep.dev/blog/2022-12-13-a-simple-sandwich-i/][Ruby solution's]] ~Sandwich~ class, I didn't know what the ~build!~ method was going to do when I first saw it. Based on the name, I figured it would build a sandwich and mutate the instance somehow. I didn't know if it would also mutate something inside the sandwich, like the slices of bread. Without reading the rest of the code, how could I know what other variables might get mutated down the line? To discover the function's purpose and result, I had to read its entire body. In Haskell, I only need to read a function's type signature to know exactly what its capabilities are.
 
-In pure functional code, there's no such thing as mutability. When we have a ~CondimentJar~ with ~contents~ set to "Peanut Butter", we can't simply change that jar. It will always have "Peanut Butter" as its contents. Instead of mutating the jar's state, we can make a new jar which is a copy of the first one, but with its ~contents~ set to a different value.
+In pure functional code, there's no such thing as mutability. When we have a ~CondimentJar~ with its ~contents~ set to "Peanut Butter", we can't simply change that jar. It will always have peanut butter as its contents. Instead of mutating the jar's state, we must make a new jar which is a copy of the first one, but with its ~contents~ set to a different value.
 
-To people less familiar with the concept of immutability, this may seem like a burden, and sometimes it can be! Really, it's just a different perspective on writing code. Instead of keeping track of every variable and its current state at any point in the code, immutability ensures that no variables can ever change and so we can easily predict their value.
+To people less familiar with the concept of immutability, this may seem like a burden, and sometimes it is! But really, it's just a different perspective on writing code. Instead of keeping track of every variable and its current state at any point in the code, immutability ensures that no variables can ever change, so we can easily discern their value.
 
-Now, this presents us with a philosophical problem in the sandwich context. What sense does it make to have a jar which is always full of peanut butter and a knife which is always clean, and when we put them to use we have a *new* empty jar and a *new* loaded knife. Does it make sense that we still have access to the old objects? The way I see it, we can think of this in different ways.
+Now, this presents us with a philosophical problem in the sandwich-making context. What sense does it make to have a jar which is always full of peanut butter and a knife which is always clean, and when we put them to use we have a *new* empty jar and a *new* loaded knife? And does it make sense that we still have access to the old objects? The way I see it, we can think of this in different ways.
 
-In one way, we can say we simply don't care that it doesn't represent the real world accurately and as long as we don't make use of the old objects after we use them, we're not doing anything we couldn't do in reality. We just have to make sure to always use the latest version of each object.
+In one way, we can say we simply don't care that it doesn't represent the real world accurately and as long as we don't make use of the old objects after we use them, we're not doing anything we couldn't do in reality. We just have to always use the latest version of each object.
 
-Another way to think about it is that having access to the old objects is like being able to travel through time. We can think of every variable as being in a particular snapshot of the universe, which we can always go back to. However, this idea breaks down when we're able to access both a new object and its older counterpart at the same time, which is kind of like having multiple universes which can interact (like the Marvel multiverse).
+Another way to think about it is that having access to the old objects is like being able to travel through time. We can think of every variable as being in a particular snapshot of the universe, which we can always go back to. However, this idea breaks down when we can access a new object and its older counterpart simultaneously, which is kind of like having multiple universes that can interact (like the [[https://en.wikipedia.org/wiki/Multiverse_(Marvel_Comics)][Marvel multiverse]]).
 
-The most accurate representation of state in a pure functional context is to keep all stateful things in a variable which must be passed as an argument to any function which may update state. This is like passing around the universe (or at least, the important things) so we only have access to one version of it at any point in time. In Haskell, there are [[https://hackage.haskell.org/package/base-4.17.0.0/docs/Control-Concurrent-MVar.html][libraries]] which handle this in a monad. Then we can write code which looks like we're updating state, but anything that involves state must be inside the state monad.
+The most accurate representation of state in a pure functional context is to keep all stateful things in a variable that must be passed as an argument to any function that may update state. This is like passing around the universe (or at least, the important things in it) so we only have access to one version of it at any point in time. In Haskell, there are [[https://hackage.haskell.org/package/base-4.17.0.0/docs/Control-Concurrent-MVar.html][libraries]] which handle this in a monad. Then we can write code which looks like we're updating state, but anything that involves state must be inside the state monad.
 
-In my code, I opted for the first approach; simply ignore the problem! The code is simpler to understand that way.
+In my code, I opted for the first approach; simply ignore the problem! I figure the sandwich-making is represented well enough and the code is simpler to understand.
 
 * Haskell Solution - OOP Translation
 
-Since Haskell is a functional language, the following Haskell code is *not idiomatic*. It is a translation of the object-oriented Ruby solution. Similarly to how we might translate a poem from Portuguese to English word-for-word, the result may have proper grammar and spelling, but the English translation won't read much like a poem would have if it were written in English from the start.[grammar?]
+Since Haskell is a functional language, the following Haskell code is *not idiomatic*. It is a translation of the object-oriented [[https://neckdeep.dev/blog/2022-12-13-a-simple-sandwich-i/][Ruby solution]]. Similarly to how we might translate a poem from Portuguese to English word-for-word, the result may have proper grammar and spelling, but the English translation won't sound poetic like it would if it were composed in English from the start.
 
 ** Condiment.hs
 
@@ -152,9 +152,9 @@ relinquishContents cj@Jar{contents=Just c}
   | otherwise = Right (cj{contents=Nothing}, c)
 #+end_src
 
-For this OOP translation, a Haskell *record* is defined for each class of its Ruby counterpart. In idiomatic Haskell, records are used frequently, but not to represent classes/objects in such a way. And the small functions like ~isClosed~ correspond to OOP methods or property accessors, which would be replaced by pattern matching in idiomatic Haskell.
+In this OOP translation, a Haskell *record* is defined for each of its Ruby *class* counterpart. In idiomatic Haskell, records are used frequently but not to represent classes/objects in such a way. And the small functions like ~isClosed~ correspond to OOP *methods* or property accessors, which would be replaced by pattern matching in idiomatic Haskell.
 
-In Condiment.hs, the ~newJar~ function acts like an object constructor in OOP (e.g., Ruby's ~initialize~ method). It takes a ~Condiment~ to tell it what the contents of the jar should be and gives back a closed jar full of that condiment.
+In Condiment.hs, the ~newJar~ function acts like an *object constructor* in OOP (e.g., Ruby's ~initialize~ method). It takes a ~Condiment~ to tell it what the contents of the jar should be and gives back a closed jar full of that condiment.
 
 #+begin_src haskell
 -- Haskell
@@ -166,7 +166,15 @@ let pb = Condiment.newJar "Peanut Butter"
 pb = CondimentJar.new("Peanut Butter")
 #+end_src
 
-As stated above about error handling, ~relinquishContents~ returns an ~Either~ type which may either be an error message (~Left String~) or a pair of a new empty jar and a condiment (~Right (Jar, Condiment)~).
+As discussed above about error handling, ~relinquishContents~ returns an ~Either~ type which may either be an error message (~Left String~) or a pair of a new empty jar and a condiment (~Right (Jar, Condiment)~).
+
+#+begin_src haskell
+relinquishContents :: Jar -> Either String (Jar, Condiment)
+relinquishContents cj@Jar{contents=Just c}
+  | isClosed cj = Left "The jar is closed and knife-impermeable."
+  | isEmpty cj = Left "The jar is empty. How disappointing."
+  | otherwise = Right (cj{contents=Nothing}, c)
+#+end_src
 
 ** Knife.hs
 
@@ -369,7 +377,7 @@ main = do
     return "Sandwich made!"
 #+end_src
 
-This Main module is where things get more interesting. In Haskell, we always need a ~main~ function which lives in the IO (input/output) monad, otherwise we would never be able to see any results from running our application. All of the functions which may fail by returning an ~Either~ type are also used as a monad themselves. Haskell's ~do~ notation uses monadic operations which end up looking like imperative instructions. It's really just syntactic sugar for doing things sequentially and updating context as it goes. The interesting part is that each code block containing a sandwich-making attempt acts similar to a ~try-catch~ exception handler in other languages. If anything goes wrong, that is, if any function returns a ~Left~ value, it gets printed with "Error: " before it. If all goes right, it prints the result of the block: "Sandwich made!".
+This module, Main.hs, is where things get more interesting. In Haskell, we always need a ~main~ function which lives in the IO (input/output) monad, otherwise we would never be able to see any results from running our application. All of the functions which may fail by returning an ~Either~ type are also used as a monad themselves. Haskell's ~do~ notation uses monadic operations which end up looking like imperative instructions. It's really just syntactic sugar for doing things sequentially and updating context as it goes. The interesting part is that each code block containing a sandwich-making attempt acts similar to a ~try-catch~ exception handler in other languages. If anything goes wrong, that is, if any function returns a ~Left~ value, it gets printed with "Error: " before it. If all goes right, it prints the result of the block: "Sandwich made!".
 
 Again, there's nothing stopping us from using ~pbKnife~ more than once because we're not keeping track of state, so some care must be taken when making a sandwich.
 
