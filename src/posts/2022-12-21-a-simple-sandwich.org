@@ -347,7 +347,7 @@ main = do
   let knife = Knife.new
 
   -- First attempt. Didn't open the jar of peanut butter.
-  either (\e -> putStrLn $ "Error: " ++ e) putStrLn $ do
+  either printError putStrLn $ do
     (pbKnife, pbEmpty) <- knife `Knife.loadFrom` pb -- Problem
     (usedKnife1, surface1) <- Bread.smearSurface pbKnife . Bread.top . head $ bread
     (jellyKnife, jellyEmpty) <- knife `Knife.loadFrom` Condiment.openJar jelly
@@ -357,7 +357,7 @@ main = do
     return "Sandwich made!"
 
   -- Next attempt. Used too much bread inside.
-  either (\e -> putStrLn $ "Error: " ++ e) putStrLn $ do
+  either printError putStrLn $ do
     (pbKnife, pbEmpty) <- knife `Knife.loadFrom` Condiment.openJar pb
     (usedKnife1, surface1) <- Bread.smearSurface pbKnife . Bread.top . head $ bread
     (jellyKnife, jellyEmpty) <- knife `Knife.loadFrom` Condiment.openJar jelly
@@ -367,7 +367,7 @@ main = do
     return "Sandwich made!"
 
   -- Successful sandwich making!
-  either (\e -> putStrLn $ "Error: " ++ e) putStrLn $ do
+  either printError putStrLn $ do
     (pbKnife, pbEmpty) <- knife `Knife.loadFrom` Condiment.openJar pb
     (usedKnife1, surface1) <- Bread.smearSurface pbKnife . Bread.top . head $ bread
     (jellyKnife, jellyEmpty) <- knife `Knife.loadFrom` Condiment.openJar jelly
@@ -375,6 +375,9 @@ main = do
     let sw = Sandwich.new [head bread, last bread]
     Sandwich.build sw
     return "Sandwich made!"
+  where
+    printError :: String -> IO ()
+    printError e = putStrLn ("Error: " ++ e)
 #+end_src
 
 This module, Main.hs, is where things get more interesting. In Haskell, we always need a ~main~ function that lives in the IO (input/output) monad, otherwise we would never be able to see any results from running our application. The functions that return an ~Either~ type for errors are also used as a monad. Haskell's ~do~ notation uses monadic operations which end up looking like imperative instructions. It's really just syntactic sugar for doing things sequentially and updating context as it goes. The interesting thing is that each code block containing a sandwich-making attempt acts similarly to ~try-catch~ exception handling in other languages. If anything goes wrong, that is, if any function returns a ~Left~ value, it gets printed with "Error: " before it. If all goes right, it prints the result of the block: "Sandwich made!".
@@ -517,12 +520,12 @@ main = do
   let jelly = fetchCondimentJar Jelly
 
   -- First attempt. Didn't open the jar of peanut butter.
-  either (\e -> putStrLn $ "Error: " ++ e) putStrLn $ do
+  either printError putStrLn $ do
     (pbKnife, emptyPB) <- knife `loadFrom` pb -- Problem
     return "Sandwich made!"
 
   -- Next attempt. Too plain.
-  either (\e -> putStrLn $ "Error: " ++ e) putStrLn $ do
+  either printError putStrLn $ do
     (pbKnife, emptyPB) <- knife `loadFrom` openJar pb
     (jellyKnife, emptyJelly) <- knife `loadFrom` openJar jelly
     let bottomSlice = fetchSliceOfBread Sourdough
@@ -531,7 +534,7 @@ main = do
     return "Sandwich made!"
 
   -- Successful sandwich making!
-  either (\e -> putStrLn $ "Error: " ++ e) putStrLn $ do
+  either printError putStrLn $ do
     (pbKnife, emptyPB) <- knife `loadFrom` openJar pb
     (jellyKnife, emptyJelly) <- knife `loadFrom` openJar jelly
     let bottomSlice = fetchSliceOfBread Sourdough
@@ -540,6 +543,9 @@ main = do
     (topSliceWithJelly, cleanKnife) <- smearSliceOfBread jellyKnife Bottom topSlice
     sw <- makeSandwich bottomSliceWithPB topSliceWithJelly
     return "Sandwich made!"
+  where
+    printError :: String -> IO ()
+    printError e = putStrLn ("Error: " ++ e)
 #+end_src
 
 To replace the ~new~ functions from the OOP-translated version, I included functions like ~fetchCondimentJar~, which act similarly. The different naming convention ("fetch-" instead of "new-") is because I started thinking of the instance-creating functions as being analogous to fetching something from the kitchen. When it's time to get a condiment jar, we can use ~fetchCondimentJar~ to fetch one of the given condiments. Interestingly, these idiomatic functions still behave much like OOP constructors.
