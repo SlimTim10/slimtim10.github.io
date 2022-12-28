@@ -1,0 +1,225 @@
+---
+title: What is Currying?
+desc: "Advice to help you along the way of self-teaching web development."
+image: "./images/blog/how_to_learn_web_development_one_your_own.jpg"
+imageAlt: "Drawing of a pile of books."
+---
+
+* What is currying?
+
+Currying is the concept that functions never need to take multiple arguments. Every function only takes a single argument. If a function needs to behave as if it takes multiple arguments, it returns another function instead.
+
+First, we need to explain curried and uncurried functions. We'll look at functions that take two arguments as examples.
+
+An uncurried function is what you're used to seeing:
+
+#+begin_src js
+const add = (x, y) => x + y
+
+console.log(
+  add(2, 3)
+) // prints 5
+#+end_src
+
+This is a simple function that takes two numbers and returns their sum.
+
+Here is a curried version of the add function:
+
+#+begin_src js
+const addCurried = x => y => x + y
+
+console.log(
+  addCurried(2)(3)
+) // prints 5
+#+end_src
+
+Notice how we have to pass the arguments to the function using more brackets.
+
+A benefit of using curried functions is *partial application*. This is when we give a function fewer arguments than it expects. As an example:
+
+#+begin_src js
+const add2 = addCurried(2)
+
+console.log(
+  add2(3)
+) // prints 5
+#+end_src
+
+[Highlight parts of add to visually explain why add2 is itself a function.]
+
+Now we have a function ~add2~, which is expecting a single argument. Whatever we give it, it will add 2 to it.
+
+Currying is the process of taking an uncurried function and transforming it into a curried one, e.g., going from ~add~ to ~addCurried~.
+
+"Process"? "Transforming"? These are just fancy words to describe a function. In other words, curry is a function that takes an uncurried function as an argument and returns a curried one.
+
+We can define the functions ~curry~ and ~uncurry~ that work on any functions of two arguments like so:
+
+#+begin_src js
+const curry = f => {
+  const g = x => y => f(x, y)
+  return g
+}
+
+const uncurry = f => {
+  const g = (x, y) => f(x)(y)
+  return g
+}
+
+const addCurried = curry(add)
+const addUncurried = uncurry(addCurried)
+#+end_src
+
+In fact, the existence of these two functions and the fact that they are inverses of each other *proves* that curried functions and uncurried functions are isomorphic/equivalent. So technically, one is not more powerful than the other.
+
+#+begin_src js
+const doNothing1 = f => curry(uncurry(f))
+const doNothing2 = f => uncurry(curry(f))
+#+end_src
+
+
+
+
+
+In JavaScript context, we could redefine uncurried and curried functions. If we want to store the arguments for ~add~ in a single variable, we have to use some sort of tuple concept, which JavaScript doesn't have inherently. Instead, we could use an array.
+
+#+begin_src js
+const args = [2, 3]
+
+console.log(
+  add(args)
+) // doesn't work!
+
+// We could use the spread operator, but then we would have to do that for every function
+console.log(
+  add(...args)
+)
+#+end_src
+
+In this way, we can consider uncurried functions more like functions that take an array of arguments:
+
+#+begin_src js
+const addNew = ([x, y]) => x + y
+
+console.log(
+  addNew([2, 3])
+) // prints 5
+#+end_src
+
+Now we could make a generic curry function like this:
+
+#+begin_src js
+const curryNew = f => {
+  const g = (x, y) => f([x, y])
+  return g
+}
+
+const uncurryNew = f => {
+  const g = ([x, y]) => f(x, y)
+  return g
+}
+
+const doNothingNew1 = f => curryNew(uncurryNew(f))
+const doNothingNew2 = f => uncurryNew(curryNew(f))
+#+end_src
+
+And use it like this:
+
+#+begin_src js
+const addNewCurried = curryNew(addNew)
+const addNewUncurried = uncurryNew(addNewCurried)
+#+end_src
+
+...But now "currying" doesn't have to do with its original definition, regarding functions returning functions. And we can't do partial application.
+
+#+begin_src js
+const add2New = addNewCurried(2) // isn't a function
+
+console.log(
+  add2New(3)
+) // doesn't work
+#+end_src
+
+Maybe we should go straight from [x, y] to true curried functions:
+
+#+begin_src js
+const curryNewNew = f => {
+  const g = x => y => f([x, y])
+  return g
+}
+
+const addNewCurried = curryNewNew(addNew)
+const add2New = addNewCurried(2)
+console.log(
+  add2New(3)
+) // prints 5
+#+end_src
+
+
+
+
+
+
+In mathematics, a tuple is defined to be an ordered finite list of elements. In JavaScript, either function arguments ~(a, b, c, ...)~ or arrays ~[a, b, c, ...]~ fit the definition. The problem is, we can't use the function-arguments-tuple as a value in JavaScript.
+
+#+begin_src js
+const add = (x, y) => x + y
+const twoAndThree = (x, y) // doesn't work!
+console.log(
+  add(twoAndThree) // want to do this
+)
+#+end_src
+
+One option is to take them both as tuples and convert between them when necessary. Fortunately, JavaScript's spread operator does exactly this conversion.
+
+#+begin_src js
+const add = (x, y) => x + y
+const twoAndThree = [2, 3]
+console.log(
+  add(...twoAndThree)
+)
+#+end_src
+
+So, we use arrays as tuple values. Then, whenever we need to pass a tuple to a function as arguments, we spread. And whenever we need a function to return a tuple, we return an array.
+
+Now we have the glue between functions that return tuples and functions that take multiple arguments.
+
+#+begin_src js
+const add = (x, y) => x + y
+
+const range = (start, end) => {
+  const size = end - start + 1;
+  const emptyArray = [...Array(size];
+  return emptyArray.map((x, i) => i + start);
+};
+
+console.log(
+  add(...range(2, 3))
+)
+#+end_src
+
+
+
+
+
+
+Why does this matter?
+
+** Short version
+
+Instead of writing something like:
+
+#+begin_src js
+// real-world example of composing multiple functions on an input to get a result
+#+end_src
+
+We can write something like:
+
+#+begin_src js
+// the same example, but using a compose function (R.compose or .after or something else?)
+#+end_src
+
+** Long version
+
+First explain function composition. Then explain uncurried and curried functions. Then explain currying (which is not often useful in functional languages, where curried functions are the default).
+
