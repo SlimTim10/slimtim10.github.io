@@ -1,11 +1,11 @@
 ---
-title: A Simple Sandwich
-desc: "Correspondence with Danny Fekete"
-image: "./images/blog/pumpkin_pie.jpg"
-imageAlt: "drawing of pumpkin pie"
+title: A Simple Sandwich, Part I
+desc: "A bunch of ideas in response to a post by Danny Fekete."
+image: "./images/blog/a_simple_sandwich_i.jpg"
+imageAlt: "Drawing of a sandwich"
 ---
 
-I wrote this as a result of reading [[https://neckdeep.dev/blog/2022-12-13-a-simple-sandwich-i/][a post by my friend Danny Fekete]]. For any of this to make sense, you need to read his post first. These are my thoughts relating to the ideas Danny brought up as well as Haskell code inspired by Danny's Ruby code.
+I wrote this as a sort of response to [[https://neckdeep.dev/blog/2022-12-13-a-simple-sandwich-i/][a post by my friend Danny Fekete]]. For any of this to make sense, you'll want to read his post first. These are my thoughts related to the ideas Danny brought up as well as Haskell code inspired by Danny's Ruby code. I would describe the subject as *programming philosophy*.
 
 * Food for Thought
 
@@ -590,10 +590,8 @@ impossibleSandwich = Sandwich
   }
 #+end_src
 
-No matter how much error handling we add along the way to making a sandwich, our definition of a sandwich makes it possible to skip the error checks and create an erroneous sandwich. Even if we force the user to only make a sandwich using the proper functions, we have to be sure we included checks for all the possible mistakes that could be made. Are we sure we didn't miss one?
+No matter how much error handling we add along the way to making a sandwich, our definition of a sandwich makes it possible to skip the error checks and create an erroneous sandwich. Even if we force the user only to make a sandwich using the proper functions, we have to be sure we include checks for all the possible mistakes that could be made. Are we sure we didn't miss one?
 
-[HERE]
-The other approach is to avoid possible errors altogether by using type-safe definitions; making it so a sandwich can only be made when its type is fulfilled. To relate this to the [[https://www.youtube.com/watch?v=FN2RM-CHkuI][video]], the kids are frustrated because their father is failing in ways they didn't expect him to fail. He's doing things they didn't want him to do. On the computer, why would we program the ability to do things we don't want to happen? We don't want it to be possible to attempt to put a knife in a closed jar, so we shouldn't make a function where that can happen. Type systems can help us resolve this. Stay tuned for the next post...
+The other approach is to avoid possible errors altogether by using type-safe definitions, making it so a sandwich can only be made when its type is fulfilled. To relate this to the [[https://www.youtube.com/watch?v=FN2RM-CHkuI][video]], the kids are frustrated because their father is failing in ways they didn't expect him to fail. He's doing things they didn't want him to do. On the computer, why would we program the ability to do things we don't want to happen? We don't want it to be possible to attempt to put a knife in a closed jar, so we shouldn't make a function where that can happen. Type systems can help us resolve this. Stay tuned for Part II...
 
-[Save for next post]
-Now for the really interesting part. I left out one approach to error handling: eliminating all possible errors by encoding data flow into the type system. This only works in a statically-typed language, such as Haskell. Using the concepts of *type theory*, we can write code which ensures that the only way for it to run is if none of the errors occur. This safeguard check is done by the compiler, which means as a programmer, we can be sure that if our code compiles, it will run without errors.
+See the full Haskell code on GitHub: https://github.com/SlimTim10/simple-sandwich
