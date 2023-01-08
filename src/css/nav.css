@@ -7,7 +7,7 @@ body > header nav {
   overflow: hidden;
   transition: max-height 0.75s ease;
   height: auto;
-  max-height: 18em;
+  max-height: 21em;
 }
 
 body > header nav.collapsed {
