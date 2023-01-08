@@ -44,7 +44,7 @@ h4 {
 }
 
 a {
-  text-decoration: none;
+  text-decoration: underline;
   font-weight: 600;
   color: #155915;
 }
@@ -161,6 +161,10 @@ footer .social-icons {
 footer .social-icons svg {
   width: 40px;
   color: #282828;
+}
+
+footer a {
+  text-decoration: none;
 }
 
 .hidden {
