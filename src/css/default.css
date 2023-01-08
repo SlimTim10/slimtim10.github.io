@@ -189,3 +189,14 @@ footer a {
   max-width: 50rem;
   align-self: center;
 }
+
+#happy-hour-banner {
+  background: #AD04DC;
+  color: white;
+  padding: 0.5rem 2rem;
+  font-weight: 600;
+}
+#happy-hour-banner a {
+  margin-left: 1em;
+  color: white;
+}
