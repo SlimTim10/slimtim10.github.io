@@ -13,3 +13,7 @@ section .content {
 section .content .btn-primary {
   align-self: center;
 }
+
+#next-happy-hour {
+  color: #E30D0D;
+}
