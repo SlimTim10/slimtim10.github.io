@@ -16,4 +16,23 @@ section .content .btn-primary {
 
 #next-happy-hour {
   color: #E30D0D;
+  align-self: center;
+}
+
+.content h1 {
+  text-transform: uppercase;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #155915;
+}
+
+.content h2 {
+  font-size: 1.25rem;
+  font-weight: 400;
+  line-height: 1.25rem;
+}
+
+img.happy-hour {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
 }
