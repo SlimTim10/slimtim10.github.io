@@ -5,13 +5,13 @@ image: "./images/blog/a_simple_sandwich_ii.jpg"
 imageAlt: "Drawing of a sandwich"
 ---
 
-(This is a continuation from [[/a-simple-sandwich-part-i.html][Part I]]. Go read it if you haven't yet.)
+(This is a continuation from [[./a-simple-sandwich-part-i.html][Part I]]. Go read it first, if you haven't yet.)
 
-Continuing the philosophical exploration about programming, with sandwiches. In [[/a-simple-sandwich-part-i.html][Part I]], I talked about error handling, mutability and state, and programming paradigms. Now it's time to get into some type theory. My original plan was, after translating Danny's Ruby solution into Haskell and then writing an idiomatic Haskell solution, to write a Haskell solution using type-level programming. Writing an Agda solution was going to be the last step. Well, plans change. After a bit of trial-and-error in trying to write a meaningful type-level Haskell solution, I decided to skip straight to Agda. It turns out, Haskell's type system is not equipped to deal with ?? nearly as well as Agda's.[fn:1] Let me explain.
+Continuing the philosophical exploration about programming, with sandwiches. In [[./a-simple-sandwich-part-i.html][Part I]], I talked about error handling, mutability and state, and programming paradigms. Now it's time to get into some type theory. My original plan was, after translating Danny's Ruby solution into Haskell and then writing an idiomatic Haskell solution, to write a Haskell solution using type-level programming. Writing an Agda solution was going to be the last step. Well, plans change. After a bit of trial-and-error in trying to write a meaningful type-level Haskell solution, I decided to skip straight to Agda. It turns out, Haskell's type system is not equipped to deal with ?? nearly as well as Agda's.[fn:1] Let me explain.
 
 * Defining a Sandwich as a Type
 
-At the end of [[/a-simple-sandwich-part-i.html][Part I]], I explained how it's easily possible to make an impossible sandwich with the previously proposed solution. Let's revisit and dig deeper into that idea.
+At the end of [[./a-simple-sandwich-part-i.html][Part I]], I explained how it's easily possible to make an impossible sandwich with the previously proposed solution. Let's revisit and dig deeper into that idea.
 
 In the context of this exploration, a sandwich is supposed to be defined as follows:
 
@@ -21,7 +21,7 @@ A sandwich consists of a bottom and top, which are both slices of bread. Neither
 
 I know, this doesn't cover nearly all the sandwiches you have in mind. I want to keep the scope of this problem small so the code is easier to understand, so we're just dealing with peanut butter and/or jelly sandwiches. To be clear, sandwiches can't be smeared on the outside or else they're too icky to hold.
 
-So, with that definition in mind, let's look at the Haskell sandwich from [[/a-simple-sandwich-part-i.html][Part I]] and where it falls short.
+So, with that definition in mind, let's look at the Haskell sandwich from [[./a-simple-sandwich-part-i.html][Part I]] and where it falls short.
 
 #+begin_src haskell
 data Sandwich = Sandwich
@@ -61,7 +61,7 @@ data SliceOfBread = SliceOfBread
 
 This type says, "a slice of bread is of a certain flavour and may be smeared with a condiment on the top and/or bottom."
 
-So, there is something about smearing, but it doesn't have the restriction we want, about the sandwich's bottom and top being smeared only on the inside. In fact, with Haskell's type system, we /can't/ represent that! Our only option is to leave the type as it is and handle the proper making of a sandwich in the logic of functions. But, as we've seen (in [[/a-simple-sandwich-part-i.html][Part I]]), that leaves us with the ability to make improper sandwiches if we forego the use of those functions. Not to mention, we have to thread error handling throughout all those functions using ~Either~ (either a function succeeds or it fails in making a sandwich).
+So, there is something about smearing, but it doesn't have the restriction we want, about the sandwich's bottom and top being smeared only on the inside. In fact, with Haskell's type system, we /can't/ represent that! Our only option is to leave the type as it is and handle the proper making of a sandwich in the logic of functions. But, as we've seen (in [[./a-simple-sandwich-part-i.html][Part I]]), that leaves us with the ability to make improper sandwiches if we forego the use of those functions. Not to mention, we have to thread error handling throughout all those functions using ~Either~ (either a function succeeds or it fails in making a sandwich).
 
 The idea of embedding our ideal definitions in types is to make it impossible to do things wrong. I don't want it to be possible to make an improper sandwich, or even fail at any step along the way. That brings us to Agda.
 
@@ -111,7 +111,7 @@ A sandwich consists of a bottom and top, which are both slices of bread. Neither
 
 * Dependently Typed Utensils
 
-In [[/a-simple-sandwich-part-i.html][Part I]], I encoded utensils in Haskell like this:
+In [[./a-simple-sandwich-part-i.html][Part I]], I encoded utensils in Haskell like this:
 
 #+begin_src haskell
 data UtensilShape = Knife | Spoon | Fork
@@ -127,6 +127,10 @@ This means a utensil shape is either a knife, a spoon, or a fork. And a utensil 
 Since Agda is dependently typed, we can easily write this!
 
 #+begin_src agda
+-- We only have peanut butter and jelly in the pantry.
+data Condiment : Type where
+  peanutButter jelly : Condiment
+
 data UtensilShape : Type where
   knife spoon fork : UtensilShape
 
@@ -171,13 +175,251 @@ cleanFork = utensil fork nothing
 
 * Dependently Typed Actions
 
-Now, for the sake of exploration, I wanted to see how far I could take this.
+Now, for the sake of exploration, I wanted to see how far I could take this. So far, I've only implemented static things, like sandwiches and utensils. In the Haskell code from [[./a-simple-sandwich-part-i.html][Part I]], there's a function to fetch a utensil of a specified shape:
 
-* Building a Sandwich
+#+begin_src haskell
+fetchUtensil :: UtensilShape -> Utensil
+fetchUtensil shape = Utensil
+  { uShape = shape
+  , uCondiment = Nothing
+  }
+#+end_src
+
+This function takes a utensil shape and returns a clean utensil of that shape. However, the type signature of the function only says it takes a utensil shape and returns a utensil. It doesn't specify that the returned utensil will be the right shape or that it will be clean; that's left to the body of the function. The common approach to making sure this function is implemented correctly is to write tests for it:
+
+#+begin_src haskell
+testFetchUtensil :: IO ()
+testFetchUtensil = do
+  print (fetchUtensil Knife == Utensil { uShape = Knife, uCondiment = Nothing })
+  print (fetchUtensil Fork == Utensil { uShape = Fork, uCondiment = Nothing })
+  print (fetchUtensil Spoon == Utensil { uShape = Spoon, uCondiment = Nothing })
+#+end_src
+
+Now, if we accidentally wrote ~fetchUtensil~ to always return a knife:
+
+#+begin_src haskell
+fetchUtensil :: UtensilShape -> Utensil
+fetchUtensil shape = Utensil
+  { uShape = Knife
+  , uCondiment = Nothing
+  }
+#+end_src
+
+our tests would catch our mistake.
+
+But there's another approach we can take. Using dependent types in Agda, we can give the function the type of "taking a utensil shape and returning a clean utensil of that shape", just like I wanted to describe it.
+
+#+begin_src agda
+fetchUtensil
+  : (s : UtensilShape)
+  → Σ u ꞉ Utensil , (shape u ≡ s) × is-nothing (loadedWith u)
+fetchUtensil s = utensil s nothing , refl s , refl
+#+end_src
+
+What this type really says is, "take a utensil shape and return a pair of values ~(u , p)~ where ~u~ is a utensil and ~p~ is a proof that ~u~ has the given shape and is clean." Then, the function body has no choice but to implement exactly that type. If we implement it any other way, the code won't compile! This is the difference: having our mistakes caught during *compiling* versus *running*. If the function's meaning is encoded in its type, our code /won't compile/ unless its body honors that type.
+
+To be clear, I'm not advocating for all programs to be written in Agda. It's not a programming language meant for producing general purpose applications. In fact, it's only meant for writing (mathematical) proofs. But! It's a great tool for discovering, planning, and expressing ideas rigorously.
+
+Just for fun, here's the most complex part of the sandwich solution in Agda versus in Haskell. Not for the faint of heart!
+
+Haskell:
+#+begin_src haskell
+loadFrom :: Utensil -> CondimentJar -> Either String (Utensil, CondimentJar)
+loadFrom _ CondimentJar{cjLid=Closed} = Left "The jar is closed and knife-impermeable."
+loadFrom _ CondimentJar{cjCondiment=Nothing} = Left "The jar is empty. How disappointing."
+loadFrom Utensil{uShape=Fork} _ = Left "Forks aren't the right shape for condiments."
+loadFrom u cj@CondimentJar{cjCondiment=Just c}
+  = Right (u { uCondiment = Just c }, cj { cjCondiment = Nothing })
+#+end_src
+
+Agda:
+#+begin_src agda
+-- A Maybe value is left unchanged if we map it to the second value of a pair and project that second value.
+-- Needed to prove this for part of loadFrom (following).
+map-pr₂-pair-refl
+  : {A B : Type} {b : B} (ma : Maybe A)
+  → ma ≡ map pr₂ (map (λ (a : A) → (b , a)) ma)
+map-pr₂-pair-refl {A} {B} {b} (just x) = refl (just x)
+map-pr₂-pair-refl {A} {B} {b} nothing = refl nothing
+
+-- Load a clean knife with a condiment from a jar that is open and full.
+-- Take a utensil that is a knife and clean.
+-- Take a condiment jar that is full and open.
+-- Return the knife, now loaded with the condiment from the jar,
+--   and the condiment jar, still open but now empty.
+loadFrom
+  : (uₛ : Σ u ꞉ Utensil , (shape u ≡ knife) × is-nothing (loadedWith u))
+    (cjₛ : Σ cj ꞉ CondimentJar , is-just (condiment cj) × (state cj ≡ open'))
+  → Σ (u' , cj') ꞉ Utensil × CondimentJar
+    , (shape u' ≡ shape (pr₁ uₛ)) -- Same shape (*the* knife)
+      × (condiment (pr₁ cjₛ) ≡ map pr₂ (loadedWith u')) -- Loaded with condiment from jar
+      × (state cj' ≡ state (pr₁ cjₛ)) -- State unchanged (still open)
+      × is-nothing (condiment cj') -- Now empty
+loadFrom
+  (u , isKnife , notLoaded)
+  (cj , isFull , isOpen)
+  = (record u { loadedWith = loadedWith' } , record cj { condiment = nothing })
+    , refl (shape u) , isLoaded' , refl (state cj) , refl
+  where
+  loadedWith' : Maybe ((shape u ≡ knife) × Condiment)
+  loadedWith' = map (λ x → (isKnife , x)) (condiment cj)
+
+  isLoaded' : condiment cj ≡ map pr₂ loadedWith'
+  isLoaded' = map-pr₂-pair-refl (condiment cj)
+#+end_src
+
+* Making a Sandwich
+
+So far, I've shown how static things and actions can be written in Agda, but what about using these individual parts together to make a sandwich? Remember, the main goal of this whole exercise is to demonstrate what it would be like to program a computer to make a sandwich (without ending up with a /real/ sandwich being squeezed out the USB port).
+
+I'm going to show a few examples of attempts at making a sandwich and how mistakes are caught. To be clear, a failed attempt doesn't mean something is wrong with the coded tools for making sandwiches; it's the opposite! It's showing how the code forces us to make proper sandwiches. In each of these attempts, I'm going to mock getting items from the kitchen by invoking fetching functions like ~fetchUtensil~, but it should be understood that any method of creating a value of a certain type equates to fetching it in the real world (things don't magically come into existence).
+
+** Attempt 1: Forgot to open the jar of peanut butter
+
+Here's an example of a first attempt at making a sandwich. This attempt didn't result in a completed sandwich because we forgot to open the jar of peanut butter.
+
+#+begin_src agda
+sandwichAttempt1 : Sandwich
+sandwichAttempt1 = {!!}
+  where
+  -- Get a knife with peanut butter.
+  step1 : Σ _ ꞉ Utensil × CondimentJar , _
+  step1 =
+    let
+      newKnife : Utensil
+      newKnife = pr₁ (fetchUtensil knife)
+      pb : CondimentJar
+      pb = pr₁ (fetchCondimentJar peanutButter)
+    -- Not possible because the pb jar isn't open!
+    in loadFrom (newKnife , (refl knife , refl)) (pb , ((peanutButter , refl) , {!!})) -- closed ≡ open'
+#+end_src
+
+In Agda, ~{!!}~ denotes a hole to be filled with some value of the right type. When writing Agda code, it's typical to have lots of holes and the goal is to fill them all with appropriate types (with interactive assistance of Agda, which is really cool). The first hole, in ~sandwichAttempt1 = {!!}~ is expecting a value of type ~Sandwich~. Since this is a failed attempt at making a sandwich, this hole will be left unfilled. The real evidence that this attempt isn't going to work is on the last line:
+
+#+begin_src agda
+loadFrom (newKnife , (refl knife , refl)) (pb , ((peanutButter , refl) , {!!}))
+#+end_src
+
+The hole in that line is expecting a value of the type ~closed ≡ open'~, meaning a proof that ~closed~ is the same as ~open~. It's expecting this type because ~loadFrom~ takes an open condiment jar as its second argument and we've given it a closed one, ~pb~. Obviously, we can't supply a proof that the given jar is open because it's not! So this hole /must/ remain unfilled.
+
+** Attempt 2: Tried to make a sandwich without condiments
+
+#+begin_src agda
+sandwichAttempt2 : Sandwich
+sandwichAttempt2 = sandwich topSlice' bottomSlice' (refl , refl , {!!}) (1 , ⋆)
+  where
+  -- Get a knife with peanut butter.
+  step1 : Σ _ ꞉ Utensil × CondimentJar , _
+  step1 =
+    let
+      newKnife : Utensil
+      newKnife = pr₁ (fetchUtensil knife)
+      pb : CondimentJar
+      pb = pr₁ (fetchCondimentJar peanutButter)
+    in loadFrom (newKnife , (refl knife , refl)) (pr₁ (openJar pb) , ((peanutButter , refl) , refl open'))
+
+  -- Get a couple slices of bread.
+  topSlice' : SliceOfBread
+  topSlice' = pr₁ (fetchSliceOfBread wholeGrain)
+  bottomSlice' : SliceOfBread
+  bottomSlice' = pr₁ (fetchSliceOfBread sourdough)
+#+end_src
+
+This time, we got closer to making a proper sandwich! In ~step1~, we got a knife and loaded it with peanut butter from a jar. Then, we got a couple slices of bread. We didn't bother to use our knife or spread any condiments on either slice, we just left them plain. When we tried to make a sandwich out of these plain slices, we ended up with a hole:
+
+#+begin_src agda
+sandwich topSlice' bottomSlice' (refl , refl , {!!}) (1 , ⋆)
+#+end_src
+
+This hole is expecting a value of the type ~is-just (smearedBottom topSlice') ∔ is-just (smearedTop bottomSlice')~, which means a proof that the top slice is smeared on its bottom or the bottom slice is smeared on its top. Since our slices are plain, we can't provide that!
+
+** Attempt 3: Successful sandwich making!
+
+Okay, this is a long one. Hey, it takes a lot of work to make a proper sandwich!
+
+#+begin_src agda
+sandwichAttempt3 : Sandwich
+sandwichAttempt3 = sandwich topSliceWithJelly bottomSliceWithPB (refl , (refl , inl (jelly , refl))) (1 , ⋆)
+  where
+  -- Get a knife with peanut butter.
+  step1 : Σ _ ꞉ Utensil × CondimentJar , _
+  step1 =
+    let
+      newKnife : Utensil
+      newKnife = pr₁ (fetchUtensil knife)
+      pb : CondimentJar
+      pb = pr₁ (fetchCondimentJar peanutButter)
+    in loadFrom (newKnife , refl knife , refl) (pr₁ (openJar pb) , (peanutButter , refl) , refl open')
+
+  -- Get a slice of bread and smear it with the PB knife.
+  step2 : Σ _ ꞉ SliceOfBread × Utensil , _
+  step2 =
+    let
+      bottomSlice : SliceOfBread
+      bottomSlice = pr₁ (fetchSliceOfBread sourdough)
+      pbKnife : Utensil
+      pbKnife = pr₁ (pr₁ step1)
+      emptyPB : CondimentJar
+      emptyPB = pr₂ (pr₁ step1)
+    in
+      smearSliceOfBread
+      (pbKnife , (refl (shape pbKnife)) , ((refl (shape pbKnife)) , peanutButter) , refl)
+      top
+      (bottomSlice , (inl (refl top , refl)))
+
+  -- Our successfuly smeared slice to be used as the bottom of the sandwich!
+  bottomSliceWithPB : SliceOfBread
+  bottomSliceWithPB = pr₁ (pr₁ step2)
+
+  -- Get another slice of bread and smear it with jelly, using the same knife as before.
+  step3 : Σ _ ꞉ SliceOfBread × Utensil , _
+  step3 =
+    let
+      jellyKnife : Utensil
+      jellyKnife =
+        let
+          -- The knife is now clean after having spread all its peanut butter on the other slice.
+          usedKnife : Utensil
+          usedKnife = pr₂ (pr₁ step2)
+          j : CondimentJar
+          j = pr₁ (fetchCondimentJar jelly)
+        in pr₁ (pr₁ (loadFrom (usedKnife , (refl knife , refl)) (pr₁ (openJar j) , (jelly , refl) , refl open')))
+      topSlice : SliceOfBread
+      topSlice = pr₁ (fetchSliceOfBread wholeGrain)
+    in
+      smearSliceOfBread
+      (jellyKnife , (refl knife , (refl knife , jelly) , refl))
+      bottom
+      (topSlice , (inr (refl bottom , refl)))
+
+  -- Our successfully smeared slice to be used as the top of the sandwich!
+  topSliceWithJelly : SliceOfBread
+  topSliceWithJelly = pr₁ (pr₁ step3)
+#+end_src
+
+I broke it down into steps so it's easier to follow. The important part is we have our sandwich:
+
+#+begin_src agda
+sandwich topSliceWithJelly bottomSliceWithPB (refl , (refl , inl (jelly , refl))) (1 , ⋆)
+#+end_src
+
+It has a top slice, a bottom slice, proof that the slices are smeared appropriately, and it's in 1 piece.
+
+For most of you, it probably feels really difficult to read a foreign language in an unfamiliar paradigm. Don't worry about piecing together every little bit. What you should be looking at are the types of the variables and what things they refer to. For example:
+
+#+begin_src agda
+usedKnife : Utensil
+usedKnife = pr₂ (pr₁ step2)
+#+end_src
+
+We know ~usedKnife~ is a utensil. And we can see it comes from ~step2~, which was when a knife was used to smear a slice of bread with peanut butter, as the comment says. So, now we know ~usedKnife~ is not just any utensil, but a knife, and the one we used previously.
+
+See the full code on GitHub: https://github.com/SlimTim10/simple-sandwich
+
+* Conclusion
+
+I hope you enjoyed this exploration with me! [[./contact.html][Send me a message]] if you have any comments or feedback. I love to chat about this stuff! Many thanks to [[https://neckdeep.dev/][Danny]] for sparking this idea and sharing the journey. Go check out his blog, it's a real treat to read.
 
 
 
-
-
-
-[fn:1] There have been attempts to extend Haskell's type system, but they are very ugly compare to Agda.
+[fn:1] There have been attempts to extend Haskell's type system to support dependent types, but they are very hacky and ugly compared to Agda.
