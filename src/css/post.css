@@ -89,3 +89,9 @@ main > article > section a {
   display: flex;
   justify-content: center;
 }
+
+.post-image {
+  align-self: center;
+  margin-top: 2rem;
+  font-style: italic; /* for image alt */
+}
