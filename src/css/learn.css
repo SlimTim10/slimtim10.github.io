@@ -84,6 +84,8 @@ section#curriculum h4 {
 section#curriculum h3 {
   font-weight: 400;
   margin-bottom: 0.5rem;
+  background-color: rgba(0,0,0,.05);
+  padding-left: 0.5rem;
 }
 
 section#curriculum .content > ul > li > ul {
