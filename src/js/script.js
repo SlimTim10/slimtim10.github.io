@@ -34,14 +34,14 @@ const getNextSessionDate = () => {
   nextWeek.setUTCDate(now.getUTCDate() + 7)
 
   // Sunday - Saturday : 0 - 6
-  const day = 3 // Wednesday
+  const day = 4 // Thursday
   const diff = (day - nextWeek.getUTCDay()) < 0
-        ? (3 - nextWeek.getUTCDay()) + 7
-        : (3 - nextWeek.getUTCDay())
+        ? (day - nextWeek.getUTCDay()) + 7
+        : (day - nextWeek.getUTCDay())
   
   const nextSessionDate = new Date()
   nextSessionDate.setUTCDate(now.getUTCDate() + diff)
-  const hour = 18 + 5 // 18:00 EST = 23:00 UTC-5
+  const hour = 19 + 5 // 19:00 EST = 24:00 UTC-5
   nextSessionDate.setUTCHours(hour)
   nextSessionDate.setUTCMinutes(0)
   nextSessionDate.setUTCSeconds(0)
