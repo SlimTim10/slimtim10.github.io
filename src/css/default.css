@@ -1,8 +1,29 @@
+/* OLD */
 /* primary: #155915 */
 /* light primary: rgba(21, 89, 21, 0.1) */
 /* secondary: #D2B48C */
 /* light secondary: rgba(210, 180, 140, 0.25) */
 /* black: #282828 */
+
+/* Colours */
+/* Background: #f1f0ec */
+/* Foreground: #4c5a51 */
+/* Accent 1: #376e49 */
+/* Accent 2: #228342 */
+/* Accent 3: #0e983b */
+
+/* Typography */
+/* - Title font */
+/*   - font-family: "Lato", sans-serif */
+/*   - font-weight: 700 or 900 */
+/*   - font-style: normal */
+/* - Subtitle font */
+/*   - font-family: "Libre Baskerville", sans-serif */
+/*   - font-weight: 900 */
+/*   - font-style: normal */
+/* - Body font */
+/*   - Inter */
+
 
 html,
 body {
@@ -46,7 +67,7 @@ h4 {
 a {
   text-decoration: underline;
   font-weight: 600;
-  color: #155915;
+  color: #4c5a51;
 }
 
 small {
@@ -62,8 +83,7 @@ pre.sourceCode {
 }
 
 body > header {
-  background: #155915;
-  color: white;
+  background: #f1f0ec;
   display: flex;
   flex-direction: column;
   padding: 0.5rem;
@@ -76,13 +96,16 @@ body > header > div {
 }
 
 body > header a {
-  color: white;
+  color: #4c5a51;
   text-decoration: none;
 }
 
 body > header #title {
   font-size: 2em;
   font-weight: 300;
+  height: 2.2rem;
+  width: 100%;
+  display: flex;
 }
 
 @media screen and (min-width: 900px) {
@@ -99,13 +122,20 @@ main {
 }
 
 .btn-primary {
-  padding: 0.75rem 1rem;
-  background: #155915;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: fit-content;
+  padding: 1rem 2rem;
+  background: #0e983b;
   color: white;
-  font-family: 'Inter', sans-serif;
-  font-weight: 500;
+  font-family: 'Lato', sans-serif;
+  font-weight: 700;
+  font-style: normal;
   text-transform: uppercase;
   text-decoration: none;
+  box-shadow: 0px 2px 4px rgba(136, 144, 194, 0.2), 0px 5px 15px rgba(37, 44, 97, 0.15);;
+  border-radius: 4px;
 }
 
 section img {
