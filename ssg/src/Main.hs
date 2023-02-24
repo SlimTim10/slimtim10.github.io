@@ -50,6 +50,7 @@ main = hakyllWith config $ do
     , "_config.yml"
     , "images/*"
     , "images/blog/*"
+    , "images/testimonials/*"
     , "js/*"
     , "fonts/*"
     ]

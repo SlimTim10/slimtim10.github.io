@@ -133,12 +133,13 @@ main {
   font-weight: 700;
   font-style: normal;
   text-transform: uppercase;
+  letter-spacing: 0.05rem;
   text-decoration: none;
   box-shadow: 0px 2px 4px rgba(136, 144, 194, 0.2), 0px 5px 15px rgba(37, 44, 97, 0.15);;
   border-radius: 4px;
 }
 
-section img {
+section#hero img {
   align-self: center;
   width: 70%;
   max-width: 20rem;
