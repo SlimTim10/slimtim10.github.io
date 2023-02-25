@@ -1,4 +1,5 @@
 main > section h2 {
+  font-family: 'Lato', sans-serif;
   font-size: 2.4rem;
   font-weight: 900;
 }
@@ -26,6 +27,7 @@ section#hero p {
   max-width: 50rem;
   width: 100%;
   text-align: center;
+  font-family: 'Lato', sans-serif;
   font-weight: 900;
   font-size: 9vw;
   color: #4c5a51;
@@ -37,6 +39,7 @@ section#hero p {
 }
 
 section#testimonials {
+  width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -44,6 +47,11 @@ section#testimonials {
   gap: 4rem;
   background: #4c5a51;
   color:  white;
+}
+
+section#testimonials > * {
+  max-width: 50rem;
+  margin: 0 1rem;
 }
 
 section#testimonials figure {
@@ -69,33 +77,49 @@ section#testimonials figcaption img {
 section#testimonials figcaption .name {
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.05rem;
 }
 
 section#program {
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 2rem;
 }
 
+section#program > * {
+  max-width: 50rem;
+  margin: 0 1rem;
+}
+
 section#program img {
-  width: 100%;
+  width: 95%;
   max-width: 25rem;
+}
+
+section#program h2 {
+  color: #4c5a51;
 }
 
 section#program p {
   font-size: 1.2rem;
-  font-weight: 300;
+  font-weight: 400;
+  color: #4c5a51;
   text-align: center;
 }
 
 section#latest-posts {
+  width: 100%;
   background: #dce5da;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 4rem;
+}
+
+section#latest-posts > * {
+  max-width: 50rem;
+  margin: 0 1rem;
 }
 
 section#latest-posts ul {
