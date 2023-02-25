@@ -5,6 +5,7 @@ title: "Home"
 ---
 
 <main>
+
   <section id="hero">
 	<img alt="headshot" src="./images/headshot_circle.jpg" />
     <p>
@@ -12,8 +13,9 @@ title: "Home"
       of tech excellence<br>
       one student at a time
     </p>
-    <a href="/learn.html" class="btn-primary">Learn More</a>
+    <a href="/learn.html" class="btn btn-primary">Learn More</a>
   </section>
+
   <section id="testimonials">
     <figure>
       <blockquote>
@@ -59,66 +61,40 @@ title: "Home"
     </figure>
   </section>
 
-  
-  <section id="cta">
-	<article>
-	  <img alt="" src="./images/undraw_knowledge_re_5v9l.svg"/>
-	  <div class="body">
-		<div class="text">
-		  <h3>
-			Thinking about starting a new career in tech?
-		  </h3>
-		  <p>
-			The project-focused private mentoring program takes you from newbie to professional software engineer.
-		  </p>
-		</div>
-		<a href="/learn.html" class="btn-primary">Learn</a>
-	  </div>
-	</article>
-	<article>
-	  <img alt="" src="./images/undraw_going_up_re_86kg.svg"/>
-	  <div class="body">
-		<div class="text">
-		  <h3>
-			Not getting proper mentorship at your job?
-		  </h3>
-		  <p>
-			Practice interviewing, understand a framework, or improve your portfolio.
-		  </p>
-		</div>
-		<a href="/learn.html#upskill" class="btn-primary">Upskill</a>
-	  </div>
-	</article>
-	<article>
-	  <img alt="" src="./images/undraw_project_completed_re_pqqq.svg"/>
-	  <div class="body">
-		<div class="text">
-		  <h3>
-			Check out some of my work!
-		  </h3>
-		  <p>
-			All of my software projects are open source.
-		  </p>
-		</div>
-		<a href="/projects.html" class="btn-primary">Projects</a>
-	  </div>
-	</article>
+  <section id="program">
+    <img alt="drawing of a teacher" src="./images/undraw_teaching_re_g7e3.svg"/>
+    <h2>What I Do</h2>
+    <p>
+      My one-on-one mentoring program offers personalized support to help you start a new career as a software engineer! If you're looking for a change and want to learn the most relevant and in-demand skills, I am here to assist you every step of the way.
+    </p>
+    <p>
+      My program is designed to offer personalized support, so you can feel confident that you're receiving the guidance you need to succeed. With flexible hours, you can work at a pace that suits you and fits around your other commitments.
+      </p>
+    <p>
+      I have extensive experience in the field and am passionate about sharing my knowledge with others. I'll work with you to understand your goals and create a tailored learning plan to get you there.
+    </p>
+    <p>
+      Whether you're a complete beginner or have some experience already, my mentoring program is perfect for those looking to start a new career as a software engineer. Contact me today to find out more about how I can help you achieve your career goals!
+    </p>
+    <a href="#calendly" class="btn btn-primary">Get Started</a>
   </section>
-  <section id="latest-posts" class="writing">
+
+  <section id="latest-posts">
     <h2>Latest Posts</h2>
     <ul>
       $for(posts)$
       <li>
-		<div>
+		<div class="blog-image">
           <a href=".$url$"><img alt="$imageAlt$" src="$image$"/></a>
 		</div>
 		<div>
-          <a href=".$url$"><h4>$title$</h4></a>
+          <a href=".$url$"><h4 class="writing">$title$</h4></a>
           <small>$date$</small>
 		</div>
       </li>
       $endfor$
     </ul>
-	<a href="/writing.html" class="btn-primary">Read More</a>
+	<a href="/writing.html" class="btn btn-secondary">Read More</a>
   </section>
+  
 </main>
