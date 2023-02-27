@@ -86,22 +86,22 @@ main = hakyllWith config $ do
         >>= applyAsTemplate indexCtx
         >>= loadAndApplyTemplate "templates/default.html" indexCtx
 
-  match "writing.html" $ do
+  match "blog.html" $ do
     route idRoute
     compile $ do
       posts <- recentFirst =<< loadAll "posts/*"
 
-      let writingCtx =
-            boolField "page-writing" (const True)
+      let blogCtx =
+            boolField "page-blog" (const True)
             <> listField "posts" postCtx (return posts)
             <> pageCtx
 
       getResourceBody
-        >>= applyAsTemplate writingCtx
-        >>= loadAndApplyTemplate "templates/default.html" writingCtx
+        >>= applyAsTemplate blogCtx
+        >>= loadAndApplyTemplate "templates/default.html" blogCtx
 
   mapM_ simplePage
-    [ ("learn.html", "learn")
+    [ ("mentorship.html", "mentorship")
     , ("events.html", "events")
     , ("projects.html", "projects")
     , ("about.html", "about")
@@ -176,7 +176,7 @@ pageCtx =
 postCtx :: Context String
 postCtx =
   pageCtx
-  <> boolField "page-writing" (const True)
+  <> boolField "page-blog" (const True)
   <> dateField "date" "%b %_d, %Y"
   <> defaultContext
 
@@ -256,7 +256,7 @@ feedConfiguration :: FeedConfiguration
 feedConfiguration =
   FeedConfiguration
     { feedTitle = "Tim Johns"
-    , feedDescription = "Writing"
+    , feedDescription = "Blog"
     , feedAuthorName = "Tim Johns"
     , feedAuthorEmail = "johns.timf@gmail.com"
     , feedRoot = root
