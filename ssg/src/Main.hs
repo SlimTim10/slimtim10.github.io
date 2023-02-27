@@ -108,6 +108,10 @@ main = hakyllWith config $ do
     , ("contact.html", "contact")
     ]
 
+  createRedirects
+    [ ("happy-hour/index.html", "/events.html") -- /happy-hour -> /events.html
+    ]
+
   match "templates/*" $
     compile templateBodyCompiler
 
