@@ -9,10 +9,10 @@ main > section {
 main > section > * {
   width: 100%;
   max-width: 50rem;
-  margin: 0 1rem;
 }
 
 main > h1 {
+  width: 90%;
   text-align: center;
   margin-top: 2rem;
 }
@@ -23,7 +23,7 @@ main > section img {
 }
 
 main > section p, main > section li {
-  font-size: 1.2rem;
+  font-size: 1rem;
   font-weight: 400;
   color: #4c5a51;
 }
@@ -32,12 +32,12 @@ main > section h2 {
   text-align: center;
 }
 
-main > section#private-mentoring h3 {
-  border-bottom: 1px solid #C0C0C0
+main  > section#private-mentoring {
+  width: 90%;
 }
 
 main > section#private-mentoring ul {
-  margin-left: 2rem;
+  margin-left: 1rem;
 }
 
 main > section#private-mentoring .line {
@@ -60,6 +60,84 @@ main > section li li {
 
 main > section ul ul {
   margin-left: 2rem;
+}
+
+.timeline {
+  position: relative;
+}
+
+.timeline .timeline-event {
+  position: relative;
+  padding-bottom: 2rem;
+}
+
+.timeline .timeline-event::before {
+  display: block;
+  content: "";
+  width: 2px;
+  height: calc(50% - 30px);
+  position: absolute;
+  left: 19px;
+  top: 0;
+  background: #d2d2d2;
+}
+
+.timeline .timeline-event::after {
+  display: block;
+  content: "";
+  width: 2px;
+  height: calc(50% - 30px);
+  position: absolute;
+  left: 19px;
+  top: calc(50% + 30px);
+  background: #d2d2d2;
+}
+
+.timeline .timeline-event:last-child::after {
+  display: none;
+}
+
+.timeline .timeline-content {
+  padding: 1rem;
+  margin-left: 70px;
+  width: calc(100% - 120px);
+  box-shadow: 0px 2px 4px rgba(136, 144, 194, 0.2), 0px 5px 15px rgba(37, 44, 97, 0.15);
+  border-radius: 4px;
+}
+
+.timeline .timeline-content h3 {
+  margin-bottom: 1rem;
+  border-bottom: 1px solid #d3d3d3;
+}
+
+.timeline .timeline-badge {
+  display: block;
+  position: absolute;
+  left: -1px;
+  width: 40px;
+  height: 40px;
+  color: white;
+  top: calc(50% - 20px);
+  right: calc(50% - 20px);
+  text-align: center;
+  cursor: default;
+}
+
+.timeline .timeline-badge > span {
+  padding: 0.5rem;
+  border-radius: 50%;
+}
+
+.timeline .timeline-badge .yellow {
+  background: #fdd835;
+}
+
+.timeline .timeline-badge .green {
+  background: #0e983b;
+}
+
+.timeline .timeline-badge .red {
+  background: #ef5350;
 }
 
 

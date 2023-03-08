@@ -61,15 +61,16 @@ h2 {
 
 h3 {
   font-family: 'Lato', sans-serif;
-  font-size: 1.4rem;
-  font-weight: 500;
+  font-size: 1.5rem;
+  font-weight: 300;
   color: #4c5a51;
 }
 
 h4 {
   font-family: 'Lato', sans-serif;
   font-size: 1.2rem;
-  font-weight: 500;
+  font-weight: 400;
+  color: #4c5a51;
 }
 
 a {
@@ -242,4 +243,8 @@ footer a {
 #happy-hour-banner a {
   margin-left: 1em;
   color: white;
+}
+
+.text-center {
+  text-align: center;
 }
