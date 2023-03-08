@@ -1,14 +1,16 @@
 main > section {
   width: 100%;
   display: flex;
+  justify-content: center;
+}
+
+main > section .content {
+  width: 90%;
+  max-width: 50rem;
+  display: flex;
   flex-direction: column;
   align-items: center;
   gap: 2rem;
-}
-
-main > section > * {
-  width: 100%;
-  max-width: 50rem;
 }
 
 main > h1 {
@@ -30,10 +32,6 @@ main > section p, main > section li {
 
 main > section h2 {
   text-align: center;
-}
-
-main  > section#private-mentoring {
-  width: 90%;
 }
 
 main > section#private-mentoring ul {
