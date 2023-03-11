@@ -1,7 +1,5 @@
 section#hero {
-  display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
   gap: 4rem;
   background: white;
@@ -33,19 +31,12 @@ section#hero p {
 }
 
 section#testimonials {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 4rem;
   background: #4c5a51;
   color:  white;
 }
 
-section#testimonials > * {
-  max-width: 50rem;
-  margin: 0 1rem;
+section#testimonials .content {
+  gap: 4rem;
 }
 
 section#testimonials figure {
@@ -56,6 +47,7 @@ section#testimonials figure {
 
 section#testimonials blockquote p {
   font-style: italic;
+  color: white;
 }
 
 section#testimonials figcaption {
@@ -71,45 +63,24 @@ section#testimonials figcaption img {
 section#testimonials figcaption .name {
   font-weight: 700;
   text-transform: uppercase;
+  color: white;
 }
 
-section#program {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2rem;
-}
-
-section#program > * {
-  max-width: 50rem;
-  margin: 0 1rem;
-}
-
-section#program img {
-  width: 95%;
-  max-width: 25rem;
+section#testimonials figcaption .career {
+  color: white;
 }
 
 section#program p {
   font-size: 1.2rem;
-  font-weight: 400;
-  color: #4c5a51;
   text-align: center;
 }
 
 section#latest-posts {
-  width: 100%;
   background: #dce5da;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 4rem;
 }
 
-section#latest-posts > * {
-  max-width: 50rem;
-  margin: 0 1rem;
+section#latest-posts .content {
+  gap: 4rem;
 }
 
 section#latest-posts ul {
