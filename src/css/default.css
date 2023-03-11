@@ -118,13 +118,6 @@ body > header #title {
   display: flex;
 }
 
-@media screen and (min-width: 900px) {
-  body > header {
-	padding-left: 2rem;
-	padding-right: 2rem;
-  }
-}
-
 main {
   flex-grow: 1;
   display: flex;
@@ -159,24 +152,16 @@ main {
   color: #376e49;
 }
 
-main > header,
-main > article > header {
-  padding: 1rem;
+main > section {
+  padding: 4rem 0;
 }
 
-main > section,
 body > footer {
   padding: 4rem 1rem;
 }
 
 @media screen and (min-width: 900px) {
   main > header {
-	padding-left: 2rem;
-	padding-right: 2rem;
-  }
-  
-  main > section,
-  body > footer {
 	padding-left: 2rem;
 	padding-right: 2rem;
   }
