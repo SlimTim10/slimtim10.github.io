@@ -9,7 +9,6 @@ main > section .content {
   max-width: 50rem;
   display: flex;
   flex-direction: column;
-  align-items: center;
   gap: 2rem;
 }
 
@@ -22,6 +21,11 @@ main > h1 {
 main > section img {
   width: 95%;
   max-width: 25rem;
+  align-self: center;
+}
+
+main > section .btn {
+  align-self: center;
 }
 
 main > section p, main > section li {
@@ -186,54 +190,43 @@ main > section ul ul {
 /* } */
 
 section#intuitive-js {
-  background: rgba(210, 180, 140, 0.25);
+  background: #4c5a51;
 }
 
-section#intuitive-js .btn-primary {
-  align-self: center;
+section#intuitive-js .content > * {
+  color: white;
 }
 
-section#curriculum h3::before {
-  content: "•";
-  color: #155915;
-  display: inline-block;
-  width: 1.5rem;
-  font-size: 2rem;
-  margin-right: 0.5rem;
+section#curriculum .curriculum-item {
+  padding: 0.5rem 0 0.5rem 1rem;
+  margin-bottom: 1rem;
 }
 
-section#curriculum h3.collapsed::before {
-  content: "+";
-}
-section#curriculum h3.expanded::before {
-  content: "-";
+section#curriculum .curriculum-item::marker {
+  font-size: 1.5rem;
 }
 
-section#curriculum h4 {
-  font-weight: 500;
+section#curriculum .collapsed {
+  list-style: disclosure-closed inside;
+  background-color: #dce5da;
+}
+
+section#curriculum .expanded {
+  list-style: disclosure-open inside;
+  border: 2px solid #dce5da;
 }
 
 section#curriculum h3 {
-  font-weight: 400;
-  margin-bottom: 0.5rem;
-  background-color: rgba(0,0,0,.05);
-  padding-left: 0.5rem;
+  font-weight: 700;
+  display: inline;
 }
 
-section#curriculum .content > ul > li > ul {
-  margin-left: 1rem;
+section#curriculum .curriculum-item ul {
+  margin-left: 2rem;
 }
 
-section#curriculum .content > ul > li > ul > li {
+section#curriculum .curriculum-item ul > li {
   margin-bottom: 1.25rem;
-}
-
-section#curriculum h4::before {
-  content: "◦";
-  color: #155915;
-  display: inline-block;
-  width: 1.5rem;
-  font-size: 2.125rem;
 }
 
 section#curriculum h4 {
@@ -241,8 +234,8 @@ section#curriculum h4 {
   align-items: center;
 }
 
-section#curriculum .content > ul > li > ul > li > pre {
-  margin-left: 1.5rem;
+section#curriculum .curriculum-item pre {
+  margin-left: 1rem;
   line-height: 1.25rem;
   white-space: pre-wrap;
   word-break: break-word;
