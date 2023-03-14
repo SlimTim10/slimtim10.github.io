@@ -271,3 +271,7 @@ footer a {
 .text-center {
   text-align: center;
 }
+
+blockquote {
+  font-style: italic;
+}
