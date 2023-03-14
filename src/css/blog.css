@@ -1,41 +1,39 @@
-main > section {
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-}
-
-main > section ul {
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-}
-
-main > section li {
-  display: flex;
-  gap: 1rem;
-}
-
-main > section li img {
+section#blog img {
   width: 96px;
 }
 @media screen and (min-width: 900px) {
-  main > section li img {
+  section#blog img {
 	width: 128px;
   }
 }
 
-main > section li div {
+section#blog li div {
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
 
-main > section li a {
-  color: #282828;
+section#blog a {
   text-decoration: none;
 }
 
-section#writing {
-  max-width: 50rem;
+section#blog ul {
   align-self: center;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+section#blog li {
+  display: flex;
+  gap: 1rem;
+}
+
+section#blog img {
+  width: 96px;
+}
+@media screen and (min-width: 900px) {
+  section#blog img {
+	width: 128px;
+  }
 }

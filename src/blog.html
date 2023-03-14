@@ -5,22 +5,24 @@ title: "Blog"
 ---
 
 <main>
-  <header>
-	<h1>$title$</h1>
-  </header>
-  <section id="writing" class="writing">
-    <ul>
-      $for(posts)$
-      <li>
-		<div>
-          <a href=".$url$"><img alt="$imageAlt$" src="$image$"/></a>
-		</div>
-		<div>
-          <a href=".$url$"><h4>$title$</h4></a>
-          <small>$date$</small>
-		</div>
-      </li>
-      $endfor$
-    </ul>
+  
+  <h1>$title$</h1>
+  
+  <section id="blog">
+    <div class="content">
+      <ul>
+        $for(posts)$
+        <li>
+		  <div>
+            <a href=".$url$"><img alt="$imageAlt$" src="$image$"/></a>
+		  </div>
+		  <div>
+            <a href=".$url$"><h4 class="writing">$title$</h4></a>
+            <small class="writing">$date$</small>
+		  </div>
+        </li>
+        $endfor$
+      </ul>
+    </div>
   </section>
 </main>
