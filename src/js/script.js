@@ -10,17 +10,16 @@ const mobileMenu = () => {
 mobileMenu()
 
 const collapsibleCurriculum = () => {
-  const sections = document.querySelectorAll('section#curriculum .content > ul > li')
+  const sections = document.querySelectorAll('#curriculum .content > ul > li')
   sections.forEach(section => {
     const details = section.querySelector('ul')
     details?.classList.add('hidden')
-    const title = section.querySelector('h3')
-    title?.classList.add('pointer')
-    title?.classList.add('collapsed')
-    title.onclick = () => {
+    section?.classList.add('pointer')
+    section?.classList.add('collapsed')
+    section.onclick = () => {
       section.querySelector('ul')?.classList.toggle('hidden')
-      title.classList.toggle('collapsed')
-      title.classList.toggle('expanded')
+      section.classList.toggle('collapsed')
+      section.classList.toggle('expanded')
     }
   })
 }

@@ -1,22 +1,36 @@
 ---
-desc: "Get in touch with Tim via email."
+desc: "Get in touch with me."
 stylesheet: "contact"
 title: "Contact"
 ---
 
 <main>
-  <header>
-	<h1>$title$</h1>
-  </header>
-  <section>
+  
+  <h1>$title$</h1>
+  
+  <section id="contact">
 	<div class="content">
-	  <img alt="" src="./images/undraw_personal_email_re_4lx7.svg"/>
+      
+	  <img class="heading-image" alt="drawing of a person sending an email" src="./images/undraw_personal_email_re_4lx7.svg"/>
+
 	  <p>
-		I'd love to hear from you. If you're interested in being my student, have any questions, or just want to say hello, send me an email at <a href="mailto:johns.timf@gmail.com">johns.timf@gmail.com</a>.
+		I'd love to hear from you. If you're interested in being my student, have any questions, or just want to say hello, send me a message!
 	  </p>
-	  <p>
-		You can also get in touch with me on <a href="https://www.linkedin.com/in/tim-johns/" target="_blank">LinkedIn</a> or <a href="https://www.instagram.com/slimtim10_/" target="_blank">Instagram</a>, but I may be slower to respond.
-	  </p>
+
+      <form action="https://api.web3forms.com/submit" method="POST">
+        <input type="hidden" name="access_key" value="71645919-c43c-4af8-bd4e-f5693318b920">
+        <input type="hidden" name="subject" value="New message from personal website">
+        <input type="hidden" name="from_name" value="timjohns.ca">
+        <input type="hidden" name="redirect" value="https://web3forms.com/success">
+        <div class="name-email">
+          <input type="text" name="name" placeholder="Name" required>
+          <input type="email" name="email" placeholder="Email" required>
+        </div>
+        <textarea name="message" placeholder="Message" required></textarea>
+        <input type="checkbox" name="botcheck" id="" style="display: none;">
+        <button type="submit" class="btn btn-primary">Send</button>
+      </form>
+      
 	</div>
   </section>
 </main>

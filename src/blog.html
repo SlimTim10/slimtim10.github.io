@@ -1,0 +1,28 @@
+---
+desc: "Posts by Tim Johns."
+stylesheet: "blog"
+title: "Blog"
+---
+
+<main>
+  
+  <h1>$title$</h1>
+  
+  <section id="blog">
+    <div class="content">
+      <ul>
+        $for(posts)$
+        <li>
+		  <div>
+            <a href=".$url$"><img alt="$imageAlt$" src="$image$"/></a>
+		  </div>
+		  <div>
+            <a href=".$url$"><h4 class="writing">$title$</h4></a>
+            <small class="writing">$date$</small>
+		  </div>
+        </li>
+        $endfor$
+      </ul>
+    </div>
+  </section>
+</main>

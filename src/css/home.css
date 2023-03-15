@@ -1,121 +1,124 @@
-section#hero {
-  display: flex;
-  justify-content: center;
-  padding: 0;
-  background: rgba(21, 89, 21, 0.1);
+#hero {
+  flex-direction: column;
+  align-items: center;
+  gap: 4rem;
+  background: white;
 }
 
-section#hero img {
+#hero img {
   width: 100%;
 }
 @media screen and (min-width: 500px) {
-  section#hero img {
+  #hero img {
 	width: 400px;
 	max-width: 25rem;
   }
 }
 
-section#intro {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2rem;
-  font-size: 1.125rem;
-  padding-top: 2rem;
-  padding-bottom: 2rem;
-}
-
-section#intro p {
+#hero p {
   max-width: 50rem;
   width: 100%;
-}
-
-section#cta {
-  background: rgba(210,180,140,0.25);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding-top: 4rem;
-  padding-bottom: 4rem;
-  padding-left: 2rem;
-  padding-right: 2rem;
-  gap: 8rem;
-}
-
-section#cta article {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2rem;
-}
-
-section#cta article .body {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
   text-align: center;
-  gap: 2rem;
-  max-width: 50rem;
+  font-family: 'Lato', sans-serif;
+  font-weight: 900;
+  font-size: 9vw;
+  color: #4c5a51;
+}
+@media screen and (min-width: 650px) {
+  #hero p {
+    font-size: 3rem;
+  }
 }
 
-section#cta article .text {
+#testimonials {
+  background: #4c5a51;
+  color:  white;
+}
+
+#testimonials .content {
+  gap: 4rem;
+}
+
+#testimonials figure {
   display: flex;
   flex-direction: column;
-  width: min-content;
+  gap: 1rem;
 }
 
-section#cta article .text > h3 {
-  width: 95vw;
+#testimonials blockquote p {
+  color: white;
 }
 
-@media screen and (min-width: 900px) {
-  section#cta article:nth-child(odd) .body {
-	flex-direction: row;
-  }
-
-  section#cta article:nth-child(even) .body {
-	flex-direction: row-reverse;
-  }
-
-  section#cta article .text > h3 {
-	width: max-content;
-  }
-}
-
-section#latest-posts {
+#testimonials figcaption {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 2rem;
+  gap: 1rem;
 }
 
-section#latest-posts ul {
+#testimonials figcaption img {
+  border-radius: 50%;
+}
+
+#testimonials figcaption .name {
+  font-weight: 700;
+  text-transform: uppercase;
+  color: white;
+}
+
+#testimonials figcaption .career {
+  color: white;
+}
+
+#program p {
+  font-size: 1.2rem;
+  text-align: center;
+}
+
+#latest-posts {
+  background: #dce5da;
+}
+
+#latest-posts .content {
+  gap: 4rem;
+}
+
+#latest-posts ul {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 4rem;
 }
 
-section#latest-posts li {
+#latest-posts li {
   display: flex;
   gap: 1rem;
 }
 
-section#latest-posts li img {
+#latest-posts li img {
+  width: 96px;
+}
+#latest-posts li .blog-image {
   width: 96px;
 }
 @media screen and (min-width: 900px) {
-  section#latest-posts li img {
+  #latest-posts li img {
 	width: 128px;
+  }
+  #latest-posts li .blog-image {
+    width: 128px;
   }
 }
 
-section#latest-posts li div {
+#latest-posts li div {
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
 
-section#latest-posts li a {
+#latest-posts li a {
   color: #282828;
   text-decoration: none;
+}
+
+#latest-posts li h4 {
+  font-weight: 700;
 }

@@ -5,11 +5,11 @@ title: "Projects"
 ---
 
 <main>
-  <header>
-	<h1>$title$</h1>
-  </header>
+  
   $if(ready)$
-  <section>
+  
+  <section id="projects">
+    
 	<article class="project">
 	  <img alt="project image" src="./images/me.jpg" />
 	  <h3>Project Name</h3>
@@ -17,6 +17,7 @@ title: "Projects"
 	  <a class="btn-primary" href="#">Live</a>
 	  <a class="btn-primary" href="#">Source code</a>
 	</article>
+    
 	<article class="project">
 	  <img alt="project image" src="./images/me.jpg" />
 	  <h3>Project Name</h3>
@@ -24,16 +25,22 @@ title: "Projects"
 	  <a class="btn-primary" href="#">Live</a>
 	  <a class="btn-primary" href="#">Source code</a>
 	</article>
+    
 	<article>
 	  <h4>
 		See other projects on my <a href="https://github.com/SlimTim10" target="_blank">GitHub</a>.
 	  </h4>
 	</article>
+    
   </section>
+  
   $else$
+  
   <section style="display: flex; flex-direction: column; align-items: center; gap: 4rem; justify-content: center; flex-grow: 1;">
-	<img alt="" src="./images/undraw_under_construction_-46-pa.svg" style="max-width: 30rem;"/>
-	<h2>Under construction</h2>
+	<img alt="" src="./images/undraw_under_construction_-46-pa.svg" style="width: 90%; max-width: 30rem;"/>
+	<h2>Coming soon!</h2>
   </section>
+  
   $endif$
+  
 </main>

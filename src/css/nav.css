@@ -1,6 +1,6 @@
 body > header #toggle-menu svg {
-  width: 2.5em;
-  height: 2.5em;
+  width: 2.5rem;
+  height: 2.5rem;
 }
 
 body > header nav {
@@ -15,7 +15,7 @@ body > header nav.collapsed {
 }
 
 body > header nav li {
-  border-bottom: 1px solid #ffffff50;
+  border-bottom: 1px solid #4c5a5150;
 }
 
 body > header nav li:last-child {
@@ -27,7 +27,12 @@ body > header nav li a {
   padding-top: 0.6rem;
   padding-bottom: 0.6rem;
   text-transform: uppercase;
-  font-weight: 500;
+  font-weight: 400;
+}
+
+#toggle-menu {
+  display: flex;
+  padding-left: 1rem;
 }
 
 @media screen and (min-width: 900px) {
@@ -56,14 +61,14 @@ body > header nav li a {
   }
 
   body > header nav li .active {
-	border-bottom: 2px solid white;
+	border-bottom: 2px solid #4c5a51;
   }
 }
 
 /* Nav menu button */
 #toggle-menu .line {
   fill: none;
-  stroke: white;
+  stroke: #4c5a51;
   stroke-width: 6;
   transition: stroke-dasharray 600ms cubic-bezier(0.4, 0, 0.2, 1),
     stroke-dashoffset 600ms cubic-bezier(0.4, 0, 0.2, 1);

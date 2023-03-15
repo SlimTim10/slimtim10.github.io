@@ -26,7 +26,11 @@
 
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link href="https://fonts.googleapis.com/css2?family=Inconsolata:wght@400;700&family=Inter:wght@300;400;500&family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inconsolata:wght@400;700&family=Inter:wght@300;400;500&family=Lato:wght@300;400;700;900&family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,1,0" />
+
+    <!-- Analytics -->
+    <script src="https://cdn.counter.dev/script.js" data-id="af659f42-a2fc-40d5-8e6c-a1036c76c51f" data-utcoffset="-4"></script>
 
     <link rel="shortcut icon" href="/favicon.ico">
     <link rel="canonical" href="$root$$url$">
@@ -44,8 +48,8 @@
 	</div>
 	<header>
 	  <div>
-		<a href="/" id="title">
-		  <p>Tim Johns</p>
+		<a href="/" id="logo">
+          <img alt="logo" src="./images/logo.svg"/>
 		</a>
 		<a href="#" id="toggle-menu" aria-label="Main Menu">
 		  <svg width="100" height="100" viewBox="0 0 100 100">
@@ -58,9 +62,9 @@
 	  <nav class="collapsed">
 		<ul>
 		  <li><a href="/" $if(page-home)$ class="active" $endif$>Home</a></li>
+		  <li><a href="/mentorship.html" $if(page-mentorship)$ class="active" $endif$>Mentorship</a></li>
 		  <li><a href="/events.html" $if(page-events)$ class="active" $endif$>Events</a></li>
-		  <li><a href="/learn.html" $if(page-learn)$ class="active" $endif$>Learn</a></li>
-		  <li><a href="/writing.html" $if(page-writing)$ class="active" $endif$>Writing</a></li>
+		  <li><a href="/blog.html" $if(page-blog)$ class="active" $endif$>Blog</a></li>
 		  <li><a href="/projects.html" $if(page-projects)$ class="active" $endif$>Projects</a></li>
 		  <li><a href="/about.html" $if(page-about)$ class="active" $endif$>About</a></li>
 		  <li><a href="/contact.html" $if(page-contact)$ class="active" $endif$>Contact</a></li>

@@ -1,0 +1,155 @@
+main > #private-mentoring ul {
+  margin-left: 1rem;
+}
+
+main > #private-mentoring .line {
+  margin-top: 5px;
+  background-color: #fcc044;
+  height: calc(100% - 155px);
+  display: block;
+  width: 2px;
+  position: absolute;
+  left: 0;
+}
+
+main > section li {
+  list-style: disc;
+}
+
+main > section li li {
+  list-style: circle;
+}
+
+main > section ul ul {
+  margin-left: 2rem;
+}
+
+.timeline {
+  position: relative;
+}
+
+.timeline .timeline-event {
+  position: relative;
+  padding-bottom: 2rem;
+}
+
+.timeline .timeline-event::before {
+  display: block;
+  content: "";
+  width: 2px;
+  height: calc(50% - 30px);
+  position: absolute;
+  left: 19px;
+  top: 0;
+  background: #d2d2d2;
+}
+
+.timeline .timeline-event::after {
+  display: block;
+  content: "";
+  width: 2px;
+  height: calc(50% - 30px);
+  position: absolute;
+  left: 19px;
+  top: calc(50% + 30px);
+  background: #d2d2d2;
+}
+
+.timeline .timeline-event:last-child::after {
+  display: none;
+}
+
+.timeline .timeline-content {
+  padding: 1rem;
+  margin-left: 70px;
+  width: calc(100% - 120px);
+  box-shadow: 0px 2px 4px rgba(136, 144, 194, 0.2), 0px 5px 15px rgba(37, 44, 97, 0.15);
+  border-radius: 4px;
+}
+
+.timeline .timeline-content h3 {
+  margin-bottom: 1rem;
+  border-bottom: 1px solid #d3d3d3;
+}
+
+.timeline .timeline-badge {
+  display: block;
+  position: absolute;
+  left: -1px;
+  width: 40px;
+  height: 40px;
+  color: white;
+  top: calc(50% - 20px);
+  right: calc(50% - 20px);
+  text-align: center;
+  cursor: default;
+}
+
+.timeline .timeline-badge > span {
+  padding: 0.5rem;
+  border-radius: 50%;
+}
+
+.timeline .timeline-badge .yellow {
+  background: #fdd835;
+}
+
+.timeline .timeline-badge .green {
+  background: #0e983b;
+}
+
+.timeline .timeline-badge .red {
+  background: #ef5350;
+}
+
+#intuitive-js {
+  background: #4c5a51;
+}
+
+#intuitive-js .content > * {
+  color: white;
+}
+
+#curriculum .curriculum-item {
+  padding: 0.5rem 0 0.5rem 1rem;
+  margin-bottom: 1rem;
+}
+
+#curriculum .curriculum-item::marker {
+  font-size: 1.5rem;
+}
+
+#curriculum .collapsed {
+  list-style: disclosure-closed inside;
+  background-color: #dce5da;
+}
+
+#curriculum .expanded {
+  list-style: disclosure-open inside;
+  border: 2px solid #dce5da;
+}
+
+#curriculum h3 {
+  font-weight: 700;
+  display: inline;
+}
+
+#curriculum .curriculum-item ul {
+  margin-left: 2rem;
+}
+
+#curriculum .curriculum-item ul > li {
+  margin-bottom: 1.25rem;
+}
+
+#curriculum h4 {
+  display: flex;
+  align-items: center;
+}
+
+#curriculum .curriculum-item pre {
+  margin-left: 1rem;
+  line-height: 1.25rem;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
