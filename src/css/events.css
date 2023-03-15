@@ -3,17 +3,45 @@
   align-self: center;
 }
 
-section#happy-hour .content h3 {
+#happy-hour .content h3 {
   text-align: center;
 }
 
-section#happy-hour blockquote {
+#happy-hour blockquote {
   text-align: center;
+  align-self: center;
+  width: fit-content;
+  padding: 1rem;
 }
 
-section#happy-hour blockquote p {
+#happy-hour blockquote p {
   font-weight: 700;
   line-height: 2.5rem;
+}
+
+#happy-hour .heading-image {
+  margin-top: 2rem;
+}
+
+.speech-bubble {
+  position: relative;
+  background: #f1f0ec;
+  border-radius: .4em;
+}
+
+.speech-bubble:after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 60%;
+  width: 0;
+  height: 0;
+  border: 3em solid transparent;
+  border-bottom-color: #f1f0ec;
+  border-top: 0;
+  border-right: 0;
+  margin-left: -1.5em;
+  margin-top: -3em;
 }
 
 .past-session {
@@ -22,8 +50,8 @@ section#happy-hour blockquote p {
 }
 
 .past-session iframe {
-	align-self: center;
-	width: 100%;
-	aspect-ratio: 1.7;
-	height: 100%;
+  align-self: center;
+  width: 100%;
+  aspect-ratio: 1.7;
+  height: 100%;
 }
