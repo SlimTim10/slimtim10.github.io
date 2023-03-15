@@ -110,7 +110,7 @@ body > header a {
   text-decoration: none;
 }
 
-body > header #title {
+#logo img {
   font-size: 2em;
   font-weight: 300;
   height: 2.2rem;
@@ -160,21 +160,6 @@ body > footer {
   padding: 4rem 1rem;
 }
 
-@media screen and (min-width: 900px) {
-  main > header {
-	padding-left: 2rem;
-	padding-right: 2rem;
-  }
-}
-
-main > header,
-main > article > header {
-  background: #f1f0ec;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-}
-
 main > section {
   width: 100%;
   display: flex;
@@ -183,7 +168,7 @@ main > section {
   align-items: center;
 }
 
-main > section .content {
+main .content {
   width: 90%;
   max-width: 50rem;
   display: flex;
@@ -197,13 +182,13 @@ main > h1 {
   margin-top: 2rem;
 }
 
-main > section .heading-image {
+main section .heading-image {
   width: 95%;
   max-width: 25rem;
   align-self: center;
 }
 
-main > section .btn {
+main section .btn {
   align-self: center;
 }
 
@@ -247,8 +232,9 @@ footer a {
   cursor: pointer;
 }
 
-.writing {
+.writing, .writing > * {
   font-family: 'Libre Baskerville', serif;
+  font-weight: 400;
 }
 
 .h-center, .center {

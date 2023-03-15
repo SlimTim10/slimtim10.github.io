@@ -1,20 +1,20 @@
 <main>
-  <article class="writing">
+  <article id="blog-post">
     <header>
-      <h1>
+      <h2 class="writing">
         $title$
-      </h1>
-      <p>$date$</p>
+      </h2>
+      <p class="writing">$date$</p>
       $if(updated)$
-      <p>(Updated $updated$)</p>
+      <p class="writing">(Updated $updated$)</p>
       $endif$
     </header>
 	<img class="post-image" alt="$imageAlt$" src="$image$" />
-    <section class="content">
+    <section class="content writing">
 	  $body$
     </section>
 	<section class="read-more">
-	  <a href="/blog.html" class="btn-primary">Read More</a>
+	  <a href="/blog.html" class="btn btn-primary">Read More</a>
 	</section>
   </article>
 </main>
