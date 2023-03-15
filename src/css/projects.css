@@ -1,13 +1,13 @@
-article.project {
+#projects .project {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 1rem;
   padding-bottom: 2rem;
   margin-bottom: 2rem;
-  border-bottom: 1px solid #D2B48C;
+  border-bottom: 1px solid #f1f0ec;
 }
 
-article.project img {
+#projects .project img {
   width: 150px;
 }
