@@ -1,16 +1,10 @@
-/* OLD */
-/* primary: #155915 */
-/* light primary: rgba(21, 89, 21, 0.1) */
-/* secondary: #D2B48C */
-/* light secondary: rgba(210, 180, 140, 0.25) */
-/* black: #282828 */
-
 /* Colours */
 /* Background: #f1f0ec */
 /* Foreground: #4c5a51 */
 /* Accent 1: #376e49 */
 /* Accent 2: #228342 */
 /* Accent 3: #0e983b */
+/* Black: #282828 */
 
 /* Typography */
 /* - Title font */
@@ -23,7 +17,6 @@
 /*   - font-style: normal */
 /* - Body font */
 /*   - Inter */
-
 
 html,
 body {
