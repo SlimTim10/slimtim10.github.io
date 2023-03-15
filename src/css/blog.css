@@ -1,39 +1,39 @@
-section#blog img {
+#blog img {
   width: 96px;
 }
 @media screen and (min-width: 900px) {
-  section#blog img {
+  #blog img {
 	width: 128px;
   }
 }
 
-section#blog li div {
+#blog li div {
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
 
-section#blog a {
+#blog a {
   text-decoration: none;
 }
 
-section#blog ul {
+#blog ul {
   align-self: center;
   display: flex;
   flex-direction: column;
   gap: 2rem;
 }
 
-section#blog li {
+#blog li {
   display: flex;
   gap: 1rem;
 }
 
-section#blog img {
+#blog img {
   width: 96px;
 }
 @media screen and (min-width: 900px) {
-  section#blog img {
+  #blog img {
 	width: 128px;
   }
 }

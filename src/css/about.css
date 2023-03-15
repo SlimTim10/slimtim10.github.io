@@ -1,32 +1,32 @@
-section#about .about-me-image img {
+#about .about-me-image img {
   width: 100%;
 }
 
-section#about .about-me-text {
+#about .about-me-text {
   display: flex;
   flex-direction: column;
   gap: 1rem;
 }
 
 @media screen and (min-width: 100rem) {
-  section#about .content {
+  #about .content {
     flex-direction: row;
     max-width: 116rem;
   }
 
-  section#about .about-me-image {
+  #about .about-me-image {
     flex: 1;
     width: 0;
     align-self: stretch;
   }
 
-  section#about .about-me-image img {
+  #about .about-me-image img {
     height: 100%;
     object-fit: cover;
     object-position: left;
   }
 
-  section#about .about-me-text {
+  #about .about-me-text {
     flex: 1;
     max-width: 50rem;
   }

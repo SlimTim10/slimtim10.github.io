@@ -1,21 +1,21 @@
-section#hero {
+#hero {
   flex-direction: column;
   align-items: center;
   gap: 4rem;
   background: white;
 }
 
-section#hero img {
+#hero img {
   width: 100%;
 }
 @media screen and (min-width: 500px) {
-  section#hero img {
+  #hero img {
 	width: 400px;
 	max-width: 25rem;
   }
 }
 
-section#hero p {
+#hero p {
   max-width: 50rem;
   width: 100%;
   text-align: center;
@@ -25,100 +25,100 @@ section#hero p {
   color: #4c5a51;
 }
 @media screen and (min-width: 650px) {
-  section#hero p {
+  #hero p {
     font-size: 3rem;
   }
 }
 
-section#testimonials {
+#testimonials {
   background: #4c5a51;
   color:  white;
 }
 
-section#testimonials .content {
+#testimonials .content {
   gap: 4rem;
 }
 
-section#testimonials figure {
+#testimonials figure {
   display: flex;
   flex-direction: column;
   gap: 1rem;
 }
 
-section#testimonials blockquote p {
+#testimonials blockquote p {
   color: white;
 }
 
-section#testimonials figcaption {
+#testimonials figcaption {
   display: flex;
   align-items: center;
   gap: 1rem;
 }
 
-section#testimonials figcaption img {
+#testimonials figcaption img {
   border-radius: 50%;
 }
 
-section#testimonials figcaption .name {
+#testimonials figcaption .name {
   font-weight: 700;
   text-transform: uppercase;
   color: white;
 }
 
-section#testimonials figcaption .career {
+#testimonials figcaption .career {
   color: white;
 }
 
-section#program p {
+#program p {
   font-size: 1.2rem;
   text-align: center;
 }
 
-section#latest-posts {
+#latest-posts {
   background: #dce5da;
 }
 
-section#latest-posts .content {
+#latest-posts .content {
   gap: 4rem;
 }
 
-section#latest-posts ul {
+#latest-posts ul {
   display: flex;
   flex-direction: column;
   gap: 4rem;
 }
 
-section#latest-posts li {
+#latest-posts li {
   display: flex;
   gap: 1rem;
 }
 
-section#latest-posts li img {
+#latest-posts li img {
   width: 96px;
 }
-section#latest-posts li .blog-image {
+#latest-posts li .blog-image {
   width: 96px;
 }
 @media screen and (min-width: 900px) {
-  section#latest-posts li img {
+  #latest-posts li img {
 	width: 128px;
   }
-  section#latest-posts li .blog-image {
+  #latest-posts li .blog-image {
     width: 128px;
   }
 }
 
-section#latest-posts li div {
+#latest-posts li div {
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
 
-section#latest-posts li a {
+#latest-posts li a {
   color: #282828;
   text-decoration: none;
 }
 
-section#latest-posts li h4 {
+#latest-posts li h4 {
   font-weight: 700;
 }

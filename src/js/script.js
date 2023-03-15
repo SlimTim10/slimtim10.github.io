@@ -10,7 +10,7 @@ const mobileMenu = () => {
 mobileMenu()
 
 const collapsibleCurriculum = () => {
-  const sections = document.querySelectorAll('section#curriculum .content > ul > li')
+  const sections = document.querySelectorAll('#curriculum .content > ul > li')
   sections.forEach(section => {
     const details = section.querySelector('ul')
     details?.classList.add('hidden')

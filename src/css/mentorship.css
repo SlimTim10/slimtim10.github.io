@@ -1,8 +1,8 @@
-main > section#private-mentoring ul {
+main > #private-mentoring ul {
   margin-left: 1rem;
 }
 
-main > section#private-mentoring .line {
+main > #private-mentoring .line {
   margin-top: 5px;
   background-color: #fcc044;
   height: calc(100% - 155px);
@@ -102,52 +102,52 @@ main > section ul ul {
   background: #ef5350;
 }
 
-section#intuitive-js {
+#intuitive-js {
   background: #4c5a51;
 }
 
-section#intuitive-js .content > * {
+#intuitive-js .content > * {
   color: white;
 }
 
-section#curriculum .curriculum-item {
+#curriculum .curriculum-item {
   padding: 0.5rem 0 0.5rem 1rem;
   margin-bottom: 1rem;
 }
 
-section#curriculum .curriculum-item::marker {
+#curriculum .curriculum-item::marker {
   font-size: 1.5rem;
 }
 
-section#curriculum .collapsed {
+#curriculum .collapsed {
   list-style: disclosure-closed inside;
   background-color: #dce5da;
 }
 
-section#curriculum .expanded {
+#curriculum .expanded {
   list-style: disclosure-open inside;
   border: 2px solid #dce5da;
 }
 
-section#curriculum h3 {
+#curriculum h3 {
   font-weight: 700;
   display: inline;
 }
 
-section#curriculum .curriculum-item ul {
+#curriculum .curriculum-item ul {
   margin-left: 2rem;
 }
 
-section#curriculum .curriculum-item ul > li {
+#curriculum .curriculum-item ul > li {
   margin-bottom: 1.25rem;
 }
 
-section#curriculum h4 {
+#curriculum h4 {
   display: flex;
   align-items: center;
 }
 
-section#curriculum .curriculum-item pre {
+#curriculum .curriculum-item pre {
   margin-left: 1rem;
   line-height: 1.25rem;
   white-space: pre-wrap;

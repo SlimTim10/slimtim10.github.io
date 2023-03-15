@@ -2,21 +2,21 @@ button {
   border: 0;
 }
 
-section#contact .heading-image {
+#contact .heading-image {
   max-width: 20rem;
 }
 
-section#contact form {
+#contact form {
   display: flex;
   flex-direction: column;
   gap: 1rem;
 }
 
-section#contact input, section#contact textarea {
+#contact input, #contact textarea {
   padding: 0.5rem;
 }
 
-section#contact .name-email {
+#contact .name-email {
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -24,19 +24,19 @@ section#contact .name-email {
 }
 
 @media screen and (min-width: 50rem) {
-  section#contact .name-email {
+  #contact .name-email {
     flex-direction: row;
   }
 }
 
-section#contact .name-email input {
+#contact .name-email input {
   flex: 1;
 }
 
-section#contact textarea {
+#contact textarea {
   height: 8rem;
 }
 
-section#contact button {
+#contact button {
   align-self: flex-start;
 }
