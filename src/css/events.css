@@ -7,6 +7,15 @@
   text-align: center;
 }
 
+#happy-hour .title {
+  display: flex;
+  flex-direction: column;
+}
+
+#happy-hour .title .btn {
+  margin-top: 1rem;
+}
+
 #happy-hour blockquote {
   text-align: center;
   align-self: center;
