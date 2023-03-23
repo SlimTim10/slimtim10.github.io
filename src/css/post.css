@@ -127,4 +127,5 @@
   align-self: center;
   margin-top: 2rem;
   font-style: italic; /* for image alt */
+  max-width: 300px;
 }

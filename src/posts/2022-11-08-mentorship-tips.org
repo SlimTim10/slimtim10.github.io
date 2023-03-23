@@ -1,7 +1,7 @@
 ---
 title: 5 Tips to Make the Most of a Coding Mentorship
 desc: "Tips from a professional coding mentor."
-image: "./images/blog/mentorship_tips.jpg"
+image: "./images/blog/mentorship_tips.png"
 imageAlt: "Drawing of a stick figure helping another up a staircase."
 ---
 

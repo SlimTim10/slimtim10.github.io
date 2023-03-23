@@ -1,7 +1,7 @@
 ---
 title: A Simple Sandwich, Part I
 desc: "A bunch of ideas in response to a post by Danny Fekete."
-image: "./images/blog/a_simple_sandwich_i.jpg"
+image: "./images/blog/a_simple_sandwich_i.png"
 imageAlt: "Drawing of a sandwich"
 ---
 
