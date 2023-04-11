@@ -1,0 +1,253 @@
+---
+title: When to use currying in JavaScript
+desc: "A look at currying and when it's actually useful in JavaScript."
+image: "./images/blog/when_to_use_currying_in_javascript.jpg"
+imageAlt: "Photo of a bowl of curry with a keyboard next to it."
+---
+
+This post is about the concept of *currying*, from functional programming, and when you should use it in JavaScript.
+
+I'm going to be honest. You probably don't need to use currying in JavaScript. In fact, trying to fit it in your code is going to do more harm than good, unless it's just for fun. Currying only becomes useful when you fully embrace functional programming, which, in JavaScript, means using a library like [[https://ramdajs.com/][Ramda]] instead of the standard built-in functions.
+
+In this article, I'm going to start by explaining what currying is, then show how it can be useful *in a functional programming context*.
+
+* What is currying?
+
+Currying is the concept that functions never need to take multiple arguments; every function only takes a single argument. If a function needs to *behave* as if it takes multiple arguments, it returns another function instead.
+
+A regular, non-curried function is what you're used to seeing:
+
+#+begin_src js
+const add = (x, y) => x + y
+
+console.log(
+  add(2, 3) // 2 + 3
+) // prints 5
+#+end_src
+
+This is a simple function that takes two numbers and returns their sum.
+
+A curried version of the same function looks like this:
+
+#+begin_src js
+const addCurried = x => y => x + y
+
+console.log(
+  addCurried(2)(3) // 2 + 3
+) // prints 5
+#+end_src
+
+Instead of the function taking two arguments, it takes one argument, then returns *another function* that takes one argument and returns the sum. Notice how we have to pass the arguments to the function using more brackets, since the arguments are passed one at a time to each nested function.
+
+We can have as many arguments as we want this way:
+
+#+begin_src js
+const addMore = a => b => c => d => e => a + b + c + d + e
+
+console.log(
+  addMore(1)(2)(3)(4)(5) // 1 + 2 + 3 + 4 + 5
+) // prints 15
+#+end_src
+
+Because of the way a curried function works, we can do something called *partial application*. This is when we give a function fewer arguments than it can take:
+
+#+begin_src js
+const addCurried = x => y => x + y
+
+console.log(
+  addCurried(2) // y => 2 + y
+) // [Function (anonymous)]
+#+end_src
+
+If we only pass ~addCurried~ one argument, the result is a function that expects another argument. In other words, the ~2~ went into the ~x~ argument, so we're left with ~y => 2 + y~. If we want, we can store this partially applied function into a variable so we can use it after the fact:
+
+#+begin_src js
+const addCurried = x => y => x + y
+const add2 = addCurried(2)
+// This is the same as:
+// const add2 = y => 2 + y
+
+console.log(
+  add2(3) // 2 + 3
+) // prints 5
+
+console.log(
+  add2(10) // 2 + 10
+) // prints 12
+#+end_src
+
+Now we have a function ~add2~, which is expecting a single argument. Whatever we give it, it will add 2 to it.
+
+* When is currying useful?
+
+Like I said, in a typical JavaScript codebase, it's not. You can probably tell that the ~addCurried~ example is very contrived and doesn't demonstrate any real benefit. But if you want to go deeper down the functional programming rabbit hole, let me show you how using curried functions can be even more elegant than the typical practice.
+
+It's all about composition.
+
+In functional programming, *composing* functions is a fundamental concept. This means using *one function after another* on some data. It's in using composition that curried functions really shine.
+
+In JavaScript, the way to compose two functions looks like this:
+
+#+begin_src js
+const compose = (f, g) => x => f(g(x))
+
+const addCurried = x => y => x + y
+
+console.log(
+  compose(addCurried(2), addCurried(3))(10) // 10 + 3 + 2 = 15
+) // prints 15
+#+end_src
+
+When using composition, you should read it as operations being done on some data from right to left. In the above example, the starting data is ~10~, which goes through ~adding 3~, followed by ~adding 2~, resulting in ~15~.
+
+Let me show by example how composing a series of curried functions looks when compared to idiomatic functional JavaScript. I'm going to use an example based on a real problem I had to solve that doesn't call for any particular programming style or language.
+
+The objective is to make a function ~cleanExpression~ that takes in a basic math expression as a string (e.g., "1 + 10 / 2") and returns a cleaned version of it. The cleaning process is to remove extra spaces and make sure the expression alternates numbers and operators (there should never be two numbers or two operators next to each other). We're dealing with single-digit numbers only.
+
+For example, "1\nbsp\nbsp\nbsp + 2 2 / 3 *" cleaned would be "1 + 2 / 3".
+
+The following is an idiomatic functional JavaScript solution. Let's call this "functional-lite".
+
+#+begin_src js
+// Helper functions
+const isOperator = x => "+-*/".includes(x)
+
+const isDigit = x => "1234567890".includes(x)
+
+const last = xs => xs[xs.length - 1]
+
+const init = xs => xs.slice(0, -1)
+
+const intersperse = (sep, xs) => xs.map(x => [sep, x]).flat()
+
+// The main function
+const cleanExpression = expr => {
+  const parseNext = ([acc, shouldBe], x) => {
+    if (shouldBe === 'digit' && isDigit(x)) {
+      return [[...acc, x], 'operator']
+    } else if (shouldBe === 'operator' && isOperator(x)) {
+      return [[...acc, x], 'digit']
+    } else {
+      return [acc, shouldBe]
+    }
+  }
+
+  const chars = expr.split('')
+  const alternating = chars.reduce(parseNext, ['', 'digit'])[0]
+  const cleaned = isOperator(last(alternating)) ? init(alternating) : alternating
+  return intersperse(' ', cleaned).join('')
+}
+
+console.log(
+  cleanExpression('1    + 2 2 / 3 *')
+)
+#+end_src
+
+And here is a more functional JavaScript solution using the [[https://ramdajs.com/][Ramda]] library in-place of built-in functions:
+
+#+begin_src js
+const R = require('ramda')
+
+const isOperator = x => R.includes(x, "+-*/")
+
+const isDigit = x => R.includes(x, "1234567890")
+
+const cleanExpression = expr => {
+  const parseNext = ([acc, shouldBe], x) => {
+    if (shouldBe === 'digit' && isDigit(x)) {
+      return [acc + x, 'operator']
+    } else if (shouldBe === 'operator' && isOperator(x)) {
+      return [acc + x, 'digit']
+    } else {
+      return [acc, shouldBe]
+    }
+  }
+
+  return R.compose(
+    R.join(''),
+    R.intersperse(' '),
+    (xs => isOperator(R.last(xs)) ? R.init(xs) : xs),
+    R.head,
+    R.reduce(parseNext, ['', 'digit']),
+    R.split('')
+  )(expr)
+}
+
+console.log(
+  cleanExpression('1    + 2 2 / 3 *')
+)
+#+end_src
+
+Fewer helper functions are needed because Ramda implements the others, but that's not what's important. The main lines to compare are in the body of ~cleanExpression~:
+
+#+begin_src js
+  // functional-lite
+  const chars = expr.split('')
+  const alternating = chars.reduce(parseNext, ['', 'digit'])[0]
+  const cleaned = isOperator(last(alternating)) ? init(alternating) : alternating
+  return intersperse(' ', cleaned).join('')
+#+end_src
+
+#+begin_src js
+  // more functional
+  return R.compose(
+    R.join(''),
+    R.intersperse(' '),
+    (xs => isOperator(R.last(xs)) ? R.init(xs) : xs),
+    R.head,
+    R.reduce(parseNext, ['', 'digit']),
+    R.split('')
+  )(expr)
+#+end_src
+
+Ramda's ~compose~ function extends function composition to any number of functions instead of only two. Still, it should be read from right to left (or bottom to top). The above example can be understood as:
+
+- Feed in ~expr~ as the data to be operated on, which in this case should be a math expression as a string.
+- Split the string, turning it into an array of characters.
+- Use ~reduce~ to walk through the expression, building a new version that alternates digits and operators (beginning with a digit).
+- Take the first element of the previous result (because it returned a pair and we only need the new expression).
+- Remove the last character if it is an operator.
+- Intersperse the new expression with spaces.
+- Finally, Convert the new expression into a string.
+
+This way, we can think of the solution as processing some data through a pipeline (bottom to top). The output of each step feeds into the input of the next one until we reach the end, which gets returned as a final result.
+
+The steps of the solution are the same in both versions, but the second version looks more linear and we can clearly see each step.
+
+For the *most functional* version, here's the same solution in Haskell, where all functions are curried by default and the composition operator is a dot (~.~) :
+
+#+begin_src haskell
+isOperator :: Char -> Bool
+isOperator x = x `elem` "+-*/"
+
+isDigit :: Char -> Bool
+isDigit x = x `elem` "1234567890"
+
+intersperse :: Char -> String -> String
+intersperse sep = init . concat . map (\x -> [x, sep])
+
+cleanExpression :: String -> String
+cleanExpression =
+  intersperse ' '
+  . (\xs -> if isOperator (last xs) then init xs else xs)
+  . fst
+  . foldl parseNext ("", "digit")
+  where
+    parseNext :: (String, String) -> Char -> (String, String)
+    parseNext (acc, shouldBe) x
+      | shouldBe == "digit" && isDigit x =
+        (acc ++ [x], "operator")
+      | shouldBe == "operator" && isOperator x =
+        (acc ++ [x], "digit")
+      | otherwise = (acc, shouldBe)
+      
+main :: IO ()
+main = do
+  print $ cleanExpression "1    + 2 2 / 3 *" == "1 + 2 / 3"
+#+end_src
+
+* Conclusion
+
+Currying is not a very complicated concept, but most people are unfamiliar with it because they have no use for it. And for good reason! It only shines when you decide to write *very functional* code and use composition everywhere. Languages like Haskell take advantage of this by defining all functions to be curried by default and having a very small operator for composing functions (like a dot).
+
+For a fun exercise, try implementing Ramda's ~compose~ function on your own! It should be able to compose any number of functions, not just two.
