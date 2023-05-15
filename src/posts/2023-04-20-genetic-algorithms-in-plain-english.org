@@ -1,0 +1,220 @@
+---
+title: Genetic Algorithms in Plain English
+desc: "An introduction to genetic algorithms with an example problem to solve."
+image: "./images/blog/dna.jpg"
+imageAlt: "Drawing of dna."
+---
+
+#+begin_center
+/[[https://www.freepik.com/free-vector/dna-helix-symbol-isolated-white-background_24085108.htm#query=dna&position=0&from_view=search&track=sph][Image by brgfx]] on Freepik/
+#+end_center
+
+Years ago, I found [[http://www.ai-junkie.com/ga/intro/gat1.html][a tutorial]] on genetic algorithms that ended up being one of the most fun coding exercises I've ever done. I still think about it often and I wanted to write a tutorial of my own that I think is more approachable. So here it is!
+
+* What is a genetic algorithm?
+
+The origin of genetic algorithms is unclear, dating back to 1989[fn:2] or earlier[fn:1]. They are inspired by the process of natural selection and genetics, key parts of evolution. In this tutorial, I'm going to describe a basic genetic algorithm, which is easy to implement and also recommended by experts:
+
+#+begin_quote
+Start by using an "off the shelf" GA. It is pointless developing a complex GA, if your problem can be solved using a simple and standard implementation.
+
+-- Sastry, K., Goldberg, D., Kendall, G. (2005). Genetic Algorithms.[fn:3]
+#+end_quote
+
+** The key points of natural selection
+
+- organism
+- chromosome
+- gene
+- DNA (maybe?)
+- allele
+- nucleotide
+- genotype (maybe?)
+- phenotype
+
+You've probably heard the phrase "[[https://en.wikipedia.org/wiki/Survival_of_the_fittest][survival of the fittest]]". It's a concise way of describing the mechanism of natural selection. Organisms in nature (as in, the world separate from human impact) tend to have a higher probability of being preserved and reproducing when they are more fit for their environment than competing organisms. This "fitness" is not necessarily a physical fitness, like being strong, but any trait that makes the organism better adapted for its environment.
+  
+Let's talk about natural selection, or at least what's relevant to genetic algorithms.
+
+In short, natural selection is a process that 
+  
+We're going to distill natural selection to a few key points that will be relevant to genetic algorithms.
+
+In genetic algorithms, a chromosome is supposed to contain all the parameters for a potential solution of the problem that the algorithm is trying to solve.
+
+* Standard genetic algorithm
+
+These are the steps to a standard genetic algorithm you can apply to many problems.
+
+** Step 1. Planning
+
+The first step towards building your algorithm for a target problem is to plan how to represent genes and chromosomes, and how to evaluate the fitness of an organism.
+
+Breaking it down from the top, each *organism* will only be made up of a single *chromosome*, so the two terms are essentially interchangeable.
+
+Each *chromosome* is made up of *genes*.
+
+Each *gene* is made up of *nucleotides*, which are equivalent to units of information. Each nucleotide will be represented by one *bit* (~0~ or ~1~), since this is the smallest piece of information on a computer.
+
+Every gene should be the same length, which is determined by the number of possible *alleles* needed for the target problem. For example, if you choose genes to be 3 bits in length, that gives
+
+*(length of bit)^(length of gene) = 2^3 = 8*
+
+different possible alleles.
+
+Each organism should represent a potential solution to the operating problem, which is its *phenotype*. For instance, if a solution is to be an English word, then a gene may represent a letter (e.g., "d") and a chromosome will thus be a string of letters (e.g., "dwnlode"), possibly forming an English word. The string of letters would be the phenotype of a chromosome.
+
+Whatever problem the algorithm is tasked to solve, we need some way of knowing which chromosomes are better than others. Remember, every chromosome is a potential solution to the given problem. The idea here is to come up with a way to evaluate each chromosome and give it a *fitness* score (a decimal number will do). Typically, the higher the fitness score, the closer the chromosome is to an ideal solution. It's difficult to be more precise than this because the fitness evaluation varies a lot depending on the problem, so I'll give an example. Let's say the target problem is to find the longest English word with the most vowels. Each organism's phenotype is a string of letters. The fitness evaluation could be:
+
+~(number of vowels in phenotype) * (length of phenotype)~
+
+** Step 2. Set the parameters
+
+There are 4 parameters that can be set and tweaked. These affect how well the algorithm runs on the target problem.
+
+*** Population size
+
+This is the number of chromosomes in the population for each generation. Each *chromosome* is meant to represent an *organism*: a potential solution to the operating problem. We'll call this parameter ~populationSize~.
+
+A good population size to try is *50*.
+
+*** Crossover rate
+
+As pairs of chromosomes are selected for each new generation's population, they may be left the same (as copies) or combined to make two new ones (like breeding offspring). The crossover rate is the *probability* that each pair of selected chromosomes will be crossed over, which will be explained in step 4. We'll call this parameter ~crossoverRate~.
+
+A good crossover rate to try is *0.6*.
+
+*** Mutation rate
+
+Every bit of information in every chromosome has a (low) chance to be mutated. Mutations can spark new traits that can then be spread to future generations, adding diversity to the population We'll call this parameter ~mutationRate~.
+
+A good mutation rate to try is *0.05*.
+
+*** Stopping condition
+
+At some point, the genetic algorithm has to stop! Otherwise, you've created an infinite loop. The easiest stopping condition to implement is to set a limit on the *number of generations*. When the limit is reached, take the chromosome with the highest fitness from the last generation's population and you have a solution!
+
+Alternately, you could let the stopping condition be a *fitness threshold*. When a chromosome's fitness meets the threshold, deem it the winner!
+
+** Step 3. Initial population
+
+The first generation of chromosomes needs to come from somewhere. A good way to make the first population is to randomly generate every bit of information in every chromosome until you have the right number of chromosomes for the population size.
+
+** Step 4. Fitness evaluation (???)
+
+Whatever problem the algorithm is tasked to solve, we need some way of knowing which chromosomes are better than others. Remember, every chromosome is a potential solution to the given problem. We need to come up with a way to evaluate each chromosome and give it a *fitness* score (a decimal number will do). Typically, the higher the fitness score, the closer the chromosome is to an ideal solution.
+
+** Step _. Selection
+
+The current population of chromosomes needs to be used to form a new population (the next generation). Essentially, we're going to take pairs of chromosomes from the current population and breed them to form offspring. Each pair will breed two offspring, and once we have enough offspring, the offspring become the new population.
+
+Instead of just selecting chromosomes at random, the probability that a chromosome is selected should be proportional to its fitness. This makes it more likely for two high-performing chromosomes to be paired up for the new population. A good way to do this proportional selection to use the *roulette wheel* strategy.
+
+/[Table of 10 chromosomes with fitness scores]/
+
+/[Drawing of chromosomes in roulette wheel]/
+
+/[Table of chromosomes with fitness scores, probabilities, and cumulative probabilities]/
+
+- Calculate total fitness (sum fitness scores of all chromosomes).
+- Calculate probabilities of each chromosome.
+- Calculate cumulative probabilities of each chromosome.
+- (Sum of cumulative probabilities should equal 1.)
+- First selection: generate random number, then select the chromosome in that cumulative probability.
+- Second selection: generate another random number, then select the chromosome in that cumulative probability.
+
+Now we have a pair of chromosomes, representing the parents.
+
+Note that this allows for the same chromosome to be selected more than once. That's okay! Organisms with higher fitness being allowed to breed multiple times is part of natural selection. Less fit individuals may not be selected to breed at all, allowing their less desirable traits to simply die out.
+
+To explain this in more detail, here's how it works in generic math:
+
+/[Show roulette wheel selection as math formula]/
+
+And here's how it works in pseudocode:
+
+/[Show roulette wheel selection in pseudocode]/
+
+** Step _. Crossover
+
+The offspring of the two selected chromosomes will either inherit a combination of their traits (genes from both parents) or be direct clones.
+
+Generate random number, compare to crossover rate to see if we should perform a crossover or simply clone the parents.
+
+To crossover two chromosomes, pick a random position less than the length of a chromosome and swap all the bits to the right in the first chromosome with all the bits to the right in the second chromosome.
+
+/[Drawing of crossover]/
+
+** Step _. Mutation
+
+For each bit in the offspring:
+Generate random number, compare to mutation rate to see if it should mutate or stay the same. To mutate, simply flip the bit (0 -> 1, or 1 -> 0).
+
+** Step _. New population
+
+Steps _ to _ (selection, crossover, and mutation) together form the breeding process. Each cycle forms 2 offspring. We need to repeat the cycle until we get enough offspring to form the new population. The old population won't be needed anymore (everything dies...).
+
+** Step 6. Repeat steps 4-5 until the stopping condition is met
+
+Steps 4 and 5 form the main loop of the algorithm. These need to be repeated until a winner can be declared, which is determined by the chromosome with the highest fitness when the stopping condition has been met. If the stopping condition is a limit on the number of generations, say 100, then the solution is the chromosome with the highest fitness after 100 generations.
+
+** Step 7. Solution (best chromosome)
+
+In the last population, pick the chromosome with the highest fitness. There's your solution!
+
+** Notes
+
+It's important to have a chance of crossover /not/ happening. Suppose we have two organisms, Alice and Bob, selected to be parents. Alice's fitness score is 99% and Bob's is 80%. If Alice and Bob are to produce offspring who inherit from both of them, the offspring are almost guaranteed to have a lower fitness than Alice's 99% because they will have many of their genes replaced which likely won't fit well with the rest of their genes. What would give a better chance at being left with an organism with close-to-ideal fitness is if Alice's offspring is an exact clone, and perhaps even mutates a bit in the right way.
+
+* A target problem
+
+As with anything in programming, you're not going to understand simply by reading. You need to try implementing a genetic algorithm for yourself. But first, you need the right kind of problem to solve. Lucky for you, I've got that part covered. In this section, I'm going to outline a problem that you can solve by coding a genetic algorithm yourself. I'm going to give you all the details you need so you can implement it in any programming language you want. In other words, I'm going to cover *step 1* (planning) and you have to do the rest.
+
+*The problem:* given a target number, find a string of single-digit numbers and basic arithmetic operators that equals that number. For example, if the target number is ~10~, some solutions would be:
+
+- ~5 + 5~
+- ~5 * 2~
+- ~5 + 5 + 1 - 1 + 9 * 1~
+
+All of these equal 10 exactly, so they are all ideal matches. Of course, there are infinitely many possibilities for any target number, but our algorithm may not discover any of them in the limited time it has to run. So, the true goal of our genetic algorithm is to give us the best candidate after a certain number of generations.
+
+** Step 1. Planning
+
+Since a potential solution is to be a string of single-digit numbers and arithmetic operators, that is exactly what a chromosome should represent. (Keep in mind that an organism is a single chromosome, so we can substitute one word for the other.) The genes, being pieces of a chromosome, should therefore each represent a single-digit number or an arithmetic operator.
+
+To determine the gene length, we need to know how many possible alleles we need to represent. In this case, the possible alleles are all the single-digit numbers and arithmetic operators: ~0~, ~1~, ~2~, ~3~, ~4~, ~5~, ~6~, ~7~, ~8~, ~9~, ~+~, ~-~, ~*~, ~/~. 14 possible alleles in total means we need a minimum of 4 bits per gene, since that gives us 2^4 = 16 different possible alleles. We will have two left over alleles, but those can be ignored in the resulting chromosome. So, our possible genes are:
+
+| gene   | allele    |
+|--------+-----------|
+| ~0000~ | ~0~       |
+| ~0001~ | ~1~       |
+| ~0010~ | ~2~       |
+| ~0011~ | ~3~       |
+| ~0100~ | ~4~       |
+| ~0101~ | ~5~       |
+| ~0110~ | ~6~       |
+| ~0111~ | ~7~       |
+| ~1000~ | ~8~       |
+| ~1001~ | ~9~       |
+| ~1010~ | ~+~       |
+| ~1011~ | ~-~       |
+| ~1100~ | ~*~       |
+| ~1101~ | ~/~       |
+| ~1110~ | ~nothing~ |
+| ~1111~ | ~nothing~ |
+
+/[gene_explanation.png -- Drawing of a single gene: circle nucleotide, circle gene, circle allele]/
+
+Now we need to determine how the fitness of an organism (chromosome) should be evaluated. Recall that that we need an
+
+* Food for thought
+
+In the target problem described above, what are the traits of an organism? Does each organism have a single trait: its evaluated number? Or can we think of each gene as a trait?
+
+Does crossing over two high-fitness organisms have a good chance of producing high-fitness offspring? Swapping genes seems likely to drastically change a chromosome's evaluated number, and not towards a better fitness.
+
+* Footnotes
+
+[fn:1] https://en.wikipedia.org/wiki/Genetic_algorithm#History
+[fn:2] Goldberg, David (1989). Genetic Algorithms in Search, Optimization and Machine Learning. Reading, MA: Addison-Wesley Professional. ISBN 978-0201157673.
+[fn:3] Sastry, K., Goldberg, D., Kendall, G. (2005). Genetic Algorithms. In: Burke, E.K., Kendall, G. (eds) Search Methodologies. Springer, Boston, MA. https://doi.org/10.1007/0-387-28356-0_4
