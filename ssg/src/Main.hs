@@ -48,9 +48,7 @@ main = hakyllWith config $ do
     , "favicon.ico"
     , "robots.txt"
     , "_config.yml"
-    , "images/*"
-    , "images/blog/*"
-    , "images/testimonials/*"
+    , "images/**"
     , "js/*"
     , "fonts/*"
     ]
