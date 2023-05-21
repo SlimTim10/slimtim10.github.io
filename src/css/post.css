@@ -26,6 +26,7 @@
 
 #blog-post .content * {
   overflow-wrap: break-word;
+  overflow: scroll;
 }
 
 #blog-post .content > * {
@@ -94,6 +95,16 @@
   background: #EAEAEA;
 }
 
+/* Custom class for table container */
+/* Tables should be centered only when the screen is big enough */
+@media screen and (min-width: 480px) {
+  #blog-post .content .table-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+  }
+}
+
 #blog-post .content table {
   background: white;
   border: 1px solid #E0E0E0;
@@ -114,6 +125,10 @@
 
 #blog-post .content a {
   text-decoration: underline;
+}
+
+#blog-post .content img {
+  width: 100%;
 }
 
 .read-more {
