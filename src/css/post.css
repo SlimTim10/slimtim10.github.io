@@ -26,7 +26,6 @@
 
 #blog-post .content * {
   overflow-wrap: break-word;
-  overflow: scroll;
 }
 
 #blog-post .content > * {
@@ -95,7 +94,14 @@
   background: #EAEAEA;
 }
 
+#blog-post .content pre {
+  overflow-x: scroll;
+}
+
 /* Custom class for table container */
+#blog-post .content .table-container {
+  overflow-x: scroll;
+}
 /* Tables should be centered only when the screen is big enough */
 @media screen and (min-width: 480px) {
   #blog-post .content .table-container {
