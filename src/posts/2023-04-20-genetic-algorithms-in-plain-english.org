@@ -9,19 +9,21 @@ imageAlt: "Drawing of dna."
 /[[https://www.freepik.com/free-vector/dna-helix-symbol-isolated-white-background_24085108.htm#query=dna&position=0&from_view=search&track=sph][Image by brgfx]] on Freepik/
 #+end_center
 
-Years ago, I found [[http://www.ai-junkie.com/ga/intro/gat1.html][a tutorial]] on genetic algorithms that ended up being one of the most fun coding exercises I've ever done. It's a great way to practice with a new programming language you're learning, or improve with one you're already familiar with. I still think about it often and I wanted to write a tutorial of my own that I think is more approachable. So here it is!
+Years ago, I found [[http://www.ai-junkie.com/ga/intro/gat1.html][a tutorial]] on genetic algorithms that ended up being one of the most fun coding exercises I've ever done. To this day, I still think about it often, so I wanted to create my own tutorial to share the experience with more people. It's a great way to practice with a new programming language you're learning, or improve with one you're already familiar with. So here it is!
 
 * What is a genetic algorithm?
 
 The origin of genetic algorithms is unclear, dating back to 1989[fn:2] or earlier[fn:1]. They are inspired by the process of natural selection and genetics, key parts of evolution. In this tutorial, I'm going to describe a basic genetic algorithm, which is easy to implement and also recommended by experts:
 
 #+begin_quote
-Start by using an "off the shelf" GA. It is pointless developing a complex GA, if your problem can be solved using a simple and standard implementation.
+Start by using an "off the shelf" GA (genetic algorithm). It is pointless developing a complex GA, if your problem can be solved using a simple and standard implementation.
 
 -- Sastry, K., Goldberg, D., Kendall, G. (2005). Genetic Algorithms.[fn:3]
 #+end_quote
 
 ** The key points of natural selection
+
+/[This is Danny's part. Everything below is rough notes to be scrapped.]/
 
 - organism
 - chromosome
@@ -44,9 +46,11 @@ In genetic algorithms, a chromosome is supposed to contain all the parameters fo
 
 * Standard genetic algorithm
 
-/[Image: UML activity diagram of genetic algorithm]/
+Before we get to the steps in detail, consider the flow of the algorithm:
 
-These are the steps to a standard genetic algorithm you can apply to many problems.
+#+begin_center
+[[file:images/blog/genetic_algorithm/genetic_algorithm_flow.svg]]
+#+end_center
 
 ** Step 1. Planning
 
@@ -58,17 +62,41 @@ Each *chromosome* is made up of *genes*. In order for the crossover step to work
 
 Each *gene* is made up of *nucleotides*, which are equivalent to units of information. Each nucleotide will be represented by one *bit* (~0~ or ~1~), since this is the smallest piece of information on a computer.
 
-Every gene should be the same length, which is determined by the number of possible *alleles* needed for the target problem. For example, if you choose genes to be 3 bits in length, that gives
+Recall that an *allele* represents all the possible values of a gene at a certain position in a chromosome. For the sake of this algorithm, the possible values of a gene don't depend on its position. So, the set of alleles is the same for any gene. We can think of an allele for a specific gene as that gene's decoded value.
+
+Every gene should be the same length, which is determined by the number of possible values needed for the target problem. For example, if you choose genes to be 3 bits in length, that gives
 
 #+begin_center
 *(length of bit)^(length of gene) = 2^3 = 8*
 #+end_center
 
-different possible alleles.
+different possible values for any one gene.
 
 Each organism should represent a potential solution to the operating problem, which is its *phenotype*. For instance, if a solution is to be an English word, then a gene may represent a letter (e.g., "d") and a chromosome will thus be a string of letters (e.g., "dwnlode"), possibly forming an English word. The string of letters would be the phenotype of a chromosome.
 
-For whatever problem we want our algorithm to solve, we need to know what a good solution looks like. That means we need some way of knowing which organisms are better than others. Remember, every organism is a potential solution to the given problem. The idea here is to come up with a way to evaluate each organism and give it a *fitness* score (a decimal number will do). The higher the fitness score, the closer the organism is to an ideal solution. It's difficult to be more precise than this because the fitness evaluation varies a lot depending on the problem, so I'll give an example. Let's say the target problem is to find the best values for ~a~, ~b~, ~c~, and ~d~ in the equation ~a + 2b + 3c + 4d = 30~.[fn:4] Each organism's phenotype is its four numbers. The fitness evaluation could be:
+Here's a breakdown of an example chromosome that could be used for a word problem:
+
+#+begin_center
+[[file:images/blog/genetic_algorithm/chromosome_explanation.svg]]
+#+end_center
+
+And the alleles for all the possible letters of the alphabet:[fn:7]
+
+#+begin_export html
+<div class="table-container">
+#+end_export
+| gene    | value |
+|---------+-------|
+| ~00001~ | ~a~   |
+| ~00010~ | ~b~   |
+| ~00011~ | ~c~   |
+| ...     | ...   |
+| ~11010~ | ~z~   |
+#+begin_export html
+</div>
+#+end_export
+
+Now for fitness evaluation. For whatever problem we want our algorithm to solve, we need to know what a good solution looks like. That means we need some way of knowing which organisms are better than others. Remember, every organism is a potential solution to the given problem. The idea here is to come up with a way to *evaluate* each organism and give it a *fitness* score (a decimal number). The higher the fitness score, the closer the organism is to an ideal solution. It's difficult to be more precise than this because the fitness evaluation varies a lot depending on the problem, so I'll give an example. Let's say the target problem is to find the best values for ~a~, ~b~, ~c~, and ~d~ in the equation ~a + 2b + 3c + 4d = 30~.[fn:4] Each organism's phenotype is its four numbers. The fitness evaluation could be:
 
 #+begin_center
 #+begin_example
@@ -76,7 +104,7 @@ For whatever problem we want our algorithm to solve, we need to know what a good
 #+end_example
 #+end_center
 
-Where ~abs~ gives the absolute value of a number. This evaluation function is designed to give a higher fitness score for better values, with 1 being a perfect fitness score. In math terms, the range is ~(0, 1]~.
+Where ~abs~ gives the absolute value of a number. This evaluation function is designed to give a higher fitness score for better values, with 1 being a perfect fitness score. The range is ~(0, 1]~, meaning from 0 (exclusive) to 1 (inclusive).
 
 So, an organism with the values ~a = 0~, ~b = 0~, ~c = 10~, ~d = 0~ would have fitness
 
@@ -99,25 +127,25 @@ There are 4 parameters that can be set and tweaked. These affect how well the al
 
 This is the number of organisms in the population for each generation. We'll call this parameter ~populationSize~.
 
-A good population size to try is *50*.
+A good starting point is ~populationSize = 50~.
 
 *** Crossover rate
 
 As pairs of organisms are selected for each new generation's population, they may be left the same (as copies) or combined to make two new ones (like breeding offspring). The crossover rate is the *probability* that each pair of selected organisms will be crossed over, which will be explained in step 4. We'll call this parameter ~crossoverRate~.
 
-A good crossover rate to try is *0.6*.
+A good starting point is ~crossoverRate = 0.6~.
 
 *** Mutation rate
 
 Every bit of information in every chromosome has a (low) chance to be mutated. Mutations can spark new traits that can then be spread to future generations, adding diversity to the population We'll call this parameter ~mutationRate~.
 
-A good mutation rate to try is *0.05*.
+A good starting point is ~mutationRate = 0.05~.
 
 *** Stopping condition
 
-At some point, the genetic algorithm has to stop! Otherwise, you've created an infinite loop. The easiest stopping condition to implement is to set a limit on the *number of generations*. When the limit is reached, take the organism with the highest fitness from the last generation's population and you have a solution!
+At some point, the genetic algorithm has to stop, otherwise you've created an infinite loop! The easiest stopping condition to implement is to set a limit on the *number of generations*. When the limit is reached, take the organism with the highest fitness from the last generation's population and you have a solution!
 
-Alternately, you could let the stopping condition be a *fitness threshold*. When a organism's fitness meets the threshold, deem it the winner!
+Alternately, you could let the stopping condition be a *fitness threshold*. When a organism's fitness meets the threshold, halt and deem it the winner!
 
 ** Step 3. Create initial population
 
@@ -125,13 +153,13 @@ The first generation of organisms needs to come from somewhere. A good way to ma
 
 ** Step 4. Fitness evaluation
 
-Evaluate the fitness of every organism in the population and store this information for later retrieval.[fn:5]
+Let the games begin! Evaluate the fitness of every organism in the population and store this information to be used in the next step.[fn:5]
 
 ** Step 5. Selection
 
 The current population needs to be used to form a new population (the next generation). Essentially, we're going to take pairs of organisms from the current population and breed them to form offspring. Each pair will breed two offspring, and once we have enough offspring, they become the new population.
 
-Instead of just selecting organisms at random, the probability that an organism is selected should be proportional to its fitness. After all, this is the purpose of organism fitness! It should be more likely for two high-performing organisms to be paired up for breeding. A good way to do this proportional selection is to use the *roulette wheel* strategy.
+Instead of just selecting organisms at random, the probability that an organism is selected should be proportional to its fitness. After all, this is the purpose of organism fitness! It should be more likely for two high-performing organisms to be paired up for breeding. For this, we're going to use the *roulette wheel* strategy.
 
 Let's say we have a population of 5 organisms:
 
@@ -151,7 +179,7 @@ Let's say we have a population of 5 organisms:
 
 (Don't pay much attention to the chromosome values in this example; I made them up randomly.)
 
-At a casino, every segment of a roulette wheel is equal size. But our goal is to make a roulette wheel where the segments are proportional to their fitness:
+At a casino, every segment of a roulette wheel is equal in size. But our goal is to make a roulette wheel where the segments are proportional to their fitness:
 
 #+begin_center
 [[file:images/blog/genetic_algorithm/genetic_algorithm_roulette.png]]
@@ -162,12 +190,12 @@ Now when we spin the wheel to select an organism, it's obvious there will be a b
 To implement roulette wheel selection in code, this is what you need to do:
 
 - (Your organisms must be kept in order. The way they're ordered doesn't matter, so long as the order doesn't change.)
-- Calculate the total fitness of the population, ~totalFitness~ (sum the fitnesses of all organisms).
+- Calculate the total fitness of the population (sum the fitnesses of all organisms).
 - Calculate the cumulative fitness of each organism. The cumulative fitness of an organism is its fitness plus the sum of the fitnesses of all the previous organisms.
-- Generate a random number, ~r~, between 0 (excluding) and ~totalFitness~ (including).
+- Generate a random number, ~r~, between 0 (exclusive) and the total fitness (inclusive).
 - Find the first organism whose cumulative fitness is greater than or equal to ~r~.
 
-For example, if we calculate the cumulative fitnesses:
+For example, if we calculate the cumulative fitnesses of our organisms:
 
 #+begin_export html
 <div class="table-container">
@@ -183,42 +211,41 @@ For example, if we calculate the cumulative fitnesses:
 </div>
 #+end_export
 
-And if our random number ~r~ turns out to be 1.89, that means we select *organism 4*.
+And if ~r~ turns out to be 1.89, that means we select *organism 4*.
 
 The overall goal of this step is to *select two organisms*, which will breed a pair of offspring.[fn:6]
 
 ** Step 6. Crossover
 
-The offspring of the two selected organisms will either inherit a combination of their traits (genes from both parents) or be clones of the parents.[fn:7]
+The offspring of the two selected organisms will either inherit a combination of their traits (genes from both parents) or be clones of the parents.
 
-*[HERE]*
+Generate a random number, ~r~, between 0 and 1. If ~r~ is less than or equal to ~crossoverRate~, perform a crossover. Otherwise, let the offspring be exact copies of the parents.
 
-Generate random number, compare to crossover rate to see if we should perform a crossover or simply clone the parents.
+To crossover two organisms, pick a random position between the genes of a chromosome and swap all the alleles to the right in the first chromosome with the same alleles in the second chromosome. (Recall that alleles are genes at specific positions.)
 
-To crossover two organisms, pick a random position less than the length of a chromosome and swap all the bits to the right in the first chromosome with all the bits to the right in the second chromosome.
+#+begin_center
+[[file:images/blog/genetic_algorithm/crossover.svg]]
+#+end_center
 
-/[Drawing of crossover]/
-
-** Step _. Mutation
+** Step 7. Mutation
 
 For each bit in the offspring:
-Generate random number, compare to mutation rate to see if it should mutate or stay the same. To mutate, simply flip the bit (0 -> 1, or 1 -> 0).
 
-** Step _. New population
+- Generate a random number, ~r~, between 0 and 1.
+- If ~r~ is less than or equal to ~mutationRate~, mutate the bit.
+- To mutate, simply flip the bit (~0~ to ~1~, or ~1~ to ~0~).
 
-Steps _ to _ (selection, crossover, and mutation) together form the breeding process. Each cycle forms 2 offspring. We need to repeat the cycle until we get enough offspring to form the new population. The old population won't be needed anymore (everything dies...).
+** Step 8. Replace population
 
-** Step 6. Repeat steps 4-5 until the stopping condition is met
+Steps 5 to 7 (selection, crossover, and mutation) together form the breeding process. Each cycle forms 2 offspring. We need to repeat the cycle until we get enough offspring to form a new population, which replaces the old population. The old population won't be needed anymore (everything dies...).
 
-Steps 4 and 5 form the main loop of the algorithm. These need to be repeated until a winner can be declared, which is determined by the organism with the highest fitness when the stopping condition has been met. If the stopping condition is a limit on the number of generations, say 100, then the solution is the organism with the highest fitness after 100 generations.
+** Step 9. Repeat until the stopping condition is met
 
-** Step 7. Solution (best organism)
+Steps 4 to 8 form the main loop of the algorithm. Each cycle is one generation. The end of the loop is determined by the stopping condition, which leaves us with the last generation's population. If the stopping condition is a limit on the number of generations, say 100, then we simply stop after repeating the steps 100 times.
 
-In the last population, pick the organism with the highest fitness. There's your solution!
+** Step 10. Pick the winner
 
-** Notes
-
-It's important to have a chance of crossover /not/ happening. Suppose we have two organisms, Alice and Bob, selected to be parents. Alice's fitness score is 99% and Bob's is 80%. If Alice and Bob are to produce offspring who inherit from both of them, the offspring are almost guaranteed to have a lower fitness than Alice's 99% because they will have many of their genes replaced which likely won't fit well with the rest of their genes. What would give a better chance at being left with an organism with close-to-ideal fitness is if Alice's offspring is an exact clone, and perhaps even mutates a bit in the right way.
+In the remaining population, pick the organism with the highest fitness. There's your solution!
 
 * A target problem
 
@@ -236,9 +263,12 @@ All of these equal 10 exactly, so they are all ideal matches. Of course, there a
 
 Since a potential solution is to be a string of single-digit numbers and arithmetic operators, that is exactly what a chromosome should represent. (Keep in mind that an organism is a single chromosome, so we can substitute one word for the other.) The genes, being pieces of a chromosome, should therefore each represent a single-digit number or an arithmetic operator.
 
-To determine the gene length, we need to know how many possible alleles we need to represent. In this case, the possible alleles are all the single-digit numbers and arithmetic operators: ~0~, ~1~, ~2~, ~3~, ~4~, ~5~, ~6~, ~7~, ~8~, ~9~, ~+~, ~-~, ~*~, ~/~. 14 possible alleles in total means we need a minimum of 4 bits per gene, since that gives us 2^4 = 16 different possible alleles. We will have two left over alleles, but those can be ignored in the resulting chromosome. So, our possible genes are:
+To determine the gene length, we need to know how many possible alleles we need to represent. In this case, the possible alleles are all the single-digit numbers and arithmetic operators: ~0~, ~1~, ~2~, ~3~, ~4~, ~5~, ~6~, ~7~, ~8~, ~9~, ~+~, ~-~, ~*~, ~/~. 14 possible alleles in total means we need a minimum of 4 bits per gene, since that gives us 2^4 = 16 different possible alleles. We will have two left over alleles, but those can be ignored in the resulting chromosome. So, our alleles are:
 
-| gene   | allele    |
+#+begin_export html
+<div class="table-container">
+#+end_export
+| allele | value     |
 |--------+-----------|
 | ~0000~ | ~0~       |
 | ~0001~ | ~1~       |
@@ -256,16 +286,42 @@ To determine the gene length, we need to know how many possible alleles we need 
 | ~1101~ | ~/~       |
 | ~1110~ | ~nothing~ |
 | ~1111~ | ~nothing~ |
+#+begin_export html
+</div>
+#+end_export
 
-/[gene_explanation.png -- Drawing of a single gene: circle nucleotide, circle gene, circle allele]/
+Now we need to determine how the fitness of an organism (chromosome) should be evaluated. Recall that that we need an evaluation function which produces a higher number for organisms that are closer to the ideal solution. Ideally, we should fit the fitness number into the range (0, 1], since this makes the roulette wheel selection easier. Try to come up with this function yourself, or click/tap to see my suggestion below.
 
-Now we need to determine how the fitness of an organism (chromosome) should be evaluated. Recall that that we need an
+#+begin_export html
+<details>
+<summary>Show fitness function</summary>
+#+end_export
+
+~fitness(phenotype) = 1 / abs((target - phenotype) + 1)~
+
+Where ~phenotype~ is the evaluated number of a given chromosome, ~target~ is the target number, and ~abs~ gives the absolute value of a number.
+
+#+begin_export html
+</details>
+#+end_export
 
 * Food for thought
 
+** Why a chance of crossover?
+
+Why is it important to have a chance of crossover /not/ happening? Suppose we have two organisms, Alice and Bob, selected to be parents. Alice's fitness score is 99% and Bob's is 80%. If Alice and Bob are to produce offspring who inherit from both of them, the offspring are almost guaranteed to have a lower fitness than Alice's 99% because they will have many of their genes replaced which likely won't fit well with the rest of their genes. What would give a better chance at being left with an organism with close-to-ideal fitness is if Alice's offspring is an exact clone, and perhaps even mutates a bit in the right way.
+
+** Why cloning?
+
+When a crossover doesn't occur, the offspring are clones of the parents. What does it mean to produce clones? Are we simulating an organism that breeds reproduces both sexually /and/ asexually? Or are we representing organisms that simply carry on living into the next generation?
+
+** What are the traits?
+
 In the target problem described above, what are the traits of an organism? Does each organism have a single trait: its evaluated number? Or can we think of each gene as a trait?
 
-Does crossing over two high-fitness organisms have a good chance of producing high-fitness offspring? Swapping genes seems likely to drastically change a chromosome's evaluated number, and not towards a better fitness.
+** Does crossover help?
+
+In the target problem described above, does crossing over two high-fitness organisms have a good chance of producing high-fitness offspring? Swapping genes seems likely to drastically change a chromosome's evaluated number (i.e., its phenotype), and not towards a better fitness. It seems more like mutating a chunk of a chromosome.
 
 * Footnotes
 
@@ -275,4 +331,4 @@ Does crossing over two high-fitness organisms have a good chance of producing hi
 [fn:4] Hermawanto, D. (2013). Genetic algorithm for solving simple mathematical equality problem. arXiv preprint [[https://arxiv.org/pdf/1308.4675.pdf][arXiv:1308.4675]].
 [fn:5] This is arguably an implementation detail pertaining to optimization via caching, but I see it as having conceptual importance. The fitness of an organism never changes because its genetics don't change. This is different from how we might talk about people's physical fitness, where you can become more fit by working out. In evolution, fitness is tied to the genetics of an organism, which are fixed. The only changes to genetics happen between generations (i.e., during breeding). So, with fitness being an unchanging value of an organism, it should be evaluated exactly once per organism.
 [fn:6] Note that this allows for the same organism to be selected more than once. That's okay! Organisms with higher fitness being allowed to breed multiple times is part of natural selection. Less fit individuals may not be selected to breed at all, allowing their less desirable traits to simply die out.
-[fn:7] What does it mean for the offspring to be clones of the parents? Are we simulating an organism that breeds reproduces both sexually /and/ asexually? Or are we representing organisms that simply carry on living into the next generation?
+[fn:7] Notice that we have to use 5 bits per gene in order to represent at least 26 different values (one for each letter of the alphabet). We will have a few alleles left over, which can represent junk values to be ignored in the chromosome's phenotype.
