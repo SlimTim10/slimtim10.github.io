@@ -35,7 +35,7 @@
 }
 
 #blog-post .content h1 {
-  font-size: 1.5rem;
+  font-size: 1.8rem;
   font-weight: 700;
   text-decoration: underline 3px;
 }
@@ -135,6 +135,10 @@
 
 #blog-post .content img {
   width: 100%;
+}
+
+#blog-post .content .footnote-ref {
+  text-decoration: none;
 }
 
 .read-more {
