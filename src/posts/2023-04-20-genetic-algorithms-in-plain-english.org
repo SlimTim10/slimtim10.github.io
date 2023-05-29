@@ -9,19 +9,9 @@ imageAlt: "Digital drawing of dna."
 /[[https://www.freepik.com/free-vector/dna-helix-symbol-isolated-white-background_24085108.htm#query=dna&position=0&from_view=search&track=sph][Image by brgfx]] on Freepik/
 #+end_center
 
-Years ago, I stumbled upon [[http://www.ai-junkie.com/ga/intro/gat1.html][a tutorial]] on genetic algorithms that ended up being one of the most interesting coding exercises I've ever done. I still think about it often to this day and I want to bring that same joy to others. This tutorial is meant to be approachable by anyone who knows at least one programming language, beginners and experts alike. You can treat it as a way to practice a new programming language you're learning, improve with one you're already familiar with, or rekindle your passion for programming. As a bonus, it will also give you a deeper understanding of evolution, since you'll be simulating it in code.
+Years ago, I stumbled upon [[http://www.ai-junkie.com/ga/intro/gat1.html][a tutorial]] on genetic algorithms that ended up being one of the most interesting coding exercises I've ever done. I still think about it often to this day and I want to bring that same joy to others. This tutorial is meant to be approachable by anyone who knows at least one programming language, beginners and experts alike. Doing this exercise is a great a way to practice a new programming language you're learning, improve with one you're already familiar with, or rekindle your passion for programming. As a bonus, it will also give you a deeper understanding of how evolution works in the real world after simulating it in code.
 
-After a bit of background on natural selection and evolution, I'm going to give the general steps of a standard genetic algorithm. Then, and this is the fun part, I'm going to describe a basic problem to solve so you can start coding right away. The program only needs to take a single number as input and print a string as output, so it can have a simple command-line user interface or you can make a fancy web UI---it's up to you how far you want to take it.
-
-* What is a genetic algorithm?
-
-The origin of genetic algorithms is unclear, dating back to 1989[fn:1] or earlier[fn:2]. They are inspired by the process of natural selection and genetics; key parts of evolution. In this tutorial, I'm going to describe a standard genetic algorithm, which is easy to code and also recommended by experts:
-
-#+begin_quote
-Start by using an "off the shelf" GA (genetic algorithm). It is pointless developing a complex GA, if your problem can be solved using a simple and standard implementation.
-
--- Sastry, K., Goldberg, D., Kendall, G. (2005). Genetic Algorithms.[fn:3]
-#+end_quote
+After a bit of background on natural selection and evolution, I'm going to explain the general steps of a standard genetic algorithm. Then, and this is the fun part, I'm going to describe a basic problem to solve so you can start coding right away! Your program only needs to take a single number as input and print a string as output, so it can have a simple command-line user interface or you can make a fancy web UI---it's up to you how far you want to take it.
 
 * Approaching the Genetic Algorithm
 
@@ -29,15 +19,19 @@ Start by using an "off the shelf" GA (genetic algorithm). It is pointless develo
 /*This section was written by Danny Fekete. Go here to read his extended post: <link>*/
 #+end_center
 
-/[Re-write this?]/
+/[Re-write this? It seems to repeatedly fall into the fitness tautology trap.]/
 
-Very broadly, *genetic algorithms* attempt to mimic principles of natural selection and genetics to build optimal solutions to problems.  They involve generating lots of randomized approaches, evaluating those approaches for their +degrees of success+, and then preferentially selecting and combining the best attempts (while discarding the worst) to see if the resulting subsequent batch contains solutions that are even better.  Rinse and repeat, sprinkling in degrees of randomness and predictability to taste, until a successful solution, or a solution with a desired degree of +efficiency+, is +achieved+.
+Very broadly, *genetic algorithms* attempt to mimic principles of natural selection and genetics to build optimal solutions to problems.  They involve generating lots of randomized approaches, evaluating those approaches for their +degrees of success+, and then preferentially selecting and combining the best attempts (while discarding the worst) to see if the resulting subsequent batch contains solutions that are even better.  Rinse and repeat, sprinkling in degrees of randomness and predictability to taste, until a successful solution, or a solution with a desired degree of +efficiency+ performance(?), is +achieved+ found.
 
 Because this strategy of solution-building is inspired by---and heavily adopts the metaphors of---academic fields outside of computer science, having a baseline understanding of those fields (and their terminology) should make trying to implement your own genetic algorithms much more intuitive.  So, here you go!
 
 ** Natural Selection
 
+/[Remove unneeded history lesson? I want this information to be more concise.]/
+
 Charles Darwin and Alfred Russel Wallace described the process of "Evolution by Natural Selection" as a way to make sense of both the stunning variation across organisms seen in the natural world, as well as the subtle but unavoidable patterns that exist between them.  *Evolution* (i.e., change over time) of species had been theorized before Darwin's time, but lacked a plausible (observable, eventually testable) engine or mechanism.  Natural +Selection+ selection was the proposed mechanism, and demonstrated that the abundant variety of life we observe would emerge directly and necessarily from the interaction between a few simple, acknowledged principles:
+
+/[The framework given here, while very interesting, doesn't synchronize well with the genetic algorithm.]/
 
 - *Heredity:* Offspring tend to resemble some combination of their parents (and diminishingly, their more distant ancestors).
 - *Mutation:* Novel or modified characteristics occasionally show up that do not appear to have belonged to an ancestor, but may still be passed on to offspring as normal.
@@ -50,13 +44,13 @@ Accepting these principles as plausible features of nature, we can anticipate so
 - *Heredity with Competition* suggests that the winners---those able to become parents before they die---will create a new generation that tends to more resemble themselves.  Conversely, traits characteristic of the losers---those who died before they reproduced---will fade from the population through subsequent generations.
 - *Mutation with Competition* suggests that occasionally a novel trait will arise that confers a competitive advantage (i.e., the organism that has that new trait is better able to survive and +attract+ acquire a mate to reproduce because of it).  These traits will then enter and proliferate across the population through subsequent generations.
 
-That's it!  In broad strokes, that engine---the consistent interaction of heredity, mutation, and competition---is the explanation for how the traits of populations change over time, or /evolve/.  It's called "/Natural/ Selection" because the "choice" of which individual organisms survive and which traits proliferate isn't made by anyone or anything, but is a /natural/ consequence of individual fitness.[fn:4]
+That's it!  In broad strokes, that engine---the consistent interaction of heredity, mutation, and competition---is the explanation for how the traits of populations change over time, or /evolve/.  It's called "/Natural/ Selection" because the "choice" of which individual organisms survive and which traits proliferate isn't made by anyone or anything, but is a /natural/ consequence of individual fitness.[fn:1]
 
 ** Genetics
 
 While natural selection operates at the level of populations, genetics concerns itself with individual members of those populations; some of the foundational ideas are represented in the following terms (organized to work our way from the observable individual organism down to the molecular medium of its heredity):
 - *Organism:* a discrete entity made up of one or more cells, each of which typically contains an identical copy of a genome (described next).
-  - Organisms with enough features in common to be able to mate and produce viable offspring (i.e., child organisms that can similarly mate and produce viable offspring) are said to be *members of the same species.*[fn:5]
+  - Organisms with enough features in common to be able to mate and produce viable offspring (i.e., child organisms that can similarly mate and produce viable offspring) are said to be *members of the same species.*[fn:2]
   - A group of organisms that are members of the same species /and/ are sufficiently local to each other that they can interbreed and compete for the same resources can be said to be *a population.* /[Do the resources need to be mentioned?]/
   - Grouping all currently-breeding parents (or the offspring of all currently-breeding parents) within a population into a cohort is the process of describing *generation.*  Generations in nature often have fuzzy boundaries, but can be conceptually useful as units for tracking the evolution of traits over time.
 - *Genome:* the complete set of data that represents an organism's heritable features.  In humans, this would be encoded in the full set of an individual's DNA.
@@ -66,7 +60,7 @@ While natural selection operates at the level of populations, genetics concerns 
   - *Analogy:* An individual's complete set of chromosomes is like a complete set of the volumes of an encyclopaedia.
 - *Gene:* a sequence of nucleotides (see the next term) located on an expected part of a chromosome that represents the instructions for building a particular configuration of protein (and ultimately contributes to the expression of a particular observable trait). /[The mention of protein only adds to confusion, at least for me.]/
   - *Analogy:* An individual's genes are like the individual words in an encyclopaedia.  Typically, the presence of /multiple/ specific genes interact together to contribute to a given trait, like multiple specific words creating meaning in a sentence.
-  - *Genes can be viewed as the unit of heredity:* when parents produce offspring through sexual reproduction, those offspring contain a combination of DNA (and ultimately, fitness-impacting genes) drawn from the parents.  If the offspring eventually become parents themselves, those same genes will have a chance to travel to the subsequent generation, and so on.[fn:6] /[Is the mention of DNA helpful here?]/
+  - *Genes can be viewed as the unit of heredity:* when parents produce offspring through sexual reproduction, those offspring contain a combination of DNA (and ultimately, fitness-impacting genes) drawn from the parents.  If the offspring eventually become parents themselves, those same genes will have a chance to travel to the subsequent generation, and so on.[fn:3] /[Is the mention of DNA helpful here?]/
 - *Allele:* the specific version of a gene (selected from the set of all possible, valid genes) that could occupy a given location on a chromosome.  The version present determines how, or which variety of a given trait is ultimately expressed.
   - *Analogy:* The alleles present that govern an individual's actual eye colour are like the adjectives chosen to drive meaning in the sentence, "Pineapple is a `[ heroic \ tragic \ confusing \ alarming ]` choice for a pizza topping." /[I like the adjectives analogy, but I find it confusing to relate it to the eye colour example.]/
 - *Nucleotide:* one of a set of complex molecules (nucleic acids) that can be linked together to form DNA.  The sequence in which these molecules occur /is/ the data which is copied and passed on in part to offspring, and could therefore be considered the fundamental matter of heredity.
@@ -74,13 +68,31 @@ While natural selection operates at the level of populations, genetics concerns 
 
 When discussing an organism's traits in genetic terms, it's helpful to know whether we're working at the scale of the generally observable, or at the scale of the genes that create them.  Two more terms are good to have handy, to this end:
 - *Phenotype:* an observable, heritable trait of an individual organism.
-  - Eye colour is an example of phenotype; which languages are spoken by the organism is /not/ an example of phenotype.[fn:7]
+  - Eye colour is an example of phenotype; which languages are spoken by the organism is /not/ an example of phenotype.[fn:4]
 - *Genotype:* the specific genes possessed by an individual that are responsible for the expression of an observable, heritable trait.
   - The presence of specific alleles of eye-colour-coding genes in an individual's genome is its eye-colour /genotype/; these will ultimately interact to result in the /phenotype/ of having an associated eye colour.
 
 * A Standard Genetic Algorithm
 
-Now that you should have a general understanding of what's involved in natural selection, it's time to learn how to simulate it. Before we get to the steps in detail, consider the high-level flow of the algorithm:
+Now that you should have a general understanding of what's involved in natural selection, it's time to learn how to simulate it. In this tutorial, I'm going to describe a standard genetic algorithm, which is easy to code and also recommended by experts.
+
+#+begin_quote
+Start by using an "off the shelf" GA (genetic algorithm). It is pointless developing a complex GA, if your problem can be solved using a simple and standard implementation.
+
+-- Sastry, K., Goldberg, D., Kendall, G. (2005). [[https://doi.org/10.1007/0-387-28356-0_4][Genetic Algorithms]].
+#+end_quote
+
+Before we dive into details, here's a high-level overview of the steps of the algorithm:
+
+- *Planning:* Some important decisions have to be made before writing any code.
+- *Setting parameters:* There are a few key parameters that will heavily influence the performance of the algorithm.
+- *Create initial population:* The first population of organisms is created.
+- *Fitness evaluation:* The fitness of the entire population is evaluated.
+- *Selection:* Two organisms are selected as parents to breed.
+- *Crossover:* The parents produce two offspring by potentially crossing over.
+- *Mutation:* Some genes in the offspring might get mutated.
+- *Replace population:* When there's enough offspring to form a new population, the old population gets replaced.
+- *Pick the winner:* The fittest organism in the remaining population is your solution!
 
 #+begin_center
 [[file:images/blog/genetic_algorithm/genetic_algorithm_flow.svg]]
@@ -88,49 +100,55 @@ Now that you should have a general understanding of what's involved in natural s
 
 ** Step 1. Planning
 
-The first step towards building your algorithm for a target problem is to plan how to represent genes and chromosomes, and how to evaluate the fitness of an organism.
+The first step towards building your own genetic algorithm for a target problem is to plan how to represent genes and chromosomes, and how to evaluate the fitness of an organism.
 
-Breaking it down from the top, each *organism* will only be made up of a single *chromosome*, so the two terms are essentially interchangeable.
+Breaking it down from the top, each *organism* will only be made up of a single *chromosome*, so the two terms are essentially interchangeable. This also means an organism's entire genome and DNA will be encoded in its one and only chromosome, which makes things much simpler than most real organisms.
 
 Each *chromosome* is made up of *genes*. In order for the crossover step to work (explained later), all chromosomes should be the same length (i.e., contain the same number of genes).
 
 Each *gene* is made up of *nucleotides*, which are equivalent to units of information. Each nucleotide will be represented by one *bit* (~0~ or ~1~), since this is the smallest piece of information on a computer.
 
+/[Is this right? Still getting tripped up trying to use "allele" properly.]/
 Recall that an *allele* represents all the possible values of a gene at a certain position in a chromosome. For the sake of this algorithm, the possible values of a gene don't depend on its position. So, the set of alleles is the same for any gene. We can think of an allele for a specific gene as that gene's decoded value.
 
-Every gene should be the same length, which is determined by the number of possible values needed for the target problem. For example, if you choose genes to be 3 bits in length, that gives
+Every gene should be the same length, which is determined by the number of possible unit values needed for the target problem. For example, if you choose genes to be 3 bits in length, that gives
 
 #+begin_center
 *(length of bit)^(length of gene) = 2^3 = 8*
 #+end_center
 
-different possible values for any one gene.
+different possible values for any single gene. (The length of a bit is always 2, since there are only two possible values: ~0~ or ~1~.)
 
-Each organism should represent a potential solution to the operating problem, which is its *phenotype*. For instance, if a solution is to be an English word, then a gene may represent a letter (e.g., "d") and a chromosome will thus be a string of letters (e.g., "dwnlode"), possibly forming an English word. The string of letters would be the phenotype of a chromosome.
+Each organism's *phenotype* should be a potential solution to the operating problem. For instance, if the expected solution to an operating problem is an English word, each gene on that organism could be expressed as a letter (e.g., "d"). The combined result of those genes would be its phenotype: a string of letters (e.g., "dwnlode").
 
-Here's a breakdown of an example chromosome that could be used for a word problem:
-
-#+begin_center
-[[file:images/blog/genetic_algorithm/chromosome_explanation.svg]]
-#+end_center
-
-And the alleles for all the possible letters of the alphabet:[fn:8]
+To allow for 26 characters, we would need genes to be at least 5 bits in length (2^5 would give us the necessary headroom of 32 possible alleles):
 
 #+begin_export html
 <div class="table-container">
 #+end_export
-| gene    | value |
+| allele  | value |
 |---------+-------|
 | ~00001~ | ~a~   |
 | ~00010~ | ~b~   |
 | ~00011~ | ~c~   |
 | ...     | ...   |
 | ~11010~ | ~z~   |
+| ...     | ...   |
 #+begin_export html
 </div>
 #+end_export
 
-Now for fitness evaluation. For whatever problem we want our algorithm to solve, we need to know what a good solution looks like. That means we need some way of knowing which organisms are better than others. Remember, every organism is a potential solution to the given problem. The idea here is to come up with a way to *evaluate* each organism and give it a *fitness* score (a decimal number). The higher the fitness score, the closer the organism is to an ideal solution. It's difficult to be more precise than this because the fitness evaluation varies a lot depending on the problem, so I'll give an example. Let's say the target problem is to find the best values for ~a~, ~b~, ~c~, and ~d~ in the equation ~a + 2b + 3c + 4d = 30~.[fn:9] Each organism's phenotype is its four numbers. The fitness evaluation could be:
+Here's a breakdown of an example chromosome that could be used for that kind of word-based operating problem:
+
+/[Point "gene" to the box. Point "allele" to the 00001. Also add "chromosome" to the image itself.]/
+
+#+begin_center
+[[file:images/blog/genetic_algorithm/chromosome_explanation.svg]]
+#+end_center
+
+/[The first gene in this chromosome has the allele that represents the value "a".]/
+
+Now for fitness. For whatever problem we want our algorithm to solve, we need to know what a good solution looks like because we need some way of knowing which organisms are better than others. The idea here is to come up with a way to *evaluate* each organism and give it a *fitness* score (a decimal number). The higher the fitness score, the closer the organism is to an ideal solution. It's difficult to be more precise than this because fitness evaluation varies a lot depending on the problem, so I'll give an example. Let's say the target problem is to find the best values for ~a~, ~b~, ~c~, and ~d~ in the equation ~a + 2b + 3c + 4d = 30~.[fn:5] Each organism's phenotype is its four numbers (together). The fitness evaluation could be:
 
 #+begin_center
 #+begin_example
@@ -138,7 +156,7 @@ Now for fitness evaluation. For whatever problem we want our algorithm to solve,
 #+end_example
 #+end_center
 
-Where ~abs~ gives the absolute value of a number. This evaluation function is designed to give a higher fitness score for better values, with 1 being a perfect fitness score. The range is ~(0, 1]~, meaning from 0 (exclusive) to 1 (inclusive).
+Where ~abs~ gives the absolute value of a number. This evaluation is designed to give a higher fitness score for better values, with 1 being a perfect fitness score. The range is (0, 1], meaning from 0 (exclusive) to 1 (inclusive).
 
 So, an organism with the values ~a = 0~, ~b = 0~, ~c = 10~, ~d = 0~ would have fitness
 
@@ -153,9 +171,17 @@ So, an organism with the values ~a = 0~, ~b = 0~, ~c = 10~, ~d = 0~ would have f
 
 Which is a perfect score! This makes sense, because these values perfectly satisfy the target equation.
 
+#+begin_center
+#+begin_example
+a + 2b + 3c + 4d = 30
+0 + 2(0) + 3(10) + 4(0) = 30
+30 = 30
+#+end_example
+#+end_center
+
 ** Step 2. Setting parameters
 
-There are 4 parameters that can be set and tweaked. These affect how well the algorithm runs on the target problem. Once you've finished implementing your algorithm, these are the parameters you'll want to play with and see how it performs differently.
+There are 4 major parameters that can be set and tweaked. These affect how well the algorithm runs on the target problem. Once you've finished implementing your algorithm, these are the parameters you'll want to play with and see how it performs differently.
 
 *** Population size
 
@@ -165,33 +191,35 @@ A good starting point is ~populationSize = 50~.
 
 *** Crossover rate
 
-As pairs of organisms are selected for each new generation's population, they may be left the same (as copies) or combined to make two new ones (like breeding offspring). The crossover rate is the *probability* that each pair of selected organisms will be crossed over, which will be explained in step 4. We'll call this parameter ~crossoverRate~.
+As pairs of organisms are selected to reproduce for the next generation, they may produce exact copies or be combined (like breeding). The crossover rate is the *probability* that each pair of selected organisms will be crossed over, which will be explained in step 6. We'll call this parameter ~crossoverRate~.
 
 A good starting point is ~crossoverRate = 0.6~.
 
 *** Mutation rate
 
-Every bit of information in every chromosome has a (low) chance to be mutated. Mutations can spark new traits that can then be spread to future generations, adding diversity to the population We'll call this parameter ~mutationRate~.
+Every bit of information in every chromosome has a (low) chance to be mutated, which will be explained in step 7. Mutations can spark new traits that can then be carried to future generations, adding diversity to the population. We'll call this parameter ~mutationRate~.
+
+/[Is this too repetitive? Mutation was explained prior to the algorithm.]/
 
 A good starting point is ~mutationRate = 0.05~.
 
 *** Stopping condition
 
-At some point, the genetic algorithm has to stop, otherwise you've created an infinite loop! The easiest stopping condition to implement is to set a limit on the *number of generations*. When the limit is reached, take the organism with the highest fitness from the last generation's population and you have a solution!
+At some point, the algorithm has to stop, otherwise you've created an infinite loop! The easiest stopping condition to implement is to set a limit on the *number of generations*. When the limit is reached, take the organism with the highest fitness from the last generation's population and you have a solution!
 
 Alternately, you could let the stopping condition be a *fitness threshold*. When a organism's fitness meets the threshold, halt and deem it the winner!
 
 ** Step 3. Create initial population
 
-The first generation of organisms needs to come from somewhere. A good way to make the first population is to randomly generate every bit of information in every organism until you have the right number of organisms for the population size.
+The first generation of organisms needs to come from somewhere. A good way to make the first population is to randomly generate every bit of information in every organism until the number of organisms is equal to ~populationSize~. In other words, make a bunch of chromosomes full of random genes.
 
 ** Step 4. Fitness evaluation
 
-Let the games begin! Evaluate the fitness of every organism in the population and store this information to be used in the next step.[fn:10]
+Let the games begin! Evaluate the fitness of every organism in the population and store this information to be used in the next step.[fn:6]
 
 ** Step 5. Selection
 
-The current population needs to be used to form a new population (the next generation). Essentially, we're going to take pairs of organisms from the current population and breed them to form offspring. Each pair will breed two offspring, and once we have enough offspring, they become the new population.
+The current population needs to be used to form a new population (the next generation). Essentially, we're going to take pairs of organisms from the current population and breed them to form offspring. Each pair will breed two offspring, and once we have enough offspring (~populationSize~), they become the new population.
 
 Instead of just selecting organisms at random, the probability that an organism is selected should be proportional to its fitness. After all, this is the purpose of organism fitness! It should be more likely for two high-performing organisms to be paired up for breeding. For this, we're going to use the *roulette wheel* strategy.
 
@@ -211,9 +239,9 @@ Let's say we have a population of 5 organisms:
 </div>
 #+end_export
 
-(Don't pay much attention to the chromosome values in this example; I made them up randomly.)
+(Don't pay much attention to the chromosome values in this example. I made them up randomly.)
 
-At a casino, every segment of a roulette wheel is equal in size. But our goal is to make a roulette wheel where the segments are proportional to their fitness:
+At a casino, every segment of a roulette wheel is equal in size. But our goal is to make a rigged roulette wheel where the segments are proportional to their fitness:
 
 #+begin_center
 [[file:images/blog/genetic_algorithm/genetic_algorithm_roulette.png]]
@@ -225,7 +253,7 @@ To implement roulette wheel selection in code, this is what you need to do:
 
 - (Your organisms must be kept in order. The way they're ordered doesn't matter, so long as the order doesn't change.)
 - Calculate the total fitness of the population (sum the fitnesses of all organisms).
-- Calculate the cumulative fitness of each organism. The cumulative fitness of an organism is its fitness plus the sum of the fitnesses of all the previous organisms.
+- Calculate the cumulative fitness of each organism. The cumulative fitness of an organism is its fitness plus the sum of the fitnesses of all the organisms before it.
 - Generate a random number, ~r~, between 0 (exclusive) and the total fitness (inclusive).
 - Find the first organism whose cumulative fitness is greater than or equal to ~r~.
 
@@ -247,15 +275,19 @@ For example, if we calculate the cumulative fitnesses of our organisms:
 
 And if ~r~ turns out to be 1.89, that means we select *organism 4*.
 
-The overall goal of this step is to *select two organisms*, which will breed a pair of offspring.[fn:11]
+#+begin_center
+[[file:images/blog/genetic_algorithm/roulette_wheel_cumulative.svg]]
+#+end_center
+
+The overall goal of this step is to *select two organisms*, which will be used in the next step to breed a pair of offspring.[fn:7]
 
 ** Step 6. Crossover
 
 The offspring of the two selected organisms will either inherit a combination of their traits (genes from both parents) or be clones of the parents.
 
-Generate a random number, ~r~, between 0 and 1. If ~r~ is less than or equal to ~crossoverRate~, perform a crossover. Otherwise, let the offspring be exact copies of the parents.
+To check if a crossover should happen, generate a random number, ~r~, between 0 and 1. If ~r~ is less than or equal to ~crossoverRate~, perform a crossover. Otherwise, let the offspring be exact copies of the parents.
 
-To crossover two organisms, pick a random position between the genes of a chromosome and swap all the alleles to the right in the first chromosome with the same alleles in the second chromosome. (Recall that alleles are genes at specific positions.)
+/[This is the place I'm most confident in my use of "alleles".]/ To crossover two organisms, pick a random position between the genes of a chromosome and swap all the alleles to the right in the first chromosome with the same alleles in the second chromosome (recall that alleles are genes at specific positions). Remember, our chromosomes are supposed to contain the same number of genes, so this makes it easy to line them up and cut them at the same spot.
 
 #+begin_center
 [[file:images/blog/genetic_algorithm/crossover.svg]]
@@ -266,16 +298,15 @@ To crossover two organisms, pick a random position between the genes of a chromo
 For each bit in the offspring:
 
 - Generate a random number, ~r~, between 0 and 1.
-- If ~r~ is less than or equal to ~mutationRate~, mutate the bit.
-- To mutate, simply flip the bit (~0~ to ~1~, or ~1~ to ~0~).
+- If ~r~ is less than or equal to ~mutationRate~, mutate the bit. To mutate, simply flip the bit (~0~ to ~1~, or ~1~ to ~0~).
 
 ** Step 8. Replace population
 
-Steps 5 to 7 (selection, crossover, and mutation) together form the breeding process. Each cycle forms 2 offspring. We need to repeat the cycle until we get enough offspring to form a new population, which replaces the old population. The old population won't be needed anymore (everything dies...).
+Steps 5 to 7 (selection, crossover, and mutation) together form the breeding process. Each cycle produces 2 offspring. We need to repeat the cycle until we get enough offspring to form a new population (~populationSize~), which replaces the old population. The old population won't be needed anymore (everything dies...).
 
 ** Step 9. Repeat until the stopping condition is met
 
-Steps 4 to 8 form the main loop of the algorithm. Each cycle is one generation. The end of the loop is determined by the stopping condition, which leaves us with the last generation's population. If the stopping condition is a limit on the number of generations, say 100, then we simply stop after repeating the steps 100 times.
+Steps 4 to 8 form the main loop of the algorithm. Each cycle is one generation. The end of the loop is determined by the stopping condition, which leaves us with the last generation's population. If the stopping condition is a limit on the number of generations, say 100, then we simply stop after repeating 100 cycles.
 
 ** Step 10. Pick the winner
 
@@ -283,47 +314,63 @@ In the remaining population, pick the organism with the highest fitness. There's
 
 * A Target Problem
 
-As with anything in programming, you're not going to understand simply by reading. You need to try implementing a genetic algorithm for yourself. But first, you need the right kind of problem to solve. Lucky for you, I've got that part covered. In this section, I'm going to outline a problem that you can solve by coding a genetic algorithm yourself. I'm going to give you all the details you need so you can implement it in any programming language you want. In other words, I'm going to cover *step 1* (planning) and you have to do the rest.
+As with anything in programming, you're not going to understand this simply by reading. You need to try implementing a genetic algorithm for yourself. But first, you need the right kind of problem to solve. Lucky for you, I've got that part covered. In this section, I'm going to outline a problem and give you all the details you need so you can start coding in any programming language you want. In other words, I'm going to cover *step 1* (planning) and you have to do the rest.
 
-*The problem:* given a target number, find a string of single-digit numbers and basic arithmetic operators that equals that number. For example, if the target number is ~10~, some solutions would be:
+** The Problem
+
+Given a target number, find a string of single-digit numbers and basic arithmetic operators that equals that number. For example, if the target number is ~10~, some solutions would be:
 
 - ~5 + 5~
 - ~5 * 2~
-- ~5 + 5 + 1 - 1 + 9 * 1~
+- ~5 + 5 + 1 - 1 - 5 - 5 + 1 + 9 * 1 / 1~
 
 All of these equal 10 exactly, so they are all ideal matches. Of course, there are infinitely many possibilities for any target number, but our algorithm may not discover any of them in the limited time it has to run. So, the true goal of our genetic algorithm is to give us the best candidate after a certain number of generations.
 
+Now, instead of artificially forcing organisms to have alternating numbers and operators, let's allow any combinations of valid genes and instead do a sort of /clean up/ when evaluating their expression. In other words, ignore successive numbers (or operators) in a row, using only the first one that appears in order while alternating.
+
+*Note:* the math strings can be evaluated left-to-right or use the standard order of operations (multiplication > division > addition > subtraction). Feel free to choose whichever evaluation method is easier for you to implement.
+
 ** Step 1. Planning
 
-Since a potential solution is to be a string of single-digit numbers and arithmetic operators, that is exactly what a chromosome should represent. (Keep in mind that an organism is a single chromosome, so we can substitute one word for the other.) The genes, being pieces of a chromosome, should therefore each represent a single-digit number or an arithmetic operator.
+Since a potential solution is to be a string of single-digit numbers and arithmetic operators, that is exactly what a chromosome should represent. The genes, being pieces of a chromosome, should therefore each represent a single-digit number or an arithmetic operator.
 
-To determine the gene length, we need to know how many possible alleles we need to represent. In this case, the possible alleles are all the single-digit numbers and arithmetic operators: ~0~, ~1~, ~2~, ~3~, ~4~, ~5~, ~6~, ~7~, ~8~, ~9~, ~+~, ~-~, ~*~, ~/~. 14 possible alleles in total means we need a minimum of 4 bits per gene, since that gives us 2^4 = 16 different possible alleles. We will have two left over alleles, but those can be ignored in the resulting chromosome. So, our alleles are:
+To determine gene length, we need to know how many possible alleles we need to represent. In this case, the possible alleles are all the single-digit numbers and arithmetic operators: ~0~, ~1~, ~2~, ~3~, ~4~, ~5~, ~6~, ~7~, ~8~, ~9~, ~+~, ~-~, ~*~, ~/~. 14 possible alleles in total means we need a minimum of 4 bits per gene, since that gives us 2^4 = 16 different possible alleles. We will have two left over alleles, but those can be ignored in the resulting chromosome. So, our alleles are:
 
-/[Are these the right terms?]/
 #+begin_export html
 <div class="table-container">
 #+end_export
-| allele | value     |
-|--------+-----------|
-| ~0000~ | ~0~       |
-| ~0001~ | ~1~       |
-| ~0010~ | ~2~       |
-| ~0011~ | ~3~       |
-| ~0100~ | ~4~       |
-| ~0101~ | ~5~       |
-| ~0110~ | ~6~       |
-| ~0111~ | ~7~       |
-| ~1000~ | ~8~       |
-| ~1001~ | ~9~       |
-| ~1010~ | ~+~       |
-| ~1011~ | ~-~       |
-| ~1100~ | ~*~       |
-| ~1101~ | ~/~       |
-| ~1110~ | ~nothing~ |
-| ~1111~ | ~nothing~ |
+| allele | value       |
+|--------+-------------|
+| ~0000~ | ~0~         |
+| ~0001~ | ~1~         |
+| ~0010~ | ~2~         |
+| ~0011~ | ~3~         |
+| ~0100~ | ~4~         |
+| ~0101~ | ~5~         |
+| ~0110~ | ~6~         |
+| ~0111~ | ~7~         |
+| ~1000~ | ~8~         |
+| ~1001~ | ~9~         |
+| ~1010~ | ~+~         |
+| ~1011~ | ~-~         |
+| ~1100~ | ~*~         |
+| ~1101~ | ~/~         |
+| ~1110~ | ~(nothing)~ |
+| ~1111~ | ~(nothing)~ |
 #+begin_export html
 </div>
 #+end_export
+
+As an example, we could have the following organism and its phenotype:
+
+#+begin_center
+#+begin_example
+[0110 0110 1110 1100 1000 0001 1010 0101 0110 1001 1101 0010 0001]
+= 6 6 (nothing) * 8 1 + 5 6 9 / 2 1
+= 6 * 8 + 5 / 2
+= 50.5
+#+end_example
+#+end_center
 
 Now we need to determine how the fitness of an organism (chromosome) should be evaluated. Recall that that we need an evaluation function which produces a higher number for organisms that are closer to the ideal solution. Ideally, we should fit the fitness number into the range (0, 1], since this makes the roulette wheel selection easier. Try to come up with this function yourself, or click/tap to see my suggestion below.
 
@@ -334,11 +381,13 @@ Now we need to determine how the fitness of an organism (chromosome) should be e
 
 ~fitness(phenotype) = 1 / abs((target - phenotype) + 1)~
 
-Where ~phenotype~ is the evaluated number of a given chromosome, ~target~ is the target number, and ~abs~ gives the absolute value of a number.
+Where ~phenotype~ is the evaluated expression of a given organism, ~target~ is the target number, and ~abs~ gives the absolute value of a number.
 
 #+begin_export html
 </details>
 #+end_export
+
+*Note:* It is very possible for division by 0 to be part of a chromosome. I'll leave it up to you to decide how to handle it, but do expect it to happen and consider your options.
 
 ** Build it!
 
@@ -348,7 +397,7 @@ That's it! Now you're on your own to code this algorithm by implementing steps 2
 
 ** Why a chance of crossover?
 
-Why is it important to have a chance of crossover /not/ happening? Suppose we have two organisms, Alice and Bob, selected to be parents. Alice's fitness score is 99% and Bob's is 80%. If Alice and Bob are to produce offspring who inherit from both of them, the offspring are almost guaranteed to have a lower fitness than Alice's 99% because they will have many of their genes replaced which likely won't fit well with the rest of their genes. What would give a better chance at being left with an organism with close-to-ideal fitness is if Alice's offspring is an exact clone, and perhaps even mutates a bit in the right way.
+Why is it important to have a chance of crossover /not/ happening? Suppose we have two organisms, Alice and Bob, selected to be parents. Alice's fitness is 99% and Bob's is 80%. If Alice and Bob are to produce offspring who inherit from both of them, the offspring are almost guaranteed to have a lower fitness than Alice's 99% because they will have many of their genes replaced which likely won't fit well with the rest of their genes. What would give a better chance at being left with an organism with close-to-ideal fitness is if Alice's offspring is an exact clone, and perhaps even mutates a bit in the right way.
 
 ** Why cloning?
 
@@ -360,28 +409,24 @@ In the target problem described above, what are the traits of an organism? Does 
 
 ** Does crossover help?
 
-In the target problem described above, does crossing over two high-fitness organisms have a good chance of producing high-fitness offspring? Swapping genes seems likely to drastically change a chromosome's evaluated number (i.e., its phenotype), and not towards a better fitness. It seems more like mutating a chunk of a chromosome.
+In the target problem described above, does crossing over two high-fitness organisms have a good chance of producing high-fitness offspring? Swapping genes seems likely to drastically change a chromosome's evaluated number (i.e., its phenotype), and not towards a better fitness. It seems more like mutating a chunk of a chromosome than inheriting traits.
 
 * Footnotes
 
-[fn:1] Goldberg, David (1989). Genetic Algorithms in Search, Optimization and Machine Learning. Reading, MA: Addison-Wesley Professional. ISBN 978-0201157673.
+[fn:1] Conversely, *artificial* selection occurs when populations are bred with intention to encourage or discourage particular traits (and therefore, "fitness" is externally, deliberately dictated).  Dog breeds and the modern forms of the fruits and vegetables we eat are classic examples of artificial selection.  (Incidentally, artificial selection in humans is called [[https://en.wikipedia.org/wiki/Eugenics][eugenics]], and is an endlessly fascinating ethical tire-fire.)
 
-[fn:2] https://en.wikipedia.org/wiki/Genetic_algorithm#History
+[fn:2] Species in nature are not as distinct as they're often presented and described, since "viability" of offspring can be a matter of degree (excluding cases like mules---horse/donkey hybrids that are born sterile), and can be subject to geographical boundaries.  One of the coolest examples I've encountered is the idea of [[https://en.wikipedia.org/wiki/Ring_species][ring speciation]]: imagine a migrating population that arrives at an impassible barrier like a lake or a mountain, and begins to spread around it.  Over multiple generations, local portions of that larger population will be subject to different selection pressures, resulting in local variations building up (and associated, accumulating genetic differences when comparing parts of the population that went one way when it met the barrier, vs. the other).  If the expanding population meets up again on the other side of the barrier (i.e., "closing the ring"), it's possible that members of the two sides will have built up enough differences that they'll no longer be genetically compatible with one another---/they'll be different species, by this definition/.  Yet, if you were to take sample organisms at smaller geographic intervals, travelling back around that ring from one end to the other, they /would/ be able to interbreed.  Speciation as a gradient!  I love it.
 
-[fn:3] Sastry, K., Goldberg, D., Kendall, G. (2005). Genetic Algorithms. In: Burke, E.K., Kendall, G. (eds) Search Methodologies. Springer, Boston, MA. https://doi.org/10.1007/0-387-28356-0_4
+[fn:3] Richard Dawkins, before his association with atheism, arguably became a household name for his book /The Selfish Gene/, wherein he explored a fascinating extension of this process and imagined the machinery of organisms---cells, blood, eyes, locomotion, intelligence, tentacles, etc.---as mere vehicles for individual genes to improve their chances of propagation.  It was a fun read, and pre-Creationist-beleaguered Dawkins had a spark of eager excitement that came out in his footnotes especially, that I think the vagaries of the world eventually ground away.  Alas.
 
-[fn:4] Conversely, *artificial* selection occurs when populations are bred with intention to encourage or discourage particular traits (and therefore, "fitness" is externally, deliberately dictated).  Dog breeds and the modern forms of the fruits and vegetables we eat are classic examples of artificial selection.  (Incidentally, artificial selection in humans is called [[https://en.wikipedia.org/wiki/Eugenics][eugenics]], and is an endlessly fascinating ethical tire-fire.)
+[fn:4] /Capacity/ to speak a language /largely/ is (i.e., no cactus is likely to ever speak Urdu no matter how much expert tutelage it has access to, while humans do it all the time); /capacity to speak a language comparatively well/ is extremely complicated, increasingly becoming an interaction between the individual's heredity and its lived experience...
 
-[fn:5] Species in nature are not as distinct as they're often presented and described, since "viability" of offspring can be a matter of degree (excluding cases like mules---horse/donkey hybrids that are born sterile), and can be subject to geographical boundaries.  One of the coolest examples I've encountered is the idea of [[https://en.wikipedia.org/wiki/Ring_species][ring speciation]]: imagine a migrating population that arrives at an impassible barrier like a lake or a mountain, and begins to spread around it.  Over multiple generations, local portions of that larger population will be subject to different selection pressures, resulting in local variations building up (and associated, accumulating genetic differences when comparing parts of the population that went one way when it met the barrier, vs. the other).  If the expanding population meets up again on the other side of the barrier (i.e., "closing the ring"), it's possible that members of the two sides will have built up enough differences that they'll no longer be genetically compatible with one another---/they'll be different species, by this definition/.  Yet, if you were to take sample organisms at smaller geographic intervals, travelling back around that ring from one end to the other, they /would/ be able to interbreed.  Speciation as a gradient!  I love it.
+[fn:5] Example borrowed from: Hermawanto, D. (2013). Genetic algorithm for solving simple mathematical equality problem. arXiv preprint [[https://arxiv.org/pdf/1308.4675.pdf][arXiv:1308.4675]].
 
-[fn:6] Richard Dawkins, before his association with atheism, arguably became a household name for his book /The Selfish Gene/, wherein he explored a fascinating extension of this process and imagined the machinery of organisms---cells, blood, eyes, locomotion, intelligence, tentacles, etc.---as mere vehicles for individual genes to improve their chances of propagation.  It was a fun read, and pre-Creationist-beleaguered Dawkins had a spark of eager excitement that came out in his footnotes especially, that I think the vagaries of the world eventually ground away.  Alas.
+[fn:6] This is arguably an implementation detail pertaining to optimization via caching, but I see it as having conceptual importance. The fitness of an organism never changes because its genetics don't change. This is different from how we might talk about people's physical fitness, where you can become more fit by working out. In evolution, fitness is tied to the genetics of an organism, which are fixed. The only changes to genetics happen between generations (i.e., during breeding). So, with fitness being an unchanging value of an organism, it should be evaluated exactly once per organism.
 
-[fn:7] /Capacity/ to speak a language /largely/ is (i.e., no cactus is likely to ever speak Urdu no matter how much expert tutelage it has access to, while humans do it all the time); /capacity to speak a language comparatively well/ is extremely complicated, increasingly becoming an interaction between the individual's heredity and its lived experience...
+[fn:7] Note that this allows for the same organism to be selected more than once. That's okay! Organisms with higher fitness being allowed to breed multiple times is part of natural selection. Less fit individuals may not be selected to breed at all, allowing their less desirable traits to simply die out.
 
-[fn:8] Notice that we have to use 5 bits per gene in order to represent at least 26 different values (one for each letter of the alphabet). We will have a few alleles left over, which can represent junk values to be ignored in the chromosome's phenotype.
+[fn:9] Goldberg, David (1989). Genetic Algorithms in Search, Optimization and Machine Learning. Reading, MA: Addison-Wesley Professional. ISBN 978-0201157673.
 
-[fn:9] Hermawanto, D. (2013). Genetic algorithm for solving simple mathematical equality problem. arXiv preprint [[https://arxiv.org/pdf/1308.4675.pdf][arXiv:1308.4675]].
-
-[fn:10] This is arguably an implementation detail pertaining to optimization via caching, but I see it as having conceptual importance. The fitness of an organism never changes because its genetics don't change. This is different from how we might talk about people's physical fitness, where you can become more fit by working out. In evolution, fitness is tied to the genetics of an organism, which are fixed. The only changes to genetics happen between generations (i.e., during breeding). So, with fitness being an unchanging value of an organism, it should be evaluated exactly once per organism.
-
-[fn:11] Note that this allows for the same organism to be selected more than once. That's okay! Organisms with higher fitness being allowed to breed multiple times is part of natural selection. Less fit individuals may not be selected to breed at all, allowing their less desirable traits to simply die out.
+[fn:8] https://en.wikipedia.org/wiki/Genetic_algorithm#History
