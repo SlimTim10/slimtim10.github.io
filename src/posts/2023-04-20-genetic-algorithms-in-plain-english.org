@@ -13,66 +13,9 @@ imageAlt: "Digital drawing of dna."
 
 Years ago, I stumbled upon [[http://www.ai-junkie.com/ga/intro/gat1.html][a tutorial]] on genetic algorithms that ended up being one of the most interesting coding exercises I've ever done. I still think about it often to this day and I want to bring that same joy to others by providing my own explanation of the subject. This tutorial is meant to be approachable by anyone who knows at least one programming language, beginners and experts alike. Doing this exercise is a great a way to practice a new programming language you're learning, improve with one you're already familiar with, or rekindle your passion for programming. Even better, it will also give you a deeper understanding of how evolution works in the real world after simulating it in code.
 
-/[Change this?]/ Throughout this tutorial, I'm going to be using terms from the discourse of natural selection and genetics. You do not need to understand the terms in order to follow along. If you want to learn more about how these things work in the real world, check out [[https://neckdeep.dev/][this article]] by [[https://neckdeep.dev/][Danny Fekete]]. First, I'm going to explain the general steps of a standard genetic algorithm. Then, and this is the fun part, I'm going to outline a problem to solve so you can start coding right away! Your resulting program only needs to take a single number as input and print a string as output, so it can have a simple command-line user interface or you can make a fancy web UI---it's up to you how far you want to take it.
+I'm going to start by explaining the general steps of a standard genetic algorithm. Afterwards, and this is the fun part, I'm going to outline a problem to solve so you can start coding right away! Your resulting program only needs to take a single number as input and print a string as output, so it can have a simple command-line user interface or you can make a fancy web UI---it's up to you how far you want to take it.
 
-* Approaching the Genetic Algorithm
-
-#+begin_center
-/*This section was written by Danny Fekete. He has an extended version of this topic on his blog that you should shouldn't miss. It's packed with valuable insights. Read it here: <link>*/
-#+end_center
-
-/[Re-write this? It seems to repeatedly fall into the fitness tautology trap.]/
-
-Very broadly, *genetic algorithms* attempt to mimic principles of natural selection and genetics to build optimal solutions to problems.  They involve generating lots of randomized approaches, evaluating those approaches for their +degrees of success+, and then preferentially selecting and combining the best attempts (while discarding the worst) to see if the resulting subsequent batch contains solutions that are even better.  Rinse and repeat, sprinkling in degrees of randomness and predictability to taste, until a successful solution, or a solution with a desired degree of +efficiency+ performance(?), is +achieved+ found.
-
-Because this strategy of solution-building is inspired by---and heavily adopts the metaphors of---academic fields outside of computer science, having a baseline understanding of those fields (and their terminology) should make trying to implement your own genetic algorithms much more intuitive.  So, here you go!
-
-** Natural Selection
-
-/[Remove unneeded history lesson? I want this information to be more concise.]/
-
-Charles Darwin and Alfred Russel Wallace described the process of "Evolution by Natural Selection" as a way to make sense of both the stunning variation across organisms seen in the natural world, as well as the subtle but unavoidable patterns that exist between them.  *Evolution* (i.e., change over time) of species had been theorized before Darwin's time, but lacked a plausible (observable, eventually testable) engine or mechanism.  Natural +Selection+ selection was the proposed mechanism, and demonstrated that the abundant variety of life we observe would emerge directly and necessarily from the interaction between a few simple, acknowledged principles:
-
-/[The framework given here, while very interesting, doesn't synchronize well with the genetic algorithm.]/
-
-- *Heredity:* Offspring tend to resemble some combination of their parents (and diminishingly, their more distant ancestors).
-- *Mutation:* Novel or modified characteristics occasionally show up that do not appear to have belonged to an ancestor, but may still be passed on to offspring as normal.
-- *Competition:* Because resources are limited and typically insufficient to fully satisfy all members of a given population, not all members will reproduce equally---some will die before they become parents, some will thrive and have lots of offspring. /[Is having limited resources the sole reason for competition? What about insufficient defense against predators?]/
-  - Competitive advantage as described by an interaction of an organism's traits with its environment is often called *fitness* (as a classic example, if a giraffe having a longer neck means access to more leaves on the local trees than fellow giraffes, and better access to leaves is demonstrated to represent a lower likelihood of dying before it reproduces, the giraffe could be said to be "more fit"). /[Even this example doesn't make me think that having limited resources is the problem. There are enough leaves for all the giraffes, but the giraffes that can't reach them die off.]/
-
-Accepting these principles as plausible features of nature, we can anticipate some overarching consequences by exploring interactions between them:
-
-- *Heredity with Mutation* suggests that a population has a capacity for change beyond just an endless recombination of preexisting traits.
-- *Heredity with Competition* suggests that the winners---those able to become parents before they die---will create a new generation that tends to more resemble themselves.  Conversely, traits characteristic of the losers---those who died before they reproduced---will fade from the population through subsequent generations.
-- *Mutation with Competition* suggests that occasionally a novel trait will arise that confers a competitive advantage (i.e., the organism that has that new trait is better able to survive and +attract+ acquire a mate to reproduce because of it).  These traits will then enter and proliferate across the population through subsequent generations.
-
-That's it!  In broad strokes, that engine---the consistent interaction of heredity, mutation, and competition---is the explanation for how the traits of populations change over time, or /evolve/.  It's called "/Natural/ Selection" because the "choice" of which individual organisms survive and which traits proliferate isn't made by anyone or anything, but is a /natural/ consequence of individual fitness.[fn:1]
-
-** Genetics
-
-While natural selection operates at the level of populations, genetics concerns itself with individual members of those populations; some of the foundational ideas are represented in the following terms (organized to work our way from the observable individual organism down to the molecular medium of its heredity):
-- *Organism:* a discrete entity made up of one or more cells, each of which typically contains an identical copy of a genome (described next).
-  - Organisms with enough features in common to be able to mate and produce viable offspring (i.e., child organisms that can similarly mate and produce viable offspring) are said to be *members of the same species.*[fn:2]
-  - A group of organisms that are members of the same species /and/ are sufficiently local to each other that they can interbreed and compete for the same resources can be said to be *a population.* /[Do the resources need to be mentioned?]/
-  - Grouping all currently-breeding parents (or the offspring of all currently-breeding parents) within a population into a cohort is the process of describing *generation.*  Generations in nature often have fuzzy boundaries, but can be conceptually useful as units for tracking the evolution of traits over time.
-- *Genome:* the complete set of data that represents an organism's heritable features.  In humans, this would be encoded in the full set of an individual's DNA.
-  - *Analogy:* An individual's genome is like the information content in a complete encyclopaedia.
-  - Identical twins have identical genomes.
-- *Chromosome:* a subdivision of an individual's genome into a discrete package.  (Humans typically have their genomes packaged into 23 chromosomes in any given cell)
-  - *Analogy:* An individual's complete set of chromosomes is like a complete set of the volumes of an encyclopaedia.
-- *Gene:* a sequence of nucleotides (see the next term) located on an expected part of a chromosome that represents the instructions for building a particular configuration of protein (and ultimately contributes to the expression of a particular observable trait). /[The mention of protein only adds to confusion, at least for me.]/
-  - *Analogy:* An individual's genes are like the individual words in an encyclopaedia.  Typically, the presence of /multiple/ specific genes interact together to contribute to a given trait, like multiple specific words creating meaning in a sentence.
-  - *Genes can be viewed as the unit of heredity:* when parents produce offspring through sexual reproduction, those offspring contain a combination of DNA (and ultimately, fitness-impacting genes) drawn from the parents.  If the offspring eventually become parents themselves, those same genes will have a chance to travel to the subsequent generation, and so on.[fn:3] /[Is the mention of DNA helpful here?]/
-- *Allele:* the specific version of a gene (selected from the set of all possible, valid genes) that could occupy a given location on a chromosome.  The version present determines how, or which variety of a given trait is ultimately expressed.
-  - *Analogy:* The alleles present that govern an individual's actual eye colour are like the adjectives chosen to drive meaning in the sentence, "Pineapple is a `[ heroic \ tragic \ confusing \ alarming ]` choice for a pizza topping." /[I like the adjectives analogy, but I find it confusing to relate it to the eye colour example.]/
-- *Nucleotide:* one of a set of complex molecules (nucleic acids) that can be linked together to form DNA.  The sequence in which these molecules occur /is/ the data which is copied and passed on in part to offspring, and could therefore be considered the fundamental matter of heredity.
-  - *Analogy:* The nucleotides linked together into an organism's DNA is like the individual letters in the words in the sentences in the articles in the volumes that make up a complete encyclopaedia.
-
-When discussing an organism's traits in genetic terms, it's helpful to know whether we're working at the scale of the generally observable, or at the scale of the genes that create them.  Two more terms are good to have handy, to this end:
-- *Phenotype:* an observable, heritable trait of an individual organism.
-  - Eye colour is an example of phenotype; which languages are spoken by the organism is /not/ an example of phenotype.[fn:4]
-- *Genotype:* the specific genes possessed by an individual that are responsible for the expression of an observable, heritable trait.
-  - The presence of specific alleles of eye-colour-coding genes in an individual's genome is its eye-colour /genotype/; these will ultimately interact to result in the /phenotype/ of having an associated eye colour.
+/[Change this?]/ Throughout this tutorial, I'm going to be using terms from the discourse of natural selection and genetics. You do not need to understand the terms in order to follow along. If you want to learn more about how these things work in the real world, check out [[https://neckdeep.dev/][this article]] by [[https://neckdeep.dev/][Danny Fekete]].
 
 * A Standard Genetic Algorithm
 
@@ -184,6 +127,9 @@ a + 2b + 3c + 4d = 30
 #+end_center
 
 ** Step 2. Setting parameters
+:PROPERTIES:
+:ID:       step-2
+:END:
 
 The algorithm has four major parameters that must be set. These will affect how well the algorithm performs each time it runs on a target problem. Once you've finished implementing your algorithm, these are the parameters you'll want to play with and see how it performs differently.
 
@@ -296,11 +242,9 @@ We have now met the overall goal of this step: to *select two organisms while ac
 
 ** Step 6. Crossover
 
-In this step, we'll be emulating an important aspect of natural selection: heredity. Offspring tend to resemble some combination of their parents (and diminishingly, their more distant ancestors). We're going to accomplish this through reproduction by breeding or cloning.
+The purpose of this step is to involve an important aspect of natural selection: heredity. Offspring tend to resemble some combination of their parents (and diminishingly, their more distant ancestors). We're going to achieve this through reproduction by breeding or cloning. The offspring of the two previously selected organisms will either inherit a combination of their traits (genes from both parents) or be clones of the parents.
 
-The offspring of the two selected organisms will either inherit a combination of their traits (genes from both parents) or be clones of the parents.
-
-To check if a crossover should happen, generate a random number, ~r~, between 0 and 1. If ~r~ is less than or equal to ~crossoverRate~, perform a crossover. Otherwise, let the offspring be exact copies of the parents. /[Rephrase this for precision? The two offspring should be the same as the two parents.]/
+To check if a crossover should happen, generate a random number, ~r~, between 0 and 1. If ~r~ is less than or equal to ~crossoverRate~, perform a crossover. Otherwise, let the offspring be exact copies of the parents (put simply, the parents become the offspring).
 
 To crossover two organisms, pick a random position between the genes of a chromosome and swap all the alleles to the right in the first chromosome with the corresponding alleles in the second chromosome. (Remember, our chromosomes are supposed to contain the same number of genes, so this makes it easy to line them up and cut them at the same spot.)
 
@@ -310,18 +254,22 @@ To crossover two organisms, pick a random position between the genes of a chromo
 
 ** Step 7. Mutation
 
-For each bit in each offspring's chromosome:
+Due to mutation in nature, novel or modified characteristics occasionally show up that do not appear to have belonged to an ancestor, but can still be passed on to offspring like any other trait. Combined with heredity, this suggests that a population has a capacity for change beyond just an endless recombination of preexisting traits. And due to fitness-based selection, occasionally a novel trait will arise that confers a competitive advantage (e.g., the organism that has that new trait is better able to survive and reproduce because of it). These traits will then enter and proliferate across the population through subsequent generations.
+
+To simulate genetic mutation in code, we allow the newly formed offspring the potential to mutate. For each bit in each offspring's chromosome:
 
 - Generate a random number, ~r~, between 0 and 1.
 - If ~r~ is less than or equal to ~mutationRate~, mutate the bit. To mutate, simply flip the bit (~0~ to ~1~, or ~1~ to ~0~).
 
 ** Step 8. Replace population
 
-Steps 5 to 7 (selection, crossover, and mutation) taken as a cycle together form the reproduction process. Each cycle produces two offspring. We need to repeat the cycle until we get enough offspring to form a new population (~populationSize~), which replaces the old population. The old population won't be needed anymore (everything dies...). (For practical purposes, this means offspring never reproduce with the previous generation.)
+Steps 5 to 7 (selection, crossover, and mutation) taken as a cycle together form the reproduction process. Each cycle produces two offspring. We need to repeat the cycle until we get enough offspring to form a new population (~populationSize~), which immediately replaces the old population. The old population won't be needed anymore (everything dies...). (For practical purposes, this means offspring never reproduce with the previous generation.)
 
 ** Step 9. Repeat until the stopping condition is met
 
-Steps 4 to 8 form the main loop of the algorithm. Each iteration of that loop is one generation. The end of the loop is determined by the stopping condition, which leaves us with the last generation's population. If the stopping condition is a limit on the number of generations, say 100, then we simply stop after repeating 100 iterations.
+As the gods of this artificial world of digital organisms, we decide when the simulation ends.
+
+Steps 4 to 8 form the main loop of the algorithm. Each iteration of that loop is one generation. The planned stopping condition marks the end of the loop, which leaves us with the last generation's population. If the stopping condition is a limit on the number of generations, say 100, then we simply stop after repeating 100 iterations.
 
 ** Step 10. Pick the winner
 
@@ -329,7 +277,7 @@ In the remaining population, pick the organism with the highest fitness. There's
 
 * A Target Problem
 
-As with anything in programming, you're not going to understand this simply by reading. You need to try implementing a genetic algorithm for yourself. But first, you need the right kind of problem to solve. Lucky for you, I've got that part covered. In this section, I'm going to outline a problem and give you all the details you need so you can start coding in any programming language you want. In other words, I'm going to cover *Step 1* (planning) and you have to do the rest.
+Just reading about genetic algorithms won't be enough to grasp this concept; you need to engage in implementing a genetic algorithm on your own. But first, you need the right kind of problem to solve. Lucky for you, I've got that part covered! In this section, I'm going to outline a problem and give you all the necessary details so you can start coding in any programming language you want. In other words, I'm going to cover *Step 1* (planning) and you have to do the rest.
 
 ** The Problem
 
@@ -387,7 +335,7 @@ As an example, we could have the following organism's chromosome and its phenoty
 #+end_example
 #+end_center
 
-Now, we need to determine how the fitness of an organism should be evaluated. Recall that that we need an evaluation function which produces a higher number for organisms that are closer to the ideal solution. Ideally, we should fit the fitness number into the range ~(0, 1]~, since this makes the roulette wheel selection easier. Try to come up with this function yourself, or click/tap to see my suggestion below.
+Now, we need to determine how the fitness of an organism should be evaluated. Recall that that we need an evaluation function which produces a higher number for organisms that are closer to the ideal solution. Ideally, we should fit the fitness number into the range ~(0, 1]~, since this makes the roulette wheel selection easier. Try to come up with this function yourself, or click/tap to see my suggestion below (there's more than one right answer!).
 
 #+begin_export html
 <details>
@@ -406,7 +354,7 @@ Where ~phenotype~ is the evaluated expression of a given organism, ~target~ is t
 
 ** Build it!
 
-That's it! Now you're on your own to code this algorithm by implementing steps 2 through 10. In the end, you should have an app that asks for a target number and then gives a math expression for that number. Remember, if you're not getting good results, try tweaking the parameters.
+That's it! Now you're on your own to code this algorithm by implementing steps 2 through 10. In the end, you should have an app which, given a target number, produces a math expression for that number. Remember, if you're not getting good results, try tweaking the [[#step-2][parameters]].
 
 * Food for Thought
 
@@ -429,6 +377,10 @@ In the real world, organisms can be described as having many traits. In the targ
 ** When does crossover help?
 
 In the target problem described above, does crossing over two high-fitness organisms have a good chance of producing high-fitness offspring? Swapping genes seems likely to drastically, and almost randomly, change a organism's phenotype. It seems more like mutating a chunk of a chromosome than inheriting traits.
+
+** What are other ways of representing organisms in the target problem?
+
+/To-do/
 
 * Footnotes
 
