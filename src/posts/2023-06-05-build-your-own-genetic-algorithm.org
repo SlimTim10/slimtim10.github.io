@@ -17,7 +17,7 @@ Years ago, I stumbled upon [[http://www.ai-junkie.com/ga/intro/gat1.html][a tuto
 
 I'm going to start by explaining the general steps of a standard genetic algorithm. Afterwards, and this is the fun part, I'm going to outline a problem to solve so you can start coding right away! Your resulting program only needs to take a single number as input and print a string as output, so it can have a simple command-line user interface or you can make a fancy web UI---it's up to you how far you want to take it.
 
-Throughout this tutorial, I'll be using terms from the topics of natural selection and genetics. You do not need to understand the terms in depth in order to follow along. If you want to learn more about how these things work in the real world, check out [[https://neckdeep.dev/blog/][this article]] by [[https://neckdeep.dev/][Danny Fekete]].
+Throughout this tutorial, I'll be using terms from the topics of natural selection and genetics. You do not need to understand the terms in depth in order to follow along. If you want to learn more about how these things work in the real world, check out [[https://neckdeep.dev/blog/2023-06-05-the-non-computer-science-behind-genetic-algorithms/][this article]] by [[https://neckdeep.dev/][Danny Fekete]].
 
 * A Standard Genetic Algorithm
 
