@@ -137,8 +137,12 @@
   width: 100%;
 }
 
+/* Properly position underline */
 #blog-post .content .footnote-ref {
   text-decoration: none;
+}
+#blog-post .content .footnote-ref sup {
+  text-decoration: underline;
 }
 
 .read-more {
