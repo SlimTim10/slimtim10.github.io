@@ -343,7 +343,7 @@ As an example, we could have the following organism's chromosome and its phenoty
 [[file:images/blog/genetic_algorithm/problem_chromosome_explanation.svg]]
 #+end_center
 
-When evaluating a math string (an organism's phenotype), we'll have to clean up any junk it may have. Let's say, for any junk in the string, ignore the junk allele and its immediately preceeding gene (which should be an operator).
+When evaluating a math string (an organism's phenotype), we'll have to clean up any junk it may have. Let's say, for any junk in the string, ignore the junk gene and its immediately preceeding gene (which should be an operator).
 
 Here's an example with clean-up:
 
