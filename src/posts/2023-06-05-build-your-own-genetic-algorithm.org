@@ -1,5 +1,5 @@
 ---
-title: Build your own Genetic Algorithm
+title: Build Your Own Genetic Algorithm
 desc: "An introduction to genetic algorithms along with an example problem to solve with your own code."
 image: "./images/blog/genetic_algorithm.jpg"
 imageAlt: "Digital drawing of DNA surrounded by binary code."
