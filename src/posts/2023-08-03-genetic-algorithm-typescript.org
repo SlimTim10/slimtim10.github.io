@@ -1,0 +1,526 @@
+---
+title: Implementing a Genetic Algorithm in TypeScript
+desc: "A brain dump of my implementation of the genetic algorithm in my previous post."
+image: "./images/blog/genetic_algorithm_typescript.jpg"
+imageAlt: "A brain with a DNA strand overlaid in the middle."
+---
+
+-----
+
+* Overview
+
+In my [[/build-your-own-genetic-algorithm.html#implementing-step-1-planning][previous post]], I described how to build a genetic algorithm in any programming language. Here, I want to give an example of a complete implementation in TypeScript. This is a brain dump style of post---just something to give you an idea of how I approach solving this problem. I have to admit, it's not entirely accurate because I'm not including all the mistakes and backtracking along the way. Since this is a written post, and not a video, it makes it seem like my process is linear when it really isn't. I would normally create functions with gaps to be filled, going back and forth between them a lot.
+
+Also important to note is that standard JavaScript/TypeScript is lacking in basic utility functions, so I will be making references to useful generic functions that I put in a separate module ([[https://github.com/SlimTim10/genetic-algorithm-math-string/blob/main/typescript/src/util.ts][util.ts]]).
+
+If you want to skip this post and just see the code (with comments), here's a link to the repo:
+
+https://github.com/SlimTim10/genetic-algorithm-math-string
+
+* Problem
+
+Given a target number, find a string of single-digit numbers and basic arithmetic operators that equals that number. For example, if the target number is 10, some solutions would be:
+
+- ~5 + 5~
+- ~5 * 2~
+- ~5 + 5 + 1 - 1 - 5 - 5 + 1 + 9 * 1 / 1~
+
+The strings will be evaluated using the standard order of operations. So, ~2 + 2 * 3 = 8~.
+
+* Implementation
+
+/See my [[/build-your-own-genetic-algorithm.html#implementing-step-1-planning][previous post]] for a detailed plan that serves as the basis for this implementation./
+
+** Implementing Step 1. Planning
+
+I like to start by planning the essential pieces in terms of types.
+
+Going from big to small...
+
+An organism is made up of one chromosome and has a fitness number.
+#+begin_src typescript
+type Organism = {
+  chromosome: Chromosome;
+  fitness: number;
+};
+#+end_src
+
+A chromosome is a collection of genes, so I'm going to make it an array. I could define it as a tuple of genes if I wanted to hard-code the length of each chromosome, but I want their length to be variable so I can tweak it on different runs of the algorithm.
+
+#+begin_src typescript
+type Chromosome = Gene[];
+#+end_src
+
+A gene is a container for information. For my implementation, I've decided that every gene can either be a number gene or an operator gene. So I'm going to use a union type.
+
+#+begin_src typescript
+type Gene = NumberGene | OperatorGene;
+#+end_src
+
+For the number genes, I can use four bits to represent any single-digit number (0 through 9), with a few junk alleles left over.
+
+#+begin_src typescript
+type NumberGene = [Bit, Bit, Bit, Bit];
+#+end_src
+
+#+begin_export html
+<div class="table-container">
+#+end_export
+| allele | value    |
+|--------+----------|
+| ~0000~ | ~0~      |
+| ~0001~ | ~1~      |
+| ~0010~ | ~2~      |
+| ~0011~ | ~3~      |
+| ~0100~ | ~4~      |
+| ~0101~ | ~5~      |
+| ~0110~ | ~6~      |
+| ~0111~ | ~7~      |
+| ~1000~ | ~8~      |
+| ~1001~ | ~9~      |
+| ~1010~ | ~(junk)~ |
+| ~1011~ | ~(junk)~ |
+| ~1100~ | ~(junk)~ |
+| ~1101~ | ~(junk)~ |
+| ~1110~ | ~(junk)~ |
+| ~1111~ | ~(junk)~ |
+#+begin_export html
+</div>
+#+end_export
+
+For the four basic math operators (+, -, *, /), I only need two bits.
+
+#+begin_src typescript
+type OperatorGene = [Bit, Bit];
+#+end_src
+
+A bit, of course, is either 1 or 0.
+
+#+begin_src typescript
+type Bit = 0 | 1;
+#+end_src
+
+I'm going to encode all the possible number alleles for the digits 0 through 9. This way, for any gene I'm working with, I can check what its allele represents.
+
+#+begin_src typescript
+const numberAlleles: NumberGene[] = [
+  [0, 0, 0, 0], // 0
+  [0, 0, 0, 1], // 1
+  [0, 0, 1, 0], // 2
+  [0, 0, 1, 1], // 3
+  [0, 1, 0, 0], // 4
+  [0, 1, 0, 1], // 5
+  [0, 1, 1, 0], // 6
+  [0, 1, 1, 1], // 7
+  [1, 0, 0, 0], // 8
+  [1, 0, 0, 1], // 9
+];
+#+end_src
+
+And the same for operators.
+
+#+begin_src typescript
+const operatorAlleles: OperatorGene[] = [
+  [0, 0], // +
+  [0, 1], // -
+  [1, 0], // *
+  [1, 1], // /
+];
+#+end_src
+
+Now I can make a function to convert any gene to its corresponding value. For this, I'll collect all the possible values with a union type and make a function that takes a gene and returns its represented value.
+
+#+begin_src typescript
+type Value
+  = "0"
+  | "1"
+  | "2"
+  | "3"
+  | "4"
+  | "5"
+  | "6"
+  | "7"
+  | "8"
+  | "9"
+  | "+"
+  | "-"
+  | "*"
+  | "/"
+  | "(junk)";
+
+// Predicate for number genes.
+const isNumber = (gene: Gene): gene is NumberGene => {
+  return numberAlleles.some((x: NumberGene) => eqArrays(x, gene));
+};
+
+// Predicate for operator genes.
+const isOperator = (gene: Gene): gene is OperatorGene => {
+  return operatorAlleles.some((x: OperatorGene) => eqArrays(x, gene));
+};
+
+// Take a gene and return its represented value.
+const geneValue = (gene: Gene): Value => {
+  // Numbers
+  if (isNumber(gene)) {
+    if (eqArrays(gene, [0, 0, 0, 0])) return "0";
+    if (eqArrays(gene, [0, 0, 0, 1])) return "1";
+    if (eqArrays(gene, [0, 0, 1, 0])) return "2";
+    if (eqArrays(gene, [0, 0, 1, 1])) return "3";
+    if (eqArrays(gene, [0, 1, 0, 0])) return "4";
+    if (eqArrays(gene, [0, 1, 0, 1])) return "5";
+    if (eqArrays(gene, [0, 1, 1, 0])) return "6";
+    if (eqArrays(gene, [0, 1, 1, 1])) return "7";
+    if (eqArrays(gene, [1, 0, 0, 0])) return "8";
+    if (eqArrays(gene, [1, 0, 0, 1])) return "9";
+  }
+
+  // Operators
+  if (isOperator(gene)) {
+    if (eqArrays(gene, [0, 0])) return "+";
+    if (eqArrays(gene, [0, 1])) return "-";
+    if (eqArrays(gene, [1, 0])) return "*";
+    if (eqArrays(gene, [1, 1])) return "/";
+  }
+
+  // Any other value is junk
+  return "(junk)";
+};
+#+end_src
+
+And now I have all the pieces needed to get an organism's phenotype. With a function that takes in an organism, I can convert each gene to its value and join them into a space-separated string.
+
+#+begin_src typescript
+const phenotype = (organism: Organism): string => {
+  return organism.chromosome
+    .map(geneValue)
+    .join(" ");
+};
+#+end_src
+
+Since a phenotype can contain junk, I also want a way to get an organism's cleaned-up phenotype, which will be safe to evaluate. That means I first need a way to clean the genes of a chromosome, in accordance with the [[/build-your-own-genetic-algorithm.html#implementing-step-1-planning][plan]]: remove any junk genes along with their immediately preceeding gene.
+
+#+begin_src typescript
+const cleanChromosome = (chromosome: Chromosome): Chromosome => {
+  // Add a "plus" gene to the beginning so I can deal with pairs safely.
+  const genes: Gene[] = [ [0, 0], ...chromosome];
+  const pairs = chunksOf(2, genes);
+  return pairs
+    .filter(pair => pair.length === 2)
+    .filter(([_, num]) => geneValue(num) !== "(junk)")
+    .reduce((acc, pair) => [...acc, ...pair], [])
+    .slice(1); // Remove the initial "plus" gene.
+};
+#+end_src
+
+And now, I can easily apply the chromosome cleaning operation to an organism as a whole.
+
+#+begin_src typescript
+const cleanPhenotype = (organism: Organism): string => {
+  return phenotype({
+    ...organism,
+    chromosome: cleanChromosome(organism.chromosome)
+  });
+};
+#+end_src
+
+To evaluate the phenotype of an organism as a math string, I'm going to take the easy route and use the built-in eval function, with the assumption that the string is already cleaned. But I need to be careful here! For one, I need to be aware that using this evaluation method means the standard order of operations is being applied. That's what I want, so that's fine. But also, it's possible for the result to be ~NaN~ or ~Infinity~ if a division by 0 happens. I'll have to remember to handle these special cases when doing fitness evaluation.
+
+#+begin_src typescript
+const evaluateMath = (mathStr: string): number => Number(eval(mathStr));
+#+end_src
+
+Now to evaluate the fitness of an organism. This part is a bit tricky because I want organisms to have their fitness stored as part of their data. If an organism is a chromosome along with fitness, I can't have my fitness evaluating function take in an organism. I need to deal with chromosomes directly. The resulting fitness score will be a number between 0 and 1, with 1 being perfect fitness. I can combine a chromosome and its fitness score into an organism somewhere else.
+
+#+begin_src typescript
+const evaluateFitness = (chromosome: Chromosome, target: number): number => {
+  const mathStr = cleanChromosome(chromosome)
+    .map(geneValue)
+    .join(" ");
+  const n = evaluateMath(mathStr);
+  
+  if (isNaN(n) || n === Infinity) {
+    // This is as far from the target number as it can be, so let's just say the fitness is 0.
+    return 0;
+  } else {
+    return 1 / (Math.abs(target - n) + 1);
+  }
+};
+#+end_src
+
+** Implementing Step 2. Setting parameters
+
+For running the algorithm, I'm going to make a main function with the tweakable parameters. For this specific application, I need a couple extra parameters: the chromosome length for each organism and the target number.
+
+#+begin_src typescript
+const runAlgorithm = (
+  populationSize: number,
+  crossoverRate: number,
+  mutationRate: number,
+  generationLimit: number,
+  chromosomeLength: number,
+  target: number
+): void => {
+
+  ...
+#+end_src
+
+From here on, writing the code is not linear. I'm going to fill in the steps of the algorithm as needed.
+
+** Implementing Step 3. Create initial population
+
+Since fitness evaluation is to be done in batch, I'm going to make a population of chromosomes instead of organisms.
+
+#+begin_src typescript
+// Inside runAlgorithm()
+const initialChromPopulation: Chromosome[] = buildArray(populationSize)
+  .map(_ => randomChromosome(chromosomeLength));
+#+end_src
+
+And the helpers to create random chromosomes can go outside the main function...
+
+#+begin_src typescript
+// Create a randomized chromosome of a desired length.
+const randomChromosome = (length: number): Chromosome => {
+  const numberGenes: Gene[] = buildArray(Math.floor(length / 2))
+    .map(_ => randomGene("number"));
+  const operatorGenes: Gene[] = buildArray(Math.floor(length / 2 - 1))
+    .map(_ => randomGene("operator"));
+  return zip(numberGenes, operatorGenes)
+    .flat()
+    .concat([last(numberGenes)]);
+};
+
+type NumberOrOperator = "number" | "operator";
+
+// Create a randomized number or operator gene.
+const randomGene = (numberOrOperator: NumberOrOperator): Gene => {
+  switch (numberOrOperator) {
+    case "number":
+      return [randomBit(), randomBit(), randomBit(), randomBit()];
+    case "operator":
+      return [randomBit(), randomBit()];
+  }
+};
+
+// Generate a random bit (0 or 1).
+const randomBit = (): Bit => (Math.random() < 0.5) ? 0 : 1;
+#+end_src
+
+** The main loop
+
+Now I'm going to set up the main loop as a recursive function. This will consist of Steps 4 through 8; fitness evaluation, selection, crossover, mutation, and replacing the population. Each iteration will produce a new generation.
+
+#+begin_src typescript
+// Inside runAlgorithm()
+const generationalStep = (chromPopulation: Chromosome[], generation: number): Chromosome[] => {
+
+  // Check for the stopping condition.
+  if (generation >= generationLimit) {
+    return chromPopulation;
+  }
+
+  ...
+#+end_src
+
+** Implementing Step 4. Fitness evaluation
+
+Since I've already made the fitness evaluation function, here I simply need to apply it to the entire population of chromosomes, turning it into a population of organisms.
+
+#+begin_src typescript
+// Inside generationalStep()
+const population: Organism[] = chromPopulation.map(chromosome => ({
+  chromosome,
+  fitness: evaluateFitness(chromosome, target)
+}));
+#+end_src
+
+** Implementing Step 5. Selection
+
+This is the first step in the reproduction process. I need to select two organisms from the population using the [[/build-your-own-genetic-algorithm.html#step-5-selection][roulette wheel strategy]].
+
+#+begin_src typescript
+// Inside generationalStep()
+const reproduce = (): [Chromosome, Chromosome] => {
+  const parent1 = rouletteWheelSelection(population);
+  const parent2 = rouletteWheelSelection(population);
+
+  ...
+#+end_src
+
+And the roulette wheel selection function can live outside the main function.
+
+#+begin_src typescript
+// Select an organism from a population using the roulette wheel strategy.
+const rouletteWheelSelection = (population: Organism[]): Organism => {
+  const fitnesses: number[] = population.map(({fitness}) => fitness);
+  const totalFitness: number = sum(fitnesses);
+  const cumulFitnesses: number[] = scan((x: number, y: number) => x + y, fitnesses[0], fitnesses);
+  const withCumulativeFitnesses: [Organism, number][] = zip(population, cumulFitnesses);
+  const r: number = Math.random() * totalFitness;
+  const found: [Organism, number] | undefined = withCumulativeFitnesses.find(([_, cf]) => cf >= r);
+  if (found === undefined) {
+    // In case an organism is not found, return the last one.
+    return population[population.length - 1];
+  } else {
+    const [organism, _] = found;
+    return organism;
+  }
+};
+#+end_src
+
+** Implementing Step 6. Crossover
+
+The next step for reproduction is crossing over the two previously selected organisms. At this point, I'm going to deal with chromosomes instead of organisms, since their fitnesses won't be evaluated until later.
+
+#+begin_src typescript
+// Inside reproduce()
+const [chrom1, chrom2] = crossover(parent1.chromosome, parent2.chromosome, crossoverRate);
+#+end_src
+
+Again, I can write the crossover function outside the main function.
+
+#+begin_src typescript
+// Crossover (or clone) two chromosomes.
+const crossover = (x: Chromosome, y: Chromosome, crossoverRate: number): [Chromosome, Chromosome] => {
+  const r: number = Math.random();
+  if (r <= crossoverRate) {
+    const position: number = Math.floor(Math.random() * x.length);
+    const xNew = [...x.slice(0, position), ...y.slice(position)];
+    const yNew = [...y.slice(0, position), ...x.slice(position)];
+    return [xNew, yNew];
+  } else {
+    return [x, y];
+  }
+};
+#+end_src
+
+** Implementing Step 7. Mutation
+
+And now for the last step for reproduction: mutating those two chromosomes. After being mutated, the chromosomes can be returned as the pair of produced offspring to end the function.
+
+#+begin_src typescript
+// Inside reproduce()
+const chrom1Mutated = mutate(chrom1, mutationRate);
+const chrom2Mutated = mutate(chrom2, mutationRate);
+
+return [chrom1Mutated, chrom2Mutated];
+// This ends reproduce()
+#+end_src
+
+Once more, the code for mutating can be outside the main function.
+
+#+begin_src typescript
+// Flip a bit from 0 to 1, or 1 to 0.
+const flipBit = (bit: Bit): Bit => bit === 0 ? 1 : 0;
+
+// Mutate a chromosome.
+const mutate = (chromosome: Chromosome, mutationRate: number): Chromosome => {
+  // Mutate a bit.
+  const mutateBit = (bit: Bit): Bit => {
+    const r: number = Math.random();
+    return r <= mutationRate
+      ? flipBit(bit)
+      : bit;
+  };
+
+  // Mutate each gene.
+  return chromosome.map(gene => {
+    if (isNumber(gene)) {
+      const [a, b, c, d] = gene;
+      return [mutateBit(a), mutateBit(b), mutateBit(c), mutateBit(d)];
+    }
+
+    if (isOperator(gene)) {
+      const [a, b] = gene;
+      return [mutateBit(a), mutateBit(b)];
+    }
+
+    return gene;
+  });
+};
+#+end_src
+
+** Implementing Step 8. Replace population
+
+That finishes the ~reproduce()~ function, but I'm not done with ~generationalStep()~ yet! I need to make use of the reproduction to make a new population of chromosomes, which will replace the old one.
+
+#+begin_src typescript
+// Inside generationalStep()
+const newChromPopulation: Chromosome[] = buildArray(Math.floor(populationSize / 2))
+  .map(reproduce)
+  .flat();
+#+end_src
+
+** Implementing Step 9. Repeat until the stopping condition is met
+
+To repeat the generation cycle, I can simply call ~generationalStep()~ recursively, passing in the new population and increasing the generation counter.
+
+#+begin_src typescript
+// Inside generationalStep()
+return generationalStep(newChromPopulation, generation + 1)
+// This ends generationalStep()
+#+end_src
+
+** Implementing Step 10. Pick the winner
+
+Time for the last step! This is where I need to trigger the generational cycle to start, with the initial population of chromosomes, and let it run until the final population.
+
+#+begin_src typescript
+// Inside runAlgorithm()
+const finalChromPopulation: Chromosome[] = generationalStep(initialChromPopulation, 0);
+#+end_src
+
+Then evaluate the fitness of each chromosome so I have a population of organisms.
+
+#+begin_src typescript
+// Inside runAlgorithm()
+const finalPopulation: Organism[] = finalChromPopulation.map(chromosome => ({
+  chromosome,
+  fitness: evaluateFitness(chromosome, target)
+}));
+#+end_src
+
+And finally, pick the chromosome with the best fitness!
+
+#+begin_src typescript
+// Inside runAlgorithm()
+const winner = finalPopulation.reduce((best, organism) =>
+  (organism.fitness > best.fitness) ? organism : best);
+#+end_src
+
+I want to print the winner's information in detail so I can see if the algorithm is producing good results.
+
+#+begin_src typescript
+// Inside runAlgorithm()
+console.log();
+console.log(`The winner is...`);
+console.log(`Phenotype: ${phenotype(winner)}`);
+console.log(`Clean phenotype: ${cleanPhenotype(winner)}`);
+console.log(`Result: ${evaluateMath(cleanPhenotype(winner))}`);
+console.log(`Fitness: ${evaluateFitness(winner.chromosome, target)}`);
+// This ends runAlgorithm()
+#+end_src
+
+** Running the algorithm
+
+After playing with the parameters, I found that these values gave pretty consistently interesting results, and relatively fast.
+
+#+begin_src typescript
+const populationSize = 200;
+const crossoverRate = 0.6;
+const mutationRate = 0.05;
+const generationLimit = 20;
+const chromosomeLength = 20;
+const target = 42;
+runAlgorithm(
+  populationSize,
+  crossoverRate,
+  mutationRate,
+  generationLimit,
+  chromosomeLength,
+  target);
+#+end_src
+
+Try it out yourself! What happens when you change the values of the parameters? Can you make it accurate /and/ fast?
+
+https://github.com/SlimTim10/genetic-algorithm-math-string
