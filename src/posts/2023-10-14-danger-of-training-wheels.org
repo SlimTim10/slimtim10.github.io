@@ -1,0 +1,34 @@
+---
+title: The Dangers of Learning to Code With Training Wheels
+desc: ""
+image: "./images/blog/training_wheels.jpg"
+imageAlt: "A drawing of a laptop combined with a bicycle."
+---
+
+Did you know it's not recommended to learn how to ride a bicycle using training wheels anymore?[fn:1] It's true![fn:2] What people found is that using training wheels don't enable the rider to learn the crucial skill of balancing on a bicycle. So, while training wheels do lower the stakes when falling, they also remove the activity's essential components.
+
+As a teacher, I've noticed the same sort of problem can come up with people learning to code. The problem is, if you learn with "training wheels" on, at some point you have to take them off. And that can be a rough transition. And, if you don't know you're using training wheels in your learning, you may not even know what skills you're missing out on.
+
+What do I mean by "training wheels" in learning to code? Well, they can come in different forms:
+
+- *Online editors*
+- *Custom libraries, frameworks, or languages designed for teaching*
+- *Code-along video tutorials*
+
+For example, the ever-popular site [[https://www.freecodecamp.org][freeCodeCamp]] provides coding lessons paired with a custom-built *online editor*. That means you're typing code in a *sandbox environment*. If you make a mistake in your code, you're given a kind of error message that's different from anything a professional developer would see. You're also not able to *experiment* and try things that you would be able to do if you simply ran your code on your own computer, which is a huge part of being a programmer! Now, I'm not saying freeCodeCamp is bad, but you should be aware that this is a very different environment than any practicing developer uses. On freeCodeCamp, you're having your hand held so tightly that you can't find your balance on your own.
+
+What I find is, by the end of a student taking a course with a sandbox environment, they're lost as to how to code on their own computer. They don't know how to *set up a project*, how to *debug* their code when things go wrong, or how to *share* their finished app with other people. These are all essential skills for any developer.
+
+The story is similar when a student learns to code using a *custom library, framework, or language*. After they're finished the course, they don't know where the course's *custom material ends* and the stuff they can use in the *real world begins*. With frustration, they ask themselves, "How do I make an app /without/ using the course tools?"
+
+When it comes to *code-along video tutorials*, you're not free to *make your own mistakes*. So you never really get a sense of what to do when things go wrong. Believe me, in programming, things go wrong /all the time/. That's part of the fun! Figuring out what went wrong and /why/ it's happening, then solving the problem is one of the /biggest/ and /best/ parts of programming. If you're just copying down someone else's thoughts, you're not learning how to think on your own.
+
+Now, I'm not saying this to discourage readers from using certain resources. I just think you should be aware of *when* you're using training wheels and whether there may be a *better option*.
+
+When I wrote [[https://intuitivejs.info/][Intuitive JavaScript]], I purposefully left the exercises as plain *.js files to encourage the student to save the code and run their solutions on their own computer. This is closer to how a professional developer works. Getting used to the tools of the industry, like [[https://code.visualstudio.com/][Visual Studio Code]] and [[https://nodejs.org/en][Node.js]], is essential for anyone who wants to become a working developer, and probably easier than you think!
+
+* Footnotes
+
+[fn:1] https://www.twowheelingtots.com/training-wheels-faq/
+
+[fn:2] https://www.ncbi.nlm.nih.gov/pmc/articles/PMC8834827/ 
