@@ -158,3 +158,27 @@
   font-style: italic; /* for image alt */
   max-width: 300px;
 }
+
+/* Table of contents */
+
+#toc {
+  background: #f1f0ec;
+  padding-bottom: 0.5rem;
+}
+
+#toc .toc-section-number {
+  display: none;
+}
+
+#toc::before {
+  content: "Table of Contents";
+  font-size: 0.8rem;
+  font-weight: 700;
+  font-style: normal;
+  letter-spacing: .025rem;
+  text-transform: uppercase;
+}
+
+.header-section-number {
+  display: none;
+}

@@ -9,12 +9,18 @@ import Text.Pandoc
   ( Extension (Ext_fenced_code_attributes, Ext_footnotes, Ext_gfm_auto_identifiers, Ext_implicit_header_references, Ext_smart),
     Extensions,
     ReaderOptions,
-    WriterOptions (writerHighlightStyle),
+    WriterOptions (
+      writerHighlightStyle,
+      writerNumberSections,
+      writerTableOfContents,
+      writerTOCDepth,
+      writerTemplate),
     extensionsFromList,
     githubMarkdownExtensions,
     readerExtensions,
     writerExtensions,
   )
+import qualified Text.Pandoc as Pandoc
 import Text.Pandoc.Highlighting (Style, breezeDark, styleToCss)
 
 --------------------------------------------------------------------------------
@@ -64,8 +70,11 @@ main = hakyllWith config $ do
     let ctx = constField "type" "article" <> postCtx
 
     route $ metadataRoute titleRoute
-    compile $
-      pandocCompilerCustom
+    compile $ do
+      underlying <- getUnderlying
+      toc <- getMetadataField underlying "tableOfContents"
+      let writerOptions = maybe pandocWriterOpts (const withTOC) toc
+      pandocCompilerWith pandocReaderOpts writerOptions
         >>= loadAndApplyTemplate "templates/post.html" ctx
         >>= saveSnapshot "content"
         >>= loadAndApplyTemplate "templates/default.html" (ctx <> constField "stylesheet" "post")
@@ -229,12 +238,26 @@ pandocReaderOpts =
     { readerExtensions = pandocExtensionsCustom
     }
 
+withTOC :: WriterOptions
+withTOC =
+  pandocWriterOpts
+  { writerNumberSections = True
+  , writerTableOfContents = True
+  , writerTOCDepth = 2
+  , writerTemplate = Just tocTemplate
+  }
+  where
+    tocTemplate =
+      either error id $ either (error . show) id $
+      Pandoc.runPure $ Pandoc.runWithDefaultPartials $
+      Pandoc.compileTemplate "" "<div id=\"toc\">$toc$</div>\n$body$"
+
 pandocWriterOpts :: WriterOptions
 pandocWriterOpts =
   defaultHakyllWriterOptions
-    { writerExtensions = pandocExtensionsCustom
-    , writerHighlightStyle = Just pandocHighlightStyle
-    }
+  { writerExtensions = pandocExtensionsCustom
+  , writerHighlightStyle = Just pandocHighlightStyle
+  }
 
 pandocHighlightStyle :: Style
 pandocHighlightStyle =

@@ -3,6 +3,7 @@ title: Breaking the Order | Coding Challenge & Analysis 1
 desc: "Solving the coding challenge: Breaking the order."
 image: "./images/blog/coding_challenge_1.jpg"
 imageAlt: "drawing of coding challenge"
+tableOfContents: true
 ---
 
 * JavaScript Coding Challenge: Breaking the Order
