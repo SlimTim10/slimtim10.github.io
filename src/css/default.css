@@ -195,6 +195,10 @@ main > section h2 {
   text-align: center;
 }
 
+#newsletter-form {
+  margin-bottom: 1rem;
+}
+
 footer {
   background: #f1f0ec;
   display: flex;
