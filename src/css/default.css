@@ -150,7 +150,7 @@ main > section {
 }
 
 body > footer {
-  padding: 4rem 1rem;
+  padding: 2rem 1rem;
 }
 
 main > section {
@@ -201,6 +201,10 @@ footer {
   flex-direction: column;
   align-items: center;
   gap: 0.5rem;
+}
+
+footer .newsletter {
+  margin-bottom: 2rem;
 }
 
 footer .social-icons {

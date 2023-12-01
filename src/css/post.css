@@ -152,6 +152,12 @@
   justify-content: center;
 }
 
+.newsletter {
+  margin-bottom: 4rem;
+  display: flex;
+  justify-content: center;
+}
+
 .post-image {
   align-self: center;
   margin-top: 2rem;
