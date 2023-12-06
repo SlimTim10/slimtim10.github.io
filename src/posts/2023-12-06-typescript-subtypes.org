@@ -1,0 +1,366 @@
+---
+title: "TypeScript's Hidden Feature: Subtypes"
+desc: "TypeScript allows you to make subtypes without any extra libraries or tools needed. You can have types for positive integers, non-empty strings, any much more."
+image: "./images/blog/typescript_subtypes.png"
+imageAlt: ""
+---
+
+This is a really cool thing in TypeScript I've been exploring recently. It turns out you can make *subtypes* without any extra libraries or tools! And the code to do it is /really easy/.
+
+Imagine you could finally have types for *positive integers* or *non-empty strings* where you need them:
+
+#+begin_src typescript
+type PositiveInteger = ???
+type NonEmptyString = ???
+
+type Product = {
+  name: NonEmptyString
+  description: string
+  priceCents: PositiveInteger
+}
+
+const addToCart = (product: Product, quantity: PositiveInteger, cart: Cart) => Cart {
+  // add a product, not having to worry about the quantity being a negative number or 0
+}
+#+end_src
+
+Then you wouldn't have to handle weird edge-cases like a product with an empty name, or a quantity that's fractional or negative.
+
+You could even strictly accept pre-validated parameters:
+
+#+begin_src typescript
+type ValidName = ???
+type ValidBirthYear = ???
+
+// This function will only accept a valid name and birth year.
+const register = (name: ValidName, birthYear: ValidBirthYear): void => {
+  console.log(`Registering user "${name}" born in ${birthYear}.`)
+}
+#+end_src
+
+* What are subtypes?
+
+In simple terms, a subtype is when you narrow down a type to be more specific.
+
+In logical terms, /B/ is a subtype of /A/ when all /Bs/ are /As/. For example, all cats are mammals. So, /Cat/ is a subtype of /Mammal/. And /Mammal/ is a subtype of /Animal/. /Prime number/ is a subtype of /Natural number/. You get the picture.
+
+You can think of making a subtype of type /A/ by choosing a certain property that some /As/ may have. This means /B/ is a subtype of /A/ defined by some predicate over /A/. In other words, any value of type /A/ can be of type /B/ if it has that chosen property. If this sounds complicated, don't worry---it will make more sense in a moment.
+
+* ✨ The code ✨
+
+** Subtype: Positive Number
+
+Starting with an example, this is how you can make a subtype for positive numbers:
+
+#+begin_src typescript
+type A = number
+type PositiveNumber = A & { readonly __type: unique symbol }
+
+const isPositiveNumber = (x: A): x is PositiveNumber => {
+  return x >= 1
+}
+
+const x: A = 2
+if (isPositiveNumber(x)) {
+  const y: PositiveNumber = x
+  console.log('y:', y)
+}
+#+end_src
+
+Looks weird, right? I'll break it down line by line.
+
+#+begin_src typescript
+type A = number
+#+end_src
+
+You don't really need this line; I added it for clarity. This is just making ~A~ a type alias for ~number~. When you're making a subtype of some custom type (instead of a primitive type), ~A~ would be that custom type.
+
+#+begin_src typescript
+type PositiveNumber = A & { readonly __type: unique symbol }
+#+end_src
+
+This is the weirdest line you have to write. This makes a new type ~PositiveNumber~, defined as the type ~A~ along with a new property with a unique symbol. Everything about the added property is to prevent you from being able to make a value of type ~PositiveNumber~ directly, while retaining the original properties of type ~A~.[fn:1] You don't need to worry about exactly how this works. The cool thing is, this line doesn't change! Anytime you make a subtype, you can write this line the same way (substituting ~A~ for the (super)type of your choice). Notice that this line doesn't actually say anything about what a positive number is; it just gives the subtype a name. This line should always be paired with a predicate function:
+
+#+begin_src typescript
+const isPositiveNumber = (x: A): x is PositiveNumber => {
+  return x >= 1
+}
+#+end_src
+
+This is where the meaning of ~PositiveNumber~ is actually defined. More than that, without this function, you can't even make a ~PositiveNumber~ value![fn:2] This is using TypeScript's feature of [[https://www.typescriptlang.org/docs/handbook/2/narrowing.html#using-type-predicates][type predicates]]. You can think of this function as returning a normal boolean value, though TypeScript gives it special treatment that brings this all together:
+
+#+begin_src typescript
+const x: A = 2
+if (isPositiveNumber(x)) {
+  const y: PositiveNumber = x
+  console.log('y:', y)
+}
+#+end_src
+
+This is where things get really interesting. Like I said, the only way to make a ~PositiveNumber~ value is to invoke the ~isPositiveNumber~ predicate function on some value ~x~ of type ~A~. And the only place where TypeScript will accept that you can actually have a ~PositiveNumber~ value is in the scope where ~isPositiveNumber(x)~ returned ~true~. The way I think of it, you need to use the predicate function to provide a *proof* that you have a value of your subtype. After all, your subtype is defined by that predicate. So in this code, ~y~ is allowed to be of type ~PositiveNumber~ if you set it to ~x~ in scope of where ~isPositiveNumber(x)~ returned ~true~.
+
+** Shorter Version
+
+In practice, I would write and use the ~PositiveNumber~ subtype a little differently:
+
+#+begin_src typescript
+type PositiveNumber = number & { readonly __type: unique symbol }
+
+const isPositiveNumber = (x: A): x is PositiveNumber => {
+  return x >= 1
+}
+
+const x: A = 2
+if (isPositiveNumber(x)) {
+  console.log('x:', x)
+}
+#+end_src
+
+All I've done is remove the superfluous ~A~ type alias and the ~y~ variable. In the scope where ~x~ has been proven to be a positive number, ~x~ itself can be of type ~PositiveNumber~. In fact, ~x~ can be treated as being a ~number~ or a ~PositiveNumber~ within that context.
+
+** General Subtype Template
+
+The general structure for making and using a subtype looks like this:
+
+#+begin_src typescript
+type A = {} // some specific type
+type B = A & { readonly __type: unique symbol }
+
+const isB = (x: A): x is B => {
+  // return a boolean value
+  return true
+}
+
+const x: A = {} // some value of type A
+if (isB(x)) {
+  const y: B = x
+  console.log('y:', y)
+}
+#+end_src
+
+* Why does this matter?
+
+If you're not yet convinced of the usefulness of subtypes, reflect on why you're using TypeScript in the first place: you want to have a type checker catch any obvious mistakes during compile-time as opposed to you discovering them later during runtime. You want to make sure the data you're working with conforms to the types you've decided it should. Why not extend that notion to even more useful types? Do you really think a general *number* type is the best case for any numeric scenario? Surely a *non-negative number* or a *whole number* would be better for many cases.
+
+And if you're /still/ not convinced, maybe the next two sections will change your mind.
+
+* You can test subtypes!
+
+Maybe you're worried your predicate function doesn't define your subtype correctly. Not a problem! You can always treat the predicate function as if it returns a normal boolean and write tests for it.
+
+#+begin_src typescript
+type ValidBirthYear = number & { readonly __type: unique symbol }
+
+const isValidBirthYear = (year: number): year is ValidBirthYear => {
+  const thisYear: number = new Date().getFullYear()
+  return year >= 1900 && year <= thisYear
+}
+
+console.log('Tests for ValidBirthYear:')
+console.log(isValidBirthYear(1900))
+console.log(!isValidBirthYear(1800))
+console.log(isValidBirthYear(2023))
+console.log(!isValidBirthYear(2100))
+#+end_src
+
+* More examples
+
+I want to finish off with a bunch of pragmatic examples to show some different ways of how you might use subtypes in your own projects.
+
+** NonNegativeInteger
+
+#+begin_src typescript
+type NonNegativeInteger = number & { readonly __type: unique symbol }
+
+const isNonNegativeInteger = (x: number): x is NonNegativeInteger => {
+  return !(x < 0) && Math.floor(x) === x
+}
+
+const betterRepeat = (s: string, n: NonNegativeInteger): string => {
+  return s.repeat(n)
+}
+
+const ex1: number = 3
+if (isNonNegativeInteger(ex1)) {
+  // This will run.
+  console.log(betterRepeat('hello', ex1))
+}
+
+const ex2: number = 3.1
+if (isNonNegativeInteger(ex2)) {
+  // This won't run.
+  console.log(betterRepeat('hello', ex2))
+}
+
+const ex3: number = -3
+if (isNonNegativeInteger(ex3)) {
+  // This won't run.
+  console.log(betterRepeat('hello', ex3))
+}
+#+end_src
+
+In the third example usage, where ~ex3~ is ~-3~, normally giving a negative number to the String.prototype.repeat() function would produce a runtime error. Instead, we caught it in compile-time and prevented it from happening at all!
+
+** NonEmptyArray
+
+Non-empty arrays are very useful in functional programming.
+
+Normally, functions like head() and last() would return ~undefined~ when given an empty array, breaking the type rules:
+
+#+begin_src typescript
+const head = <T>(xs: Array<T>): T => xs[0]
+const last = <T>(xs: Array<T>): T => xs[xs.length - 1]
+
+const arrEmpty: Array<number> = []
+console.log('head(arrEmpty):', head(arrEmpty)) // undefined
+console.log('last(arrEmpty):', last(arrEmpty)) // undefined
+#+end_src
+
+We can make better versions with a ~NonEmptyArray~ subtype:
+
+#+begin_src typescript
+type NonEmptyArray<T> = Array<T> & { readonly __type: unique symbol }
+
+const isNonEmptyArray = <T>(xs: Array<T>): xs is NonEmptyArray<T> => {
+  return xs.length >= 1
+}
+
+const head = <T>(xs: NonEmptyArray<T>): T => xs[0]
+const last = <T>(xs: NonEmptyArray<T>): T => xs[xs.length - 1]
+
+const arr1: Array<number> = [1]
+const arrEmpty: Array<number> = []
+
+if (isNonEmptyArray(arr1)) {
+  console.log('head(arr1):', head(arr1))
+  console.log('last(arr1):', last(arr1))
+}
+
+if (isNonEmptyArray(arrEmpty)) {
+  // None of this will run.
+  console.log('head(arrEmpty):', head(arrEmpty))
+  console.log('last(arrEmpty):', last(arrEmpty))
+}
+#+end_src
+
+** ValidWardrobe[fn:3]
+
+I like this example because it shows how far you can stretch the predicate function. Which, it turns out, is as far as you want! As long as it returns a boolean in the end, you're good.
+
+#+begin_src typescript
+type Colour = 'white' | 'cream' | 'blue' | 'navy' // ...
+
+type Wardrobe = {
+  owner: {
+    name: string
+    age: number
+  }
+  tops: Colour[]
+  pants: Colour[]
+  shorts: Colour[]
+  skirts: Colour[]
+  desiredNumberOfOutfits: number
+}
+
+type ValidWardrobe = Wardrobe & { readonly __type: unique symbol }
+
+const isValidWardrobe = (wardrobe: Wardrobe): wardrobe is ValidWardrobe => {
+  const numOutfits: number =
+    wardrobe.tops.length * wardrobe.pants.length
+    + wardrobe.tops.length * wardrobe.shorts.length
+    + wardrobe.tops.length * wardrobe.skirts.length
+
+  return numOutfits >= wardrobe.desiredNumberOfOutfits
+}
+
+const suggestOutfits = (wardrobe: ValidWardrobe): void => {
+  console.log(`Printing suggested outfits for ${wardrobe.owner.name}...`)
+  // Do stuff here, knowing that wardrobe has already been validated.
+}
+
+const ex1: Wardrobe = {
+  owner: {
+    name: 'Alice',
+    age: 22
+  },
+  tops: ['blue', 'white', 'cream'],
+  pants: ['navy', 'blue'],
+  shorts: ['navy'],
+  skirts: ['navy', 'blue'],
+  desiredNumberOfOutfits: 15
+}
+if (isValidWardrobe(ex1)) {
+  suggestOutfits(ex1)
+}
+#+end_src
+
+** Validated Form Input
+
+Let's say you have some input from a user registration form. And you have a ~register~ function whose job is to save this user data somewhere. Rather than clouding the concerns of ~register~ by validating the user data within the function, you can have it only accept data that has been previously validated!
+
+#+begin_src typescript
+type ValidName = string & { readonly __type: unique symbol }
+const isValidName = (name: string): name is ValidName => name.trim().length > 0
+
+type ValidBirthYear = number & { readonly __type: unique symbol }
+const isValidBirthYear = (year: number): year is ValidBirthYear => {
+  const thisYear: number = new Date().getFullYear()
+  return year >= 1900 && year <= thisYear
+}
+
+const register = (name: ValidName, birthYear: ValidBirthYear): void => {
+  console.log(`Registering user with name "${name}" born in ${birthYear}`)
+}
+
+const nameInput: string = 'test'
+const birthYearInput: number = 1800
+
+if (!isValidName(nameInput)) {
+  console.log('Name cannot be empty')
+} else if (!isValidBirthYear(birthYearInput)) {
+  console.log('Invalid birth year')
+} else {
+  register(nameInput, birthYearInput)
+}
+#+end_src
+
+** PositiveInteger, NonEmptyString
+
+You can nest subtypes in other types, too.
+
+#+begin_src typescript
+type PositiveInteger = number & { readonly __type: unique symbol }
+
+const isPositiveInteger = (x: number): x is PositiveInteger => {
+  return x >= 1 && Math.floor(x) === x
+}
+
+type NonEmptyString = string & { readonly __type: unique symbol }
+
+const isNonEmptyString = (s: string): s is NonEmptyString => {
+  return s.trim().length > 0
+}
+
+type Product = {
+  name: NonEmptyString
+  description: string
+  priceCents: PositiveInteger
+}
+
+type Cart = {} // Use your imagination
+
+const addToCart = (product: Product, quantity: PositiveInteger, cart: Cart): Cart => {
+  // Add a product to the cart, not having to worry about the quantity being a negative number or 0.
+  // ...
+  
+  return cart
+}
+#+end_src
+
+* Footnotes
+
+[fn:1] TypeScript intersections between primitives and objects are enabled to allow for making "branded primitives", which is intended to allow for nominal typing. See [[https://github.com/microsoft/TypeScript/wiki/FAQ#can-i-make-a-type-alias-nominal][TypeScript FAQ]]. With subtypes, we're leveraging that feature for an entirely different purpose.
+
+[fn:2] Without using type assertions, which would bypass the type checker altogether.
+
+[fn:3] Based off of my partner's [[https://github.com/Lzduque/personal-stylist][Personal Stylist]] app.
