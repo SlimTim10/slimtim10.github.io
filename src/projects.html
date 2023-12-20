@@ -1,46 +1,31 @@
 ---
-desc: "Projects created by Tim Johns."
+desc: "See a list of featured projects created by Tim Johns."
 stylesheet: "projects"
 title: "Projects"
 ---
 
 <main>
-  
-  $if(ready)$
-  
+
+  <h1>Projects</h1>
+
   <section id="projects">
-    
-	<article class="project">
-	  <img alt="project image" src="./images/me.jpg" />
-	  <h3>Project Name</h3>
-	  <p>Aenean sed adipiscing diam donec. Nulla at volutpat diam ut venenatis tellus in metus vulputate eu scelerisque felis imperdiet proin fermentum leo vel orci porta non pulvinar neque laoreet suspendisse!</p>
-	  <a class="btn-primary" href="#">Live</a>
-	  <a class="btn-primary" href="#">Source code</a>
-	</article>
-    
-	<article class="project">
-	  <img alt="project image" src="./images/me.jpg" />
-	  <h3>Project Name</h3>
-	  <p>Ante metus, dictum at tempor commodo, ullamcorper a lacus vestibulum sed arcu non! Laoreet id donec ultrices tincidunt arcu, non sodales neque sodales ut etiam sit amet nisl purus, in!</p>
-	  <a class="btn-primary" href="#">Live</a>
-	  <a class="btn-primary" href="#">Source code</a>
-	</article>
-    
-	<article>
+
+	  <article class="project">
+	    <a class="project-image" href="https://github.com/SlimTim10/easy-invoice-maker" target="_blank"><img alt="project image" src="./images/projects/easy_invoice_maker.png" /></a>
+	    <h2>Easy Invoice Maker</h2>
+      <p>I created the Easy Invoice Maker to solve a real problem in my life. I use it every day.</p>
+      <p>In my mentoring and consulting services, I needed a quick and simple way to whip up invoices and deliver them to clients. This command-line tool allows me to write invoices within the comfort of my text editor, without having to worry about visual formatting or composing an email. It literally takes me less than a minute from start to finish.</p>
+      <p>For me, it's an important feature that the invoices are stored in a human-readable, text-based format (YAML). I can easily edit, search, use version control, and do analysis on them as needed, using command-line tools I'm already proficient with.</p>
+      <p>This project was built in Haskell and packaged with Nix.</p>
+	    <a class="btn btn-primary" href="https://github.com/SlimTim10/easy-invoice-maker" target="_blank"><img class="icon" alt="GitHub logo" src="./images/projects/github-mark-white.svg"/>Source</a>
+	  </article>
+
+	  <article>
 	  <h4>
-		See other projects on my <a href="https://github.com/SlimTim10" target="_blank">GitHub</a>.
+        See my <a href="https://github.com/SlimTim10" target="_blank">GitHub</a> for other projects I've made over the years. 
 	  </h4>
 	</article>
-    
+
   </section>
-  
-  $else$
-  
-  <section style="display: flex; flex-direction: column; align-items: center; gap: 4rem; justify-content: center; flex-grow: 1;">
-	<img alt="" src="./images/undraw_under_construction_-46-pa.svg" style="width: 90%; max-width: 30rem;"/>
-	<h2>Coming soon!</h2>
-  </section>
-  
-  $endif$
-  
+
 </main>
