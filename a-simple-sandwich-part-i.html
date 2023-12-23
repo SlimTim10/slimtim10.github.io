@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Tim Johns - A Simple Sandwich, Part I</title>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="A bunch of ideas in response to a post by Danny Fekete.">
+    <meta name="author" content="Tim Johns">
+    
+
+    <meta property="og:site_name" content="Tim Johns">
+    <meta property="og:title" content="A Simple Sandwich, Part I">
+    <meta property="og:url" content="https://timjohns.ca/a-simple-sandwich-part-i.html">
+    <meta property="og:description" content="A bunch of ideas in response to a post by Danny Fekete.">
+    
+    <meta property="og:image" content="https://timjohns.ca./images/blog/a_simple_sandwich_i.png">
+    
+    
+    <meta property="og:type" content="article">
+    
+
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inconsolata:wght@400;700&family=Inter:wght@300;400;500&family=Lato:wght@300;400;700;900&family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,1,0" />
+
+    <!-- Analytics -->
+    <script src="https://cdn.counter.dev/script.js" data-id="af659f42-a2fc-40d5-8e6c-a1036c76c51f" data-utcoffset="-4"></script>
+
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="canonical" href="https://timjohns.ca/a-simple-sandwich-part-i.html">
+    <link rel="stylesheet" href="./css/reset.css" />
+    <link rel="stylesheet" href="./css/default.css" />
+    <link rel="stylesheet" href="./css/nav.css" />
+	<link rel="stylesheet" href="./css/vs2015.css" />
+	
+    <link rel="stylesheet" href="./css/post.css" />
+	
+  </head>
+  <body>
+	<header>
+	  <div>
+		<a href="/" id="logo">
+          <img alt="logo" src="./images/logo.svg"/>
+		</a>
+		<a href="#" id="toggle-menu" aria-label="Main Menu">
+		  <svg width="100" height="100" viewBox="0 0 100 100">
+			<path class="line line1" d="M 20,29.000046 H 80.000231 C 80.000231,29.000046 94.498839,28.817352 94.532987,66.711331 94.543142,77.980673 90.966081,81.670246 85.259173,81.668997 79.552261,81.667751 75.000211,74.999942 75.000211,74.999942 L 25.000021,25.000058" />
+			<path class="line line2" d="M 20,50 H 80" />
+			<path class="line line3" d="M 20,70.999954 H 80.000231 C 80.000231,70.999954 94.498839,71.182648 94.532987,33.288669 94.543142,22.019327 90.966081,18.329754 85.259173,18.331003 79.552261,18.332249 75.000211,25.000058 75.000211,25.000058 L 25.000021,74.999942" />
+		  </svg>
+		</a>
+	  </div>
+	  <nav class="collapsed">
+		<ul>
+		  <li><a href="/" >Home</a></li>
+		  <li><a href="/mentorship.html" >Mentorship</a></li>
+		  <li><a href="/events.html" >Events</a></li>
+		  <li><a href="/blog.html"  class="active" >Blog</a></li>
+		  <li><a href="/projects.html" >Projects</a></li>
+		  <li><a href="/about.html" >About</a></li>
+		  <li><a href="/contact.html" >Contact</a></li>
+		</ul>
+	  </nav>
+	</header>
+    <main>
+  <article id="blog-post">
+    <header>
+      <h1 class="writing">
+        A Simple Sandwich, Part I
+      </h1>
+      <p class="writing">Dec 28, 2022</p>
+      
+    </header>
+	<img class="post-image" alt="Drawing of a sandwich" src="./images/blog/a_simple_sandwich_i.png" />
+    <section class="content writing">
+	  <p>I wrote this as a sort of response to <a href="https://neckdeep.dev/blog/2022-12-13-a-simple-sandwich-i/">a post by my friend Danny Fekete</a>. For any of this to make sense, you’ll want to read his post first. These are my thoughts related to the ideas Danny brought up as well as Haskell code inspired by Danny’s Ruby code. I would describe the subject as <strong>programming philosophy</strong>.</p>
+<h1 id="food-for-thought">Food for Thought</h1>
+<p>The point of the “exact instructions challenge” shown in <a href="https://www.youtube.com/watch?v=FN2RM-CHkuI">this video</a> is to explain to kids (or any non-programmers) what it’s like to write a computer program to solve a task. I used to think this was a good explanation, but now I’ve changed my mind. What’s being said is that giving a computer instructions to solve a task is challenging because you need to be very precise. The computer is dumb and won’t fill in the gaps; it will not necessarily do what you have in mind if you give it vague instructions. Instead, it does the wrong thing or produces an error. So let’s think about this. Why is it different from giving a human vague instructions? Well, a human can fill in the blanks. Why? Because they have the same context as the instruction-giver and both minds abstract the details. If a human did not have the proper context, they would do the task wrong, like the dad in the video. So, the dad is not acting specifically like a computer but rather any receiver with improper context that is attempting the task anyway. Realistically, if a computer has improper context to perform an instruction, it will produce an error rather than try to do it and fail. In whatever programming language you choose, if you try to run the function <code>makeSandwich</code> and that function doesn’t exist, it will produce an error instead of trying to make a sandwich (whatever it means for a computer to make a sandwich…).</p>
+<p>So really, what we’re talking about here is <strong>context</strong> and <strong>abstraction</strong>, not necessarily humans vs computers. Now you think I’m being pedantic. True, computers are usually the ones with less context and can’t do abstraction on their own. But programmers are the ones deciding what context is needed! If a language is made at a higher level of abstraction than another, it may need less context than the other to accomplish the same task. For example, in Haskell, I can write <code>putStrLn (unwords ["Hello,", "world!"])</code> to print “Hello, world!”, but in C, I would have to write a lot more code (giving more context about how to make an array into a sentence of words). The fact is, no programmer writes code <strong>from scratch</strong>. Everyone is building upon other work, even if you’re including the language’s standard library. In fact, if I take the effort to write the <code>unwords</code> function in C, then the resulting code is not too different from Haskell: <code>printf("%s", unwords((char**){"Hello,", "world!"}, 2));</code>.</p>
+<p>In the end, if someone (it doesn’t matter who) has made a <code>makeSandwich</code> function and it makes a sandwich (somehow…), I can tell the computer to run that function and I don’t need to give it extra information. The same as telling a human who I trust to make a sandwich, “make me a sandwich”.</p>
+<p>Now that we have sophisticated AI (demonstrated by tools like <a href="https://openai.com/blog/chatgpt/">ChatGPT</a>), computers actually have as much context as the average person for many problems. The AI can do spoken language processing that appears to be on par with humans. I can give it a problem to solve, written in plain English, and it will give a solution! Many people would be fooled into thinking they’re chatting with a human.</p>
+<h1 id="programming-a-sandwich">Programming a Sandwich</h1>
+<p>That said, let’s say we want to demonstrate what it would be like to program the computer to make a sandwich anyway. In <a href="https://neckdeep.dev/blog/2022-12-13-a-simple-sandwich-i/">Danny’s post</a>, he wrote a great, complete example in Ruby code. After reading through it, it brings up some interesting points to talk about:</p>
+<ul>
+<li>Error handling</li>
+<li>Mutability and state</li>
+<li>Programming paradigms (object-oriented programming, functional programming)</li>
+<li>Type theory</li>
+</ul>
+<p>Fortunately for me, Danny already handled the hardest part: deciding what functionality to include in the sandwich-making code. After all, we can’t expect the computer to make a real sandwich in the end, so one has to (somewhat arbitrarily) decide what a valid solution requires.</p>
+<p>For my own exploration, I decided to take the following steps:</p>
+<ul>
+<li>Translate Danny’s OOP (object-oriented programming) solution into Haskell</li>
+<li>Write an idiomatic Haskell solution</li>
+<li>Write a Haskell solution using type-level programming</li>
+<li>Write an Agda solution</li>
+</ul>
+<p>Before getting to the code, I want to express some thoughts about programming concepts.</p>
+<h1 id="error-handling">Error Handling</h1>
+<p>Deciding how to handle errors is a notoriously tricky problem in programming. We have to think about what kind of errors our code may encounter. Are they logic-breaking errors, in which case we want our app to print a message and quit running when it encounters one? Or are they more like warnings, where we can print a message to the user and allow the code to continue running? Should we even handle them at all or just let the program break when it may? Maybe we should mix and match? Can we reduce the possible errors some other way?</p>
+<p>Before I could write any Haskell solution to the sandwich-making problem, I had to decide how to handle errors. After all, many things can go wrong along the way, like attempting to put a knife in a closed jar of peanut butter.</p>
+<p>Because Haskell is a purely functional language, every function is considered either to be “pure” or in a monad (such as “IO”). Using the monad concept is how Haskell gets around the “impure” or “side effect” capability while retaining a pure mathematical foundation. It is favourable to keep as many functions pure as possible, so handling errors in a pure way would be ideal.</p>
+<h2 id="breaking-errors">Breaking errors</h2>
+<p>One option to handle errors is to simply break execution and print an error message whenever one happens. In Haskell, this would be done using the built-in <code>error</code> function, which can be used in any function. But this comes with caveats:</p>
+<ul>
+<li>We can’t know which functions may produce an error by looking at their type signature.</li>
+<li>We can’t recover from errors.</li>
+</ul>
+<h2 id="exceptions">Exceptions</h2>
+<p>Another option is to throw exceptions. Then we can catch errors, but it comes with a big caveat:</p>
+<ul>
+<li>Every function that may throw an exception (or include another function that may throw an exception) must be in the IO monad. That means virtually all the code has to live in the IO monad, and we don’t have any pure functions.</li>
+</ul>
+<h2 id="maybe">Maybe</h2>
+<p>A more idiomatic option in Haskell is to use the <code>Maybe</code> type. Any function that might produce an error returns a <code>Maybe a</code> value, which is either <code>Nothing</code> or <code>Just a</code>, where <code>a</code> is any type. For example,</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ot">relinquishContents ::</span> <span class="dt">Jar</span> <span class="ot">-&gt;</span> <span class="dt">Maybe</span> (<span class="dt">Jar</span>, <span class="dt">Condiment</span>)</span></code></pre></div>
+<p>This version of <code>relinquishContents</code> takes a <code>Jar</code> and returns either <code>Nothing</code> if it fails (because the jar is closed or empty) or a pair <code>(Jar, Condiment)</code> of a new empty <code>Jar</code> and a <code>Condiment</code>. The problem with using <code>Maybe</code> is we don’t have any message attached to the error side; we just have <code>Nothing</code>. So we know something went wrong, but we don’t know what it is.</p>
+<h2 id="either">Either</h2>
+<p>Finally, the solution I settled on is the other idiomatic option in Haskell: the <code>Either</code> type. It’s almost the same as <code>Maybe</code>, except its values are <code>Left a</code> and <code>Right b</code>, where <code>a</code> and <code>b</code> are any types. This way, we have,</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ot">relinquishContents ::</span> <span class="dt">Jar</span> <span class="ot">-&gt;</span> <span class="dt">Either</span> <span class="dt">String</span> (<span class="dt">Jar</span>, <span class="dt">Condiment</span>)</span></code></pre></div>
+<p>In the error case, <code>relinquishContents</code> returns a <code>Left String</code> (such as <code>Left "The jar is closed and knife-impermeable."</code>). In the good case, it returns a <code>Right (Jar, Condiment)</code>. In other words, we <strong>either</strong> have an error message or a good return value.</p>
+<p>Taking this path, every function that might produce an error must return an <code>Either</code> type, which allows us to keep most of the code pure. Also, we have no choice but to write code which handles the errors where they may occur. We can’t simply skip over the fact that a function may produce an error; we have to handle both sides of the result: <code>Left</code> and <code>Right</code>.</p>
+<h1 id="mutability-and-state">Mutability and State</h1>
+<p>In <a href="https://en.wikipedia.org/wiki/Object-oriented_programming">OOP</a>, it’s common to make an instance of an object with some properties and then mutate its properties along the way. For example, we may have a <code>CondimentJar</code> with a <code>contents</code> property that starts off as some string, like “Peanut Butter”. When we want to empty the jar, we set its <code>contents</code> property to <code>nil</code>, effectively <strong>mutating the state</strong> of the jar.</p>
+<p>This can often make code easy to write but harder to follow. For example, in the <a href="https://neckdeep.dev/blog/2022-12-13-a-simple-sandwich-i/">Ruby solution’s</a> <code>Sandwich</code> class, I didn’t know what the <code>build!</code> method was going to do when I first saw it. Based on the name, I figured it would build a sandwich and mutate the instance somehow. I didn’t know if it would also mutate something inside the sandwich, like the slices of bread. Without reading the rest of the code, how could I know what other variables might get mutated down the line? To discover the function’s purpose and result, I had to read its entire body. In Haskell, I only need to read a function’s type signature to know exactly what its capabilities are.</p>
+<p>In pure functional code, there’s no such thing as mutability. When we have a <code>CondimentJar</code> with its <code>contents</code> set to “Peanut Butter”, we can’t simply change that jar. It will always have peanut butter as its contents. Instead of mutating the jar’s state, we must make a new jar which is a copy of the first one, but with its <code>contents</code> set to a different value.</p>
+<p>To people less familiar with the concept of immutability, this may seem like a burden, and sometimes it is! But really, it’s just a different perspective on writing code. Instead of keeping track of every variable and its current state at any point in the code, immutability ensures that no variables can ever change, so we can easily discern their value.</p>
+<p>Now, this presents us with a philosophical problem in the sandwich-making context. What sense does it make to have a jar which is always full of peanut butter and a knife which is always clean, and when we put them to use we have a <strong>new</strong> empty jar and a <strong>new</strong> loaded knife? And does it make sense that we still have access to the old objects? The way I see it, we can think of this in different ways.</p>
+<p>In one way, we can say we simply don’t care that it doesn’t represent the real world accurately and as long as we don’t make use of the old objects after we use them, we’re not doing anything we couldn’t do in reality. We just have to always use the latest version of each object.</p>
+<p>Another way to think about it is that having access to the old objects is like being able to travel through time. We can think of every variable as being in a particular snapshot of the universe, which we can always go back to. However, this idea breaks down when we can access a new object and its older counterpart simultaneously, which is kind of like having multiple universes that can interact (like the <a href="https://en.wikipedia.org/wiki/Multiverse_(Marvel_Comics)">Marvel multiverse</a>).</p>
+<p>The most accurate representation of state in a pure functional context is to keep all stateful things in a variable that must be passed as an argument to any function that may update state. This is like passing around the universe (or at least, the important things in it) so we only have access to one version of it at any point in time. In Haskell, there are <a href="https://hackage.haskell.org/package/base-4.17.0.0/docs/Control-Concurrent-MVar.html">libraries</a> which handle this in a monad. Then we can write code which looks like we’re updating state, but anything that involves state must be inside the state monad.</p>
+<p>In my code, I opted for the first approach; simply ignore the problem! I figure the sandwich-making is represented well enough and the code is simpler to understand.</p>
+<h1 id="haskell-solution---oop-translation">Haskell Solution - OOP Translation</h1>
+<p>Since Haskell is a functional language, the following Haskell code is <strong>not idiomatic</strong>. It is a translation of the object-oriented <a href="https://neckdeep.dev/blog/2022-12-13-a-simple-sandwich-i/">Ruby solution</a>. Similarly to how we might translate a poem from Portuguese to English word-for-word, the result may have proper grammar and spelling, but the English translation won’t sound poetic like it would if it were composed in English from the start.</p>
+<h2 id="condimenths">Condiment.hs</h2>
+<div class="sourceCode" id="cb3"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">module</span> <span class="dt">Condiment</span> <span class="kw">where</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> <span class="dt">Condiment</span> <span class="ot">=</span> <span class="dt">String</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">OpenOrClosed</span> <span class="ot">=</span> <span class="dt">Open</span> <span class="op">|</span> <span class="dt">Closed</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="kw">deriving</span> (<span class="dt">Eq</span>)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">Jar</span> <span class="ot">=</span> <span class="dt">Jar</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  {<span class="ot"> contents ::</span> <span class="dt">Maybe</span> <span class="dt">Condiment</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  ,<span class="ot"> lid ::</span> <span class="dt">OpenOrClosed</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="ot">newJar ::</span> <span class="dt">Condiment</span> <span class="ot">-&gt;</span> <span class="dt">Jar</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>newJar c <span class="ot">=</span> <span class="dt">Jar</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>  { contents <span class="ot">=</span> <span class="dt">Just</span> c</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>  , lid <span class="ot">=</span> <span class="dt">Closed</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="ot">isEmpty ::</span> <span class="dt">Jar</span> <span class="ot">-&gt;</span> <span class="dt">Bool</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>isEmpty <span class="dt">Jar</span>{contents<span class="ot">=</span><span class="dt">Nothing</span>} <span class="ot">=</span> <span class="dt">True</span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>isEmpty _ <span class="ot">=</span> <span class="dt">False</span></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a><span class="ot">hasStuff ::</span> <span class="dt">Jar</span> <span class="ot">-&gt;</span> <span class="dt">Bool</span></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>hasStuff <span class="ot">=</span> <span class="fu">not</span> <span class="op">.</span> isEmpty</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a><span class="ot">isClosed ::</span> <span class="dt">Jar</span> <span class="ot">-&gt;</span> <span class="dt">Bool</span></span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>isClosed <span class="dt">Jar</span>{lid<span class="ot">=</span><span class="dt">Closed</span>} <span class="ot">=</span> <span class="dt">True</span></span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>isClosed _ <span class="ot">=</span> <span class="dt">False</span></span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a><span class="ot">closeJar ::</span> <span class="dt">Jar</span> <span class="ot">-&gt;</span> <span class="dt">Jar</span></span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>closeJar cj <span class="ot">=</span> cj {lid<span class="ot">=</span><span class="dt">Closed</span>}</span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a><span class="ot">isOpen ::</span> <span class="dt">Jar</span> <span class="ot">-&gt;</span> <span class="dt">Bool</span></span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>isOpen <span class="ot">=</span> <span class="fu">not</span> <span class="op">.</span> isClosed</span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a><span class="ot">openJar ::</span> <span class="dt">Jar</span> <span class="ot">-&gt;</span> <span class="dt">Jar</span></span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>openJar cj <span class="ot">=</span> cj {lid<span class="ot">=</span><span class="dt">Open</span>}</span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a><span class="ot">relinquishContents ::</span> <span class="dt">Jar</span> <span class="ot">-&gt;</span> <span class="dt">Either</span> <span class="dt">String</span> (<span class="dt">Jar</span>, <span class="dt">Condiment</span>)</span>
+<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a>relinquishContents cj<span class="op">@</span><span class="dt">Jar</span>{contents<span class="ot">=</span><span class="dt">Just</span> c}</span>
+<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a>  <span class="op">|</span> isClosed cj <span class="ot">=</span> <span class="dt">Left</span> <span class="st">&quot;The jar is closed and knife-impermeable.&quot;</span></span>
+<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a>  <span class="op">|</span> isEmpty cj <span class="ot">=</span> <span class="dt">Left</span> <span class="st">&quot;The jar is empty. How disappointing.&quot;</span></span>
+<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a>  <span class="op">|</span> <span class="fu">otherwise</span> <span class="ot">=</span> <span class="dt">Right</span> (cj{contents<span class="ot">=</span><span class="dt">Nothing</span>}, c)</span></code></pre></div>
+<p>In this OOP translation, a Haskell <strong>record</strong> is defined for each of its Ruby <strong>class</strong> counterpart. In idiomatic Haskell, records are used frequently but not to represent classes/objects in such a way. And the small functions like <code>isClosed</code> correspond to OOP <strong>methods</strong> or property accessors, which would be replaced by pattern matching in idiomatic Haskell.</p>
+<p>In Condiment.hs, the <code>newJar</code> function acts like an <strong>object constructor</strong> in OOP (e.g., Ruby’s <code>initialize</code> method). It takes a <code>Condiment</code> to tell it what the contents of the jar should be and gives back a closed jar full of that condiment.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- Haskell</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> pb <span class="ot">=</span> Condiment.newJar <span class="st">&quot;Peanut Butter&quot;</span></span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode ruby"><code class="sourceCode ruby"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Ruby</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>pb <span class="kw">=</span> <span class="dt">CondimentJar</span><span class="at">.new</span>(<span class="st">&quot;Peanut Butter&quot;</span>)</span></code></pre></div>
+<p>As discussed above about error handling, <code>relinquishContents</code> returns an <code>Either</code> type which may either be an error message (<code>Left String</code>) or a pair of a new empty jar and a condiment (<code>Right (Jar, Condiment)</code>).</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ot">relinquishContents ::</span> <span class="dt">Jar</span> <span class="ot">-&gt;</span> <span class="dt">Either</span> <span class="dt">String</span> (<span class="dt">Jar</span>, <span class="dt">Condiment</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>relinquishContents cj<span class="op">@</span><span class="dt">Jar</span>{contents<span class="ot">=</span><span class="dt">Just</span> c}</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="op">|</span> isClosed cj <span class="ot">=</span> <span class="dt">Left</span> <span class="st">&quot;The jar is closed and knife-impermeable.&quot;</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="op">|</span> isEmpty cj <span class="ot">=</span> <span class="dt">Left</span> <span class="st">&quot;The jar is empty. How disappointing.&quot;</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="op">|</span> <span class="fu">otherwise</span> <span class="ot">=</span> <span class="dt">Right</span> (cj{contents<span class="ot">=</span><span class="dt">Nothing</span>}, c)</span></code></pre></div>
+<h2 id="knifehs">Knife.hs</h2>
+<div class="sourceCode" id="cb7"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">module</span> <span class="dt">Knife</span> <span class="kw">where</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Condiment</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">Knife</span> <span class="ot">=</span> <span class="dt">Knife</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  {<span class="ot"> contents ::</span> <span class="dt">Maybe</span> <span class="dt">Condiment.Condiment</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="ot">new ::</span> <span class="dt">Knife</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>new <span class="ot">=</span> <span class="dt">Knife</span> {contents<span class="ot">=</span><span class="dt">Nothing</span>}</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="ot">isClean ::</span> <span class="dt">Knife</span> <span class="ot">-&gt;</span> <span class="dt">Bool</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>isClean <span class="dt">Knife</span> {contents<span class="ot">=</span><span class="dt">Nothing</span>} <span class="ot">=</span> <span class="dt">True</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>isClean _ <span class="ot">=</span> <span class="dt">False</span></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a><span class="ot">clean ::</span> <span class="dt">Knife</span> <span class="ot">-&gt;</span> <span class="dt">Knife</span></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>clean k <span class="ot">=</span> k {contents<span class="ot">=</span><span class="dt">Nothing</span>}</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a><span class="ot">isLoaded ::</span> <span class="dt">Knife</span> <span class="ot">-&gt;</span> <span class="dt">Bool</span></span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>isLoaded <span class="ot">=</span> <span class="fu">not</span> <span class="op">.</span> isClean</span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a><span class="ot">loadFrom ::</span> <span class="dt">Knife</span> <span class="ot">-&gt;</span> <span class="dt">Condiment.Jar</span> <span class="ot">-&gt;</span> <span class="dt">Either</span> <span class="dt">String</span> (<span class="dt">Knife</span>, <span class="dt">Condiment.Jar</span>)</span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>loadFrom k cj</span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>  <span class="op">|</span> isLoaded k <span class="ot">=</span> <span class="dt">Left</span> <span class="st">&quot;This knife is already loaded. Don&#39;t mix your condiments!&quot;</span></span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>  <span class="op">|</span> <span class="fu">otherwise</span> <span class="ot">=</span> <span class="fu">uncurry</span> load <span class="op">&lt;$&gt;</span> Condiment.relinquishContents cj</span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>  <span class="kw">where</span></span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>    load cj&#39; c <span class="ot">=</span> (k {contents<span class="ot">=</span><span class="dt">Just</span> c}, cj&#39;)</span></code></pre></div>
+<p>Interesting to note here is the decision to include <code>loadFrom</code> in the Knife.hs module. It seemed right to put it here because the OOP version has <code>loadFrom</code> as a method of the <code>Knife</code> object. But in this Haskell version, <code>loadFrom</code> is a pure function that happens to take a <code>Knife</code> and a <code>Condiment.Jar</code> as two arguments, so it doesn’t need to belong in any specific module. It would work just as well to put it in Main.hs. In fact, the same could be said for any of the functions. The choice to put them in a particular module is somewhat arbitrary; it simply makes sense intuitively to bundle them together based on context. In the case of <code>loadFrom</code>, it would make just as much sense to put it in Condiment.hs or Main.hs.</p>
+<h2 id="breadhs">Bread.hs</h2>
+<div class="sourceCode" id="cb8"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">module</span> <span class="dt">Bread</span> <span class="kw">where</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Condiment</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Knife</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">Surface</span> <span class="ot">=</span> <span class="dt">Surface</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  {<span class="ot"> contents ::</span> <span class="dt">Maybe</span> <span class="dt">Condiment.Condiment</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="ot">newSurface ::</span> <span class="dt">Surface</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>newSurface <span class="ot">=</span> <span class="dt">Surface</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>  { contents <span class="ot">=</span> <span class="dt">Nothing</span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a><span class="ot">surfaceIsPlain ::</span> <span class="dt">Surface</span> <span class="ot">-&gt;</span> <span class="dt">Bool</span></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>surfaceIsPlain <span class="dt">Surface</span> {contents<span class="ot">=</span><span class="dt">Nothing</span>} <span class="ot">=</span> <span class="dt">True</span></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>surfaceIsPlain _ <span class="ot">=</span> <span class="dt">False</span></span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a><span class="ot">surfaceIsSmeared ::</span> <span class="dt">Surface</span> <span class="ot">-&gt;</span> <span class="dt">Bool</span></span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>surfaceIsSmeared <span class="ot">=</span> <span class="fu">not</span> <span class="op">.</span> surfaceIsPlain</span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">Slice</span> <span class="ot">=</span> <span class="dt">Slice</span></span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>  {<span class="ot"> top ::</span> <span class="dt">Surface</span></span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>  ,<span class="ot"> bottom ::</span> <span class="dt">Surface</span></span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a><span class="ot">newSlice ::</span> <span class="dt">Slice</span></span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a>newSlice <span class="ot">=</span> <span class="dt">Slice</span></span>
+<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a>  { top <span class="ot">=</span> newSurface</span>
+<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a>  , bottom <span class="ot">=</span> newSurface</span>
+<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a><span class="ot">sliceIsPlain ::</span> <span class="dt">Slice</span> <span class="ot">-&gt;</span> <span class="dt">Bool</span></span>
+<span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a>sliceIsPlain <span class="dt">Slice</span> {top<span class="ot">=</span>t, bottom<span class="ot">=</span>b}</span>
+<span id="cb8-35"><a href="#cb8-35" aria-hidden="true" tabindex="-1"></a>  <span class="ot">=</span> surfaceIsPlain t <span class="op">&amp;&amp;</span> surfaceIsPlain b</span>
+<span id="cb8-36"><a href="#cb8-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-37"><a href="#cb8-37" aria-hidden="true" tabindex="-1"></a><span class="ot">sliceIsSmeared ::</span> <span class="dt">Slice</span> <span class="ot">-&gt;</span> <span class="dt">Bool</span></span>
+<span id="cb8-38"><a href="#cb8-38" aria-hidden="true" tabindex="-1"></a>sliceIsSmeared <span class="ot">=</span> <span class="fu">not</span> <span class="op">.</span> sliceIsPlain</span>
+<span id="cb8-39"><a href="#cb8-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-40"><a href="#cb8-40" aria-hidden="true" tabindex="-1"></a><span class="ot">smearSurface ::</span> <span class="dt">Knife.Knife</span> <span class="ot">-&gt;</span> <span class="dt">Surface</span> <span class="ot">-&gt;</span> <span class="dt">Either</span> <span class="dt">String</span> (<span class="dt">Knife.Knife</span>, <span class="dt">Surface</span>)</span>
+<span id="cb8-41"><a href="#cb8-41" aria-hidden="true" tabindex="-1"></a>smearSurface k s</span>
+<span id="cb8-42"><a href="#cb8-42" aria-hidden="true" tabindex="-1"></a>  <span class="op">|</span> surfaceIsSmeared s <span class="ot">=</span> <span class="dt">Left</span> <span class="st">&quot;This surface was already smeared!&quot;</span></span>
+<span id="cb8-43"><a href="#cb8-43" aria-hidden="true" tabindex="-1"></a>  <span class="op">|</span> Knife.isClean k <span class="ot">=</span> <span class="dt">Left</span> <span class="st">&quot;This knife is too clean to smear with.&quot;</span></span>
+<span id="cb8-44"><a href="#cb8-44" aria-hidden="true" tabindex="-1"></a>  <span class="op">|</span> <span class="fu">otherwise</span> <span class="ot">=</span> <span class="dt">Right</span> (Knife.clean k, s {contents<span class="ot">=</span>Knife.contents k})</span></code></pre></div>
+<h2 id="sandwichhs">Sandwich.hs</h2>
+<div class="sourceCode" id="cb9"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">module</span> <span class="dt">Sandwich</span> <span class="kw">where</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Bread</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Condiment</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Knife</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Data.Maybe</span> <span class="kw">as</span> <span class="dt">Maybe</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Data.List</span> <span class="kw">as</span> <span class="dt">L</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">Sandwich</span> <span class="ot">=</span> <span class="dt">Sandwich</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>  {<span class="ot"> slices ::</span> [<span class="dt">Bread.Slice</span>]</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>  ,<span class="ot"> built ::</span> <span class="dt">Bool</span></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>  ,<span class="ot"> isCut ::</span> <span class="dt">Bool</span></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a><span class="ot">new ::</span> [<span class="dt">Bread.Slice</span>] <span class="ot">-&gt;</span> <span class="dt">Sandwich</span></span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>new slices <span class="ot">=</span> <span class="dt">Sandwich</span></span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>  { slices <span class="ot">=</span> slices</span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>  , built <span class="ot">=</span> <span class="dt">False</span></span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>  , isCut <span class="ot">=</span> <span class="dt">False</span></span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a><span class="ot">flavours ::</span> <span class="dt">Sandwich</span> <span class="ot">-&gt;</span> [<span class="dt">Condiment.Condiment</span>]</span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>flavours <span class="ot">=</span> <span class="fu">concat</span> <span class="op">.</span> <span class="fu">map</span> sliceFlavours <span class="op">.</span> slices</span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>  <span class="kw">where</span></span>
+<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a><span class="ot">    sliceFlavours ::</span> <span class="dt">Bread.Slice</span> <span class="ot">-&gt;</span> [<span class="dt">Condiment.Condiment</span>]</span>
+<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a>    sliceFlavours <span class="ot">=</span> <span class="dt">Maybe</span><span class="op">.</span>catMaybes <span class="op">.</span> <span class="fu">map</span> Bread.contents <span class="op">.</span> <span class="fu">sequence</span> [Bread.top, Bread.bottom]</span>
+<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a><span class="ot">showFlavours ::</span> <span class="dt">Sandwich</span> <span class="ot">-&gt;</span> <span class="dt">String</span></span>
+<span id="cb9-30"><a href="#cb9-30" aria-hidden="true" tabindex="-1"></a>showFlavours <span class="ot">=</span> f <span class="op">.</span> flavours</span>
+<span id="cb9-31"><a href="#cb9-31" aria-hidden="true" tabindex="-1"></a>  <span class="kw">where</span></span>
+<span id="cb9-32"><a href="#cb9-32" aria-hidden="true" tabindex="-1"></a><span class="ot">    f ::</span> [<span class="dt">Condiment.Condiment</span>] <span class="ot">-&gt;</span> <span class="dt">String</span></span>
+<span id="cb9-33"><a href="#cb9-33" aria-hidden="true" tabindex="-1"></a>    f cs</span>
+<span id="cb9-34"><a href="#cb9-34" aria-hidden="true" tabindex="-1"></a>      <span class="op">|</span> <span class="fu">length</span> cs <span class="op">==</span> <span class="dv">2</span> <span class="ot">=</span> L.intercalate <span class="st">&quot; and &quot;</span> cs</span>
+<span id="cb9-35"><a href="#cb9-35" aria-hidden="true" tabindex="-1"></a>      <span class="op">|</span> <span class="fu">otherwise</span> <span class="ot">=</span> L.intercalate <span class="st">&quot;, &quot;</span> (<span class="fu">init</span> cs) <span class="op">++</span> <span class="st">&quot;, and &quot;</span> <span class="op">++</span> <span class="fu">last</span> cs</span>
+<span id="cb9-36"><a href="#cb9-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-37"><a href="#cb9-37" aria-hidden="true" tabindex="-1"></a><span class="ot">isReadyToEat ::</span> <span class="dt">Sandwich</span> <span class="ot">-&gt;</span> <span class="dt">Bool</span></span>
+<span id="cb9-38"><a href="#cb9-38" aria-hidden="true" tabindex="-1"></a>isReadyToEat sw <span class="ot">=</span> built sw <span class="op">&amp;&amp;</span> isCut sw</span>
+<span id="cb9-39"><a href="#cb9-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-40"><a href="#cb9-40" aria-hidden="true" tabindex="-1"></a><span class="ot">build ::</span> <span class="dt">Sandwich</span> <span class="ot">-&gt;</span> <span class="dt">Either</span> <span class="dt">String</span> <span class="dt">Sandwich</span></span>
+<span id="cb9-41"><a href="#cb9-41" aria-hidden="true" tabindex="-1"></a>build sw</span>
+<span id="cb9-42"><a href="#cb9-42" aria-hidden="true" tabindex="-1"></a>  <span class="op">|</span> built sw <span class="ot">=</span> <span class="dt">Left</span> <span class="st">&quot;It&#39;s already a glorious tower of food!&quot;</span></span>
+<span id="cb9-43"><a href="#cb9-43" aria-hidden="true" tabindex="-1"></a>  <span class="op">|</span> <span class="fu">length</span> (slices sw) <span class="op">&lt;</span> <span class="dv">2</span> <span class="ot">=</span> <span class="dt">Left</span> <span class="st">&quot;Not enough slices&quot;</span></span>
+<span id="cb9-44"><a href="#cb9-44" aria-hidden="true" tabindex="-1"></a>  <span class="op">|</span> outsideSmeared <span class="ot">=</span> <span class="dt">Left</span> <span class="st">&quot;This sandwich would be icky to hold.&quot;</span></span>
+<span id="cb9-45"><a href="#cb9-45" aria-hidden="true" tabindex="-1"></a>  <span class="op">|</span> tooPlain <span class="ot">=</span> <span class="dt">Left</span> <span class="st">&quot;This sandwich might actually be a loaf.&quot;</span></span>
+<span id="cb9-46"><a href="#cb9-46" aria-hidden="true" tabindex="-1"></a>  <span class="op">|</span> <span class="fu">otherwise</span> <span class="ot">=</span> <span class="dt">Right</span> (sw {built<span class="ot">=</span><span class="dt">True</span>})</span>
+<span id="cb9-47"><a href="#cb9-47" aria-hidden="true" tabindex="-1"></a>  <span class="kw">where</span></span>
+<span id="cb9-48"><a href="#cb9-48" aria-hidden="true" tabindex="-1"></a><span class="ot">    bottomSmeared ::</span> <span class="dt">Bool</span></span>
+<span id="cb9-49"><a href="#cb9-49" aria-hidden="true" tabindex="-1"></a>    bottomSmeared <span class="ot">=</span> Bread.surfaceIsSmeared <span class="op">.</span> Bread.bottom <span class="op">.</span> <span class="fu">head</span> <span class="op">$</span> slices sw</span>
+<span id="cb9-50"><a href="#cb9-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-51"><a href="#cb9-51" aria-hidden="true" tabindex="-1"></a><span class="ot">    topSmeared ::</span> <span class="dt">Bool</span></span>
+<span id="cb9-52"><a href="#cb9-52" aria-hidden="true" tabindex="-1"></a>    topSmeared <span class="ot">=</span> Bread.surfaceIsSmeared <span class="op">.</span> Bread.top <span class="op">.</span> <span class="fu">last</span> <span class="op">$</span> slices sw</span>
+<span id="cb9-53"><a href="#cb9-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-54"><a href="#cb9-54" aria-hidden="true" tabindex="-1"></a><span class="ot">    outsideSmeared ::</span> <span class="dt">Bool</span></span>
+<span id="cb9-55"><a href="#cb9-55" aria-hidden="true" tabindex="-1"></a>    outsideSmeared <span class="ot">=</span> <span class="fu">length</span> (slices sw) <span class="op">&gt;=</span> <span class="dv">2</span> <span class="op">&amp;&amp;</span> (bottomSmeared <span class="op">||</span> topSmeared)</span>
+<span id="cb9-56"><a href="#cb9-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-57"><a href="#cb9-57" aria-hidden="true" tabindex="-1"></a><span class="ot">    tooPlain ::</span> <span class="dt">Bool</span></span>
+<span id="cb9-58"><a href="#cb9-58" aria-hidden="true" tabindex="-1"></a>    tooPlain <span class="ot">=</span> <span class="fu">any</span> Bread.sliceIsPlain <span class="op">.</span> <span class="fu">init</span> <span class="op">.</span> <span class="fu">tail</span> <span class="op">$</span> slices sw</span>
+<span id="cb9-59"><a href="#cb9-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-60"><a href="#cb9-60" aria-hidden="true" tabindex="-1"></a><span class="ot">cut ::</span> <span class="dt">Sandwich</span> <span class="ot">-&gt;</span> <span class="dt">Knife.Knife</span> <span class="ot">-&gt;</span> <span class="dt">Either</span> <span class="dt">String</span> <span class="dt">Sandwich</span></span>
+<span id="cb9-61"><a href="#cb9-61" aria-hidden="true" tabindex="-1"></a>cut sw k</span>
+<span id="cb9-62"><a href="#cb9-62" aria-hidden="true" tabindex="-1"></a>  <span class="op">|</span> (<span class="fu">not</span> <span class="op">.</span> built) sw <span class="ot">=</span> <span class="dt">Left</span> <span class="st">&quot;Build the sandwich and then cut it in one glorious stroke.&quot;</span></span>
+<span id="cb9-63"><a href="#cb9-63" aria-hidden="true" tabindex="-1"></a>  <span class="op">|</span> Knife.isLoaded k <span class="ot">=</span> <span class="dt">Left</span> <span class="st">&quot;No! You&#39;ll get the edge all yucky with that knife.&quot;</span></span>
+<span id="cb9-64"><a href="#cb9-64" aria-hidden="true" tabindex="-1"></a>  <span class="op">|</span> isCut sw <span class="ot">=</span> <span class="dt">Left</span> <span class="st">&quot;One cut will do.&quot;</span></span>
+<span id="cb9-65"><a href="#cb9-65" aria-hidden="true" tabindex="-1"></a>  <span class="op">|</span> <span class="fu">otherwise</span> <span class="ot">=</span> <span class="dt">Right</span> (sw {isCut<span class="ot">=</span><span class="dt">True</span>})</span></code></pre></div>
+<h2 id="mainhs">Main.hs</h2>
+<div class="sourceCode" id="cb10"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">module</span> <span class="dt">Main</span> <span class="kw">where</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Condiment</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Knife</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Bread</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="kw">import</span> <span class="kw">qualified</span> <span class="dt">Sandwich</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="ot">main ::</span> <span class="dt">IO</span> ()</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>main <span class="ot">=</span> <span class="kw">do</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span> bread <span class="ot">=</span> <span class="fu">replicate</span> <span class="dv">5</span> Bread.newSlice</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span> pb <span class="ot">=</span> Condiment.newJar <span class="st">&quot;Peanut Butter&quot;</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span> jelly <span class="ot">=</span> Condiment.newJar <span class="st">&quot;Jelly&quot;</span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span> knife <span class="ot">=</span> Knife.new</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>  <span class="co">-- First attempt. Didn&#39;t open the jar of peanut butter.</span></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">either</span> printError <span class="fu">putStrLn</span> <span class="op">$</span> <span class="kw">do</span></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>    (pbKnife, pbEmpty) <span class="ot">&lt;-</span> knife <span class="ot">`Knife.loadFrom`</span> pb <span class="co">-- Problem</span></span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>    (usedKnife1, surface1) <span class="ot">&lt;-</span> Bread.smearSurface pbKnife <span class="op">.</span> Bread.top <span class="op">.</span> <span class="fu">head</span> <span class="op">$</span> bread</span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>    (jellyKnife, jellyEmpty) <span class="ot">&lt;-</span> knife <span class="ot">`Knife.loadFrom`</span> Condiment.openJar jelly</span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>    (usedKnife2, surface2) <span class="ot">&lt;-</span> Bread.smearSurface jellyKnife <span class="op">.</span> Bread.bottom <span class="op">.</span> <span class="fu">last</span> <span class="op">$</span> bread</span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> sw <span class="ot">=</span> Sandwich.new bread</span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>    Sandwich.build sw</span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span> <span class="st">&quot;Sandwich made!&quot;</span></span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a>  <span class="co">-- Next attempt. Used too much bread inside.</span></span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">either</span> printError <span class="fu">putStrLn</span> <span class="op">$</span> <span class="kw">do</span></span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a>    (pbKnife, pbEmpty) <span class="ot">&lt;-</span> knife <span class="ot">`Knife.loadFrom`</span> Condiment.openJar pb</span>
+<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a>    (usedKnife1, surface1) <span class="ot">&lt;-</span> Bread.smearSurface pbKnife <span class="op">.</span> Bread.top <span class="op">.</span> <span class="fu">head</span> <span class="op">$</span> bread</span>
+<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a>    (jellyKnife, jellyEmpty) <span class="ot">&lt;-</span> knife <span class="ot">`Knife.loadFrom`</span> Condiment.openJar jelly</span>
+<span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a>    (usedKnife2, surface2) <span class="ot">&lt;-</span> Bread.smearSurface jellyKnife <span class="op">.</span> Bread.bottom <span class="op">.</span> <span class="fu">last</span> <span class="op">$</span> bread</span>
+<span id="cb10-31"><a href="#cb10-31" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> sw <span class="ot">=</span> Sandwich.new bread</span>
+<span id="cb10-32"><a href="#cb10-32" aria-hidden="true" tabindex="-1"></a>    Sandwich.build sw <span class="co">-- Problem</span></span>
+<span id="cb10-33"><a href="#cb10-33" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span> <span class="st">&quot;Sandwich made!&quot;</span></span>
+<span id="cb10-34"><a href="#cb10-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-35"><a href="#cb10-35" aria-hidden="true" tabindex="-1"></a>  <span class="co">-- Successful sandwich making!</span></span>
+<span id="cb10-36"><a href="#cb10-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">either</span> printError <span class="fu">putStrLn</span> <span class="op">$</span> <span class="kw">do</span></span>
+<span id="cb10-37"><a href="#cb10-37" aria-hidden="true" tabindex="-1"></a>    (pbKnife, pbEmpty) <span class="ot">&lt;-</span> knife <span class="ot">`Knife.loadFrom`</span> Condiment.openJar pb</span>
+<span id="cb10-38"><a href="#cb10-38" aria-hidden="true" tabindex="-1"></a>    (usedKnife1, surface1) <span class="ot">&lt;-</span> Bread.smearSurface pbKnife <span class="op">.</span> Bread.top <span class="op">.</span> <span class="fu">head</span> <span class="op">$</span> bread</span>
+<span id="cb10-39"><a href="#cb10-39" aria-hidden="true" tabindex="-1"></a>    (jellyKnife, jellyEmpty) <span class="ot">&lt;-</span> knife <span class="ot">`Knife.loadFrom`</span> Condiment.openJar jelly</span>
+<span id="cb10-40"><a href="#cb10-40" aria-hidden="true" tabindex="-1"></a>    (usedKnife2, surface2) <span class="ot">&lt;-</span> Bread.smearSurface jellyKnife <span class="op">.</span> Bread.bottom <span class="op">.</span> <span class="fu">last</span> <span class="op">$</span> bread</span>
+<span id="cb10-41"><a href="#cb10-41" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> sw <span class="ot">=</span> Sandwich.new [<span class="fu">head</span> bread, <span class="fu">last</span> bread]</span>
+<span id="cb10-42"><a href="#cb10-42" aria-hidden="true" tabindex="-1"></a>    Sandwich.build sw</span>
+<span id="cb10-43"><a href="#cb10-43" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span> <span class="st">&quot;Sandwich made!&quot;</span></span>
+<span id="cb10-44"><a href="#cb10-44" aria-hidden="true" tabindex="-1"></a>  <span class="kw">where</span></span>
+<span id="cb10-45"><a href="#cb10-45" aria-hidden="true" tabindex="-1"></a><span class="ot">    printError ::</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> ()</span>
+<span id="cb10-46"><a href="#cb10-46" aria-hidden="true" tabindex="-1"></a>    printError e <span class="ot">=</span> <span class="fu">putStrLn</span> (<span class="st">&quot;Error: &quot;</span> <span class="op">++</span> e)</span></code></pre></div>
+<p>This module, Main.hs, is where things get more interesting. In Haskell, we always need a <code>main</code> function that lives in the IO (input/output) monad, otherwise we would never be able to see any results from running our application. The functions that return an <code>Either</code> type for errors are also used as a monad. Haskell’s <code>do</code> notation uses monadic operations which end up looking like imperative instructions. It’s really just syntactic sugar for doing things sequentially and updating context as it goes. The interesting thing is that each code block containing a sandwich-making attempt acts similarly to <code>try-catch</code> exception handling in other languages. If anything goes wrong, that is, if any function returns a <code>Left</code> value, it gets printed with “Error:” before it. If all goes right, it prints the result of the block: “Sandwich made!”.</p>
+<p>Again, there’s nothing stopping us from using <code>pbKnife</code> more than once because we’re not keeping track of any state, so some care must be taken when making a sandwich.</p>
+<p>In the end, I think this version is quite readable (if you know Haskell), though the modules contain more functions than needed, and the custom types are all records instead of more intuitive types, as in the following version.</p>
+<h2 id="what-is-a-sandwich">What is a sandwich?</h2>
+<p>Something about the <code>Sandwich</code> type (or Ruby class) doesn’t sit well with me. In my mind, it doesn’t make sense for a sandwich to have a <code>built</code> property that says whether the sandwich is built correctly or not. What would it mean to have a sandwich that is not built? That sounds like something that is <em>not</em> a sandwich, which shouldn’t be part of the definition of what a sandwich <em>is</em>. If it is possible to make an instance of a sandwich that is not a proper sandwich, maybe the type/class/definition of a sandwich needs more refining. In this definition, a sandwich is allowed to have any number of slices. Wouldn’t it make more sense for a sandwich to require at least two slices of bread? Or, even more accurately, a sandwich requires exactly two slices of bread (any inner slices of bread can be considered part of the sandwich–unless that’s all it has, in which case it is a loaf). I see it as partway to an accurate definition of a sandwich but stopped short.</p>
+<h1 id="haskell-solution---idiomatic">Haskell Solution - Idiomatic</h1>
+<p>In this version, I attempted a more idiomatic Haskell solution, using fewer records, more pattern matching, and more features of types.</p>
+<p>I also took some liberties to reframe parts of the problem. In Danny’s code, I noticed a validation to make sure we’re using a knife where another utensil wouldn’t work.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode ruby"><code class="sourceCode ruby"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="cf">def</span> smear!(knife:, surface:)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">unless</span> knife<span class="at">.is_a?</span>(<span class="dt">Knife</span>)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>      <span class="fu">raise</span> <span class="dt">InvalidKnifeError</span>, <span class="st">&quot;That&#39;s not hygienic.&quot;</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">end</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="co"># ...</span></span></code></pre></div>
+<p>I decided if we’re going to be checking that we’re using a knife, we may as well include other utensils. Otherwise, the only kind of utensil the program knows about is a knife. In Haskell, we never need to check whether a value is of a particular type; that’s made explicit by static typing, and the compiler does the type-checking work.</p>
+<p>I took a similar approach to bread. We may also include different flavours of bread to make things more interesting.</p>
+<p>Because this version is idiomatic code, it’s also much shorter, so I put it all in a single module.</p>
+<h2 id="mainhs-1">Main.hs</h2>
+<div class="sourceCode" id="cb12"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="kw">module</span> <span class="dt">Main</span> <span class="kw">where</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">UtensilShape</span> <span class="ot">=</span> <span class="dt">Knife</span> <span class="op">|</span> <span class="dt">Spoon</span> <span class="op">|</span> <span class="dt">Fork</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="kw">deriving</span> (<span class="dt">Show</span>, <span class="dt">Eq</span>)</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">Utensil</span> <span class="ot">=</span> <span class="dt">Utensil</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>  {<span class="ot"> uShape ::</span> <span class="dt">UtensilShape</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>  ,<span class="ot"> uCondiment ::</span> <span class="dt">Maybe</span> <span class="dt">Condiment</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>  <span class="kw">deriving</span> (<span class="dt">Show</span>)</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a><span class="ot">fetchUtensil ::</span> <span class="dt">UtensilShape</span> <span class="ot">-&gt;</span> <span class="dt">Utensil</span></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>fetchUtensil shape <span class="ot">=</span> <span class="dt">Utensil</span></span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>  { uShape <span class="ot">=</span> shape</span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>  , uCondiment <span class="ot">=</span> <span class="dt">Nothing</span></span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">Condiment</span> <span class="ot">=</span> <span class="dt">PeanutButter</span> <span class="op">|</span> <span class="dt">Jelly</span></span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>  <span class="kw">deriving</span> (<span class="dt">Show</span>, <span class="dt">Eq</span>)</span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">OpenOrClosed</span> <span class="ot">=</span> <span class="dt">Open</span> <span class="op">|</span> <span class="dt">Closed</span></span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>  <span class="kw">deriving</span> (<span class="dt">Show</span>, <span class="dt">Eq</span>)</span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">CondimentJar</span> <span class="ot">=</span> <span class="dt">CondimentJar</span></span>
+<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a>  {<span class="ot"> cjCondiment ::</span> <span class="dt">Maybe</span> <span class="dt">Condiment</span></span>
+<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a>  ,<span class="ot"> cjLid ::</span> <span class="dt">OpenOrClosed</span></span>
+<span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb12-28"><a href="#cb12-28" aria-hidden="true" tabindex="-1"></a>  <span class="kw">deriving</span> (<span class="dt">Show</span>)</span>
+<span id="cb12-29"><a href="#cb12-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-30"><a href="#cb12-30" aria-hidden="true" tabindex="-1"></a><span class="ot">fetchCondimentJar ::</span> <span class="dt">Condiment</span> <span class="ot">-&gt;</span> <span class="dt">CondimentJar</span></span>
+<span id="cb12-31"><a href="#cb12-31" aria-hidden="true" tabindex="-1"></a>fetchCondimentJar c <span class="ot">=</span> <span class="dt">CondimentJar</span></span>
+<span id="cb12-32"><a href="#cb12-32" aria-hidden="true" tabindex="-1"></a>  { cjCondiment <span class="ot">=</span> <span class="dt">Just</span> c</span>
+<span id="cb12-33"><a href="#cb12-33" aria-hidden="true" tabindex="-1"></a>  , cjLid <span class="ot">=</span> <span class="dt">Closed</span></span>
+<span id="cb12-34"><a href="#cb12-34" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb12-35"><a href="#cb12-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-36"><a href="#cb12-36" aria-hidden="true" tabindex="-1"></a><span class="ot">loadFrom ::</span> <span class="dt">Utensil</span> <span class="ot">-&gt;</span> <span class="dt">CondimentJar</span> <span class="ot">-&gt;</span> <span class="dt">Either</span> <span class="dt">String</span> (<span class="dt">Utensil</span>, <span class="dt">CondimentJar</span>)</span>
+<span id="cb12-37"><a href="#cb12-37" aria-hidden="true" tabindex="-1"></a>loadFrom _ <span class="dt">CondimentJar</span>{cjLid<span class="ot">=</span><span class="dt">Closed</span>} <span class="ot">=</span> <span class="dt">Left</span> <span class="st">&quot;The jar is closed and knife-impermeable.&quot;</span></span>
+<span id="cb12-38"><a href="#cb12-38" aria-hidden="true" tabindex="-1"></a>loadFrom _ <span class="dt">CondimentJar</span>{cjCondiment<span class="ot">=</span><span class="dt">Nothing</span>} <span class="ot">=</span> <span class="dt">Left</span> <span class="st">&quot;The jar is empty. How disappointing.&quot;</span></span>
+<span id="cb12-39"><a href="#cb12-39" aria-hidden="true" tabindex="-1"></a>loadFrom <span class="dt">Utensil</span>{uShape<span class="ot">=</span><span class="dt">Fork</span>} _ <span class="ot">=</span> <span class="dt">Left</span> <span class="st">&quot;Forks aren&#39;t the right shape for condiments.&quot;</span></span>
+<span id="cb12-40"><a href="#cb12-40" aria-hidden="true" tabindex="-1"></a>loadFrom u cj<span class="op">@</span><span class="dt">CondimentJar</span>{cjCondiment<span class="ot">=</span><span class="dt">Just</span> c}</span>
+<span id="cb12-41"><a href="#cb12-41" aria-hidden="true" tabindex="-1"></a>  <span class="ot">=</span> <span class="dt">Right</span> (u { uCondiment <span class="ot">=</span> <span class="dt">Just</span> c }, cj { cjCondiment <span class="ot">=</span> <span class="dt">Nothing</span> })</span>
+<span id="cb12-42"><a href="#cb12-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-43"><a href="#cb12-43" aria-hidden="true" tabindex="-1"></a><span class="ot">openJar ::</span> <span class="dt">CondimentJar</span> <span class="ot">-&gt;</span> <span class="dt">CondimentJar</span></span>
+<span id="cb12-44"><a href="#cb12-44" aria-hidden="true" tabindex="-1"></a>openJar cj <span class="ot">=</span> cj { cjLid <span class="ot">=</span> <span class="dt">Open</span> }</span>
+<span id="cb12-45"><a href="#cb12-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-46"><a href="#cb12-46" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">BreadFlavour</span> <span class="ot">=</span> <span class="dt">Sourdough</span> <span class="op">|</span> <span class="dt">WholeGrain</span> <span class="op">|</span> <span class="dt">White</span></span>
+<span id="cb12-47"><a href="#cb12-47" aria-hidden="true" tabindex="-1"></a>  <span class="kw">deriving</span> (<span class="dt">Show</span>)</span>
+<span id="cb12-48"><a href="#cb12-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-49"><a href="#cb12-49" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">SliceOfBread</span> <span class="ot">=</span> <span class="dt">SliceOfBread</span></span>
+<span id="cb12-50"><a href="#cb12-50" aria-hidden="true" tabindex="-1"></a>  {<span class="ot"> sobFlavour ::</span> <span class="dt">BreadFlavour</span></span>
+<span id="cb12-51"><a href="#cb12-51" aria-hidden="true" tabindex="-1"></a>  ,<span class="ot"> sobTop ::</span> <span class="dt">Maybe</span> <span class="dt">Condiment</span></span>
+<span id="cb12-52"><a href="#cb12-52" aria-hidden="true" tabindex="-1"></a>  ,<span class="ot"> sobBottom ::</span> <span class="dt">Maybe</span> <span class="dt">Condiment</span></span>
+<span id="cb12-53"><a href="#cb12-53" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb12-54"><a href="#cb12-54" aria-hidden="true" tabindex="-1"></a>  <span class="kw">deriving</span> (<span class="dt">Show</span>)</span>
+<span id="cb12-55"><a href="#cb12-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-56"><a href="#cb12-56" aria-hidden="true" tabindex="-1"></a><span class="ot">fetchSliceOfBread ::</span> <span class="dt">BreadFlavour</span> <span class="ot">-&gt;</span> <span class="dt">SliceOfBread</span></span>
+<span id="cb12-57"><a href="#cb12-57" aria-hidden="true" tabindex="-1"></a>fetchSliceOfBread flavour <span class="ot">=</span> <span class="dt">SliceOfBread</span></span>
+<span id="cb12-58"><a href="#cb12-58" aria-hidden="true" tabindex="-1"></a>  { sobFlavour <span class="ot">=</span> flavour</span>
+<span id="cb12-59"><a href="#cb12-59" aria-hidden="true" tabindex="-1"></a>  , sobTop <span class="ot">=</span> <span class="dt">Nothing</span></span>
+<span id="cb12-60"><a href="#cb12-60" aria-hidden="true" tabindex="-1"></a>  , sobBottom <span class="ot">=</span> <span class="dt">Nothing</span></span>
+<span id="cb12-61"><a href="#cb12-61" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb12-62"><a href="#cb12-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-63"><a href="#cb12-63" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">Surface</span> <span class="ot">=</span> <span class="dt">Top</span> <span class="op">|</span> <span class="dt">Bottom</span></span>
+<span id="cb12-64"><a href="#cb12-64" aria-hidden="true" tabindex="-1"></a>  <span class="kw">deriving</span> (<span class="dt">Show</span>, <span class="dt">Eq</span>)</span>
+<span id="cb12-65"><a href="#cb12-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-66"><a href="#cb12-66" aria-hidden="true" tabindex="-1"></a><span class="ot">smearSliceOfBread ::</span> <span class="dt">Utensil</span> <span class="ot">-&gt;</span> <span class="dt">Surface</span> <span class="ot">-&gt;</span> <span class="dt">SliceOfBread</span> <span class="ot">-&gt;</span> <span class="dt">Either</span> <span class="dt">String</span> (<span class="dt">SliceOfBread</span>, <span class="dt">Utensil</span>)</span>
+<span id="cb12-67"><a href="#cb12-67" aria-hidden="true" tabindex="-1"></a>smearSliceOfBread u surface slice</span>
+<span id="cb12-68"><a href="#cb12-68" aria-hidden="true" tabindex="-1"></a>  <span class="op">|</span> uShape u <span class="op">/=</span> <span class="dt">Knife</span> <span class="ot">=</span> <span class="dt">Left</span> <span class="st">&quot;You can&#39;t smear with that!&quot;</span></span>
+<span id="cb12-69"><a href="#cb12-69" aria-hidden="true" tabindex="-1"></a>  <span class="op">|</span> uCondiment u <span class="op">==</span> <span class="dt">Nothing</span> <span class="ot">=</span> <span class="dt">Left</span> <span class="st">&quot;This knife is too clean to smear with.&quot;</span></span>
+<span id="cb12-70"><a href="#cb12-70" aria-hidden="true" tabindex="-1"></a>  <span class="op">|</span> surface <span class="op">==</span> <span class="dt">Top</span> <span class="op">&amp;&amp;</span> sobTop slice <span class="op">/=</span> <span class="dt">Nothing</span> <span class="ot">=</span> <span class="dt">Left</span> <span class="st">&quot;This surface was already smeared!&quot;</span></span>
+<span id="cb12-71"><a href="#cb12-71" aria-hidden="true" tabindex="-1"></a>  <span class="op">|</span> surface <span class="op">==</span> <span class="dt">Bottom</span> <span class="op">&amp;&amp;</span> sobBottom slice <span class="op">/=</span> <span class="dt">Nothing</span> <span class="ot">=</span> <span class="dt">Left</span> <span class="st">&quot;This surface was already smeared!&quot;</span></span>
+<span id="cb12-72"><a href="#cb12-72" aria-hidden="true" tabindex="-1"></a>  <span class="op">|</span> <span class="fu">otherwise</span> <span class="ot">=</span> <span class="dt">Right</span> (smearedSlice, cleanUtensil)</span>
+<span id="cb12-73"><a href="#cb12-73" aria-hidden="true" tabindex="-1"></a>  <span class="kw">where</span></span>
+<span id="cb12-74"><a href="#cb12-74" aria-hidden="true" tabindex="-1"></a>    smearedSlice</span>
+<span id="cb12-75"><a href="#cb12-75" aria-hidden="true" tabindex="-1"></a>      <span class="op">|</span> surface <span class="op">==</span> <span class="dt">Top</span> <span class="ot">=</span> slice { sobTop <span class="ot">=</span> uCondiment u }</span>
+<span id="cb12-76"><a href="#cb12-76" aria-hidden="true" tabindex="-1"></a>      <span class="op">|</span> surface <span class="op">==</span> <span class="dt">Bottom</span> <span class="ot">=</span> slice { sobBottom <span class="ot">=</span> uCondiment u }</span>
+<span id="cb12-77"><a href="#cb12-77" aria-hidden="true" tabindex="-1"></a>    cleanUtensil <span class="ot">=</span> u { uCondiment <span class="ot">=</span> <span class="dt">Nothing</span>}</span>
+<span id="cb12-78"><a href="#cb12-78" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-79"><a href="#cb12-79" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">Sandwich</span> <span class="ot">=</span> <span class="dt">Sandwich</span></span>
+<span id="cb12-80"><a href="#cb12-80" aria-hidden="true" tabindex="-1"></a>  {<span class="ot"> swBottom ::</span> <span class="dt">SliceOfBread</span></span>
+<span id="cb12-81"><a href="#cb12-81" aria-hidden="true" tabindex="-1"></a>  ,<span class="ot"> swTop ::</span> <span class="dt">SliceOfBread</span></span>
+<span id="cb12-82"><a href="#cb12-82" aria-hidden="true" tabindex="-1"></a>  ,<span class="ot"> swPieces ::</span> [(<span class="dt">SliceOfBread</span>, <span class="dt">SliceOfBread</span>)]</span>
+<span id="cb12-83"><a href="#cb12-83" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb12-84"><a href="#cb12-84" aria-hidden="true" tabindex="-1"></a>  <span class="kw">deriving</span> (<span class="dt">Show</span>)</span>
+<span id="cb12-85"><a href="#cb12-85" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-86"><a href="#cb12-86" aria-hidden="true" tabindex="-1"></a><span class="ot">makeSandwich ::</span> <span class="dt">SliceOfBread</span> <span class="ot">-&gt;</span> <span class="dt">SliceOfBread</span> <span class="ot">-&gt;</span> <span class="dt">Either</span> <span class="dt">String</span> <span class="dt">Sandwich</span></span>
+<span id="cb12-87"><a href="#cb12-87" aria-hidden="true" tabindex="-1"></a>makeSandwich bottom top</span>
+<span id="cb12-88"><a href="#cb12-88" aria-hidden="true" tabindex="-1"></a>  <span class="op">|</span> sobTop bottom <span class="op">==</span> <span class="dt">Nothing</span> <span class="op">&amp;&amp;</span> sobBottom top <span class="op">==</span> <span class="dt">Nothing</span> <span class="ot">=</span> <span class="dt">Left</span> <span class="st">&quot;This sandwich might actually be a loaf.&quot;</span></span>
+<span id="cb12-89"><a href="#cb12-89" aria-hidden="true" tabindex="-1"></a>  <span class="op">|</span> sobTop top <span class="op">/=</span> <span class="dt">Nothing</span> <span class="op">||</span> sobBottom bottom <span class="op">/=</span> <span class="dt">Nothing</span> <span class="ot">=</span> <span class="dt">Left</span> <span class="st">&quot;This sandwich would be icky to hold.&quot;</span></span>
+<span id="cb12-90"><a href="#cb12-90" aria-hidden="true" tabindex="-1"></a>  <span class="op">|</span> <span class="fu">otherwise</span> <span class="ot">=</span> <span class="dt">Right</span> <span class="dt">Sandwich</span> { swBottom <span class="ot">=</span> bottom, swTop <span class="ot">=</span> top, swPieces <span class="ot">=</span> [(bottom, top)] }</span>
+<span id="cb12-91"><a href="#cb12-91" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-92"><a href="#cb12-92" aria-hidden="true" tabindex="-1"></a><span class="co">-- A sandwich is always cut through all the pieces, doubling them all</span></span>
+<span id="cb12-93"><a href="#cb12-93" aria-hidden="true" tabindex="-1"></a><span class="ot">cutSandwich ::</span> <span class="dt">Utensil</span> <span class="ot">-&gt;</span> <span class="dt">Sandwich</span> <span class="ot">-&gt;</span> <span class="dt">Either</span> <span class="dt">String</span> <span class="dt">Sandwich</span></span>
+<span id="cb12-94"><a href="#cb12-94" aria-hidden="true" tabindex="-1"></a>cutSandwich u sw</span>
+<span id="cb12-95"><a href="#cb12-95" aria-hidden="true" tabindex="-1"></a>  <span class="op">|</span> uShape u <span class="op">==</span> <span class="dt">Fork</span> <span class="op">||</span> uShape u <span class="op">==</span> <span class="dt">Spoon</span> <span class="ot">=</span> <span class="dt">Left</span> <span class="st">&quot;You can&#39;t cut a sandwich with that!&quot;</span></span>
+<span id="cb12-96"><a href="#cb12-96" aria-hidden="true" tabindex="-1"></a>  <span class="op">|</span> uCondiment u <span class="op">/=</span> <span class="dt">Nothing</span> <span class="ot">=</span> <span class="dt">Left</span> <span class="st">&quot;No! You&#39;ll get the edge all yucky with that knife.&quot;</span></span>
+<span id="cb12-97"><a href="#cb12-97" aria-hidden="true" tabindex="-1"></a>  <span class="op">|</span> <span class="fu">otherwise</span> <span class="ot">=</span> <span class="dt">Right</span> sw { swPieces <span class="ot">=</span> newPieces }</span>
+<span id="cb12-98"><a href="#cb12-98" aria-hidden="true" tabindex="-1"></a>  <span class="kw">where</span></span>
+<span id="cb12-99"><a href="#cb12-99" aria-hidden="true" tabindex="-1"></a>    newPieces <span class="ot">=</span> <span class="fu">concat</span> [swPieces sw, swPieces sw]</span>
+<span id="cb12-100"><a href="#cb12-100" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-101"><a href="#cb12-101" aria-hidden="true" tabindex="-1"></a><span class="ot">main ::</span> <span class="dt">IO</span> ()</span>
+<span id="cb12-102"><a href="#cb12-102" aria-hidden="true" tabindex="-1"></a>main <span class="ot">=</span> <span class="kw">do</span></span>
+<span id="cb12-103"><a href="#cb12-103" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span> knife <span class="ot">=</span> fetchUtensil <span class="dt">Knife</span></span>
+<span id="cb12-104"><a href="#cb12-104" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span> pb <span class="ot">=</span> fetchCondimentJar <span class="dt">PeanutButter</span></span>
+<span id="cb12-105"><a href="#cb12-105" aria-hidden="true" tabindex="-1"></a>  <span class="kw">let</span> jelly <span class="ot">=</span> fetchCondimentJar <span class="dt">Jelly</span></span>
+<span id="cb12-106"><a href="#cb12-106" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-107"><a href="#cb12-107" aria-hidden="true" tabindex="-1"></a>  <span class="co">-- First attempt. Didn&#39;t open the jar of peanut butter.</span></span>
+<span id="cb12-108"><a href="#cb12-108" aria-hidden="true" tabindex="-1"></a>  <span class="fu">either</span> printError <span class="fu">putStrLn</span> <span class="op">$</span> <span class="kw">do</span></span>
+<span id="cb12-109"><a href="#cb12-109" aria-hidden="true" tabindex="-1"></a>    (pbKnife, emptyPB) <span class="ot">&lt;-</span> knife <span class="ot">`loadFrom`</span> pb <span class="co">-- Problem</span></span>
+<span id="cb12-110"><a href="#cb12-110" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span> <span class="st">&quot;Sandwich made!&quot;</span></span>
+<span id="cb12-111"><a href="#cb12-111" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-112"><a href="#cb12-112" aria-hidden="true" tabindex="-1"></a>  <span class="co">-- Next attempt. Too plain.</span></span>
+<span id="cb12-113"><a href="#cb12-113" aria-hidden="true" tabindex="-1"></a>  <span class="fu">either</span> printError <span class="fu">putStrLn</span> <span class="op">$</span> <span class="kw">do</span></span>
+<span id="cb12-114"><a href="#cb12-114" aria-hidden="true" tabindex="-1"></a>    (pbKnife, emptyPB) <span class="ot">&lt;-</span> knife <span class="ot">`loadFrom`</span> openJar pb</span>
+<span id="cb12-115"><a href="#cb12-115" aria-hidden="true" tabindex="-1"></a>    (jellyKnife, emptyJelly) <span class="ot">&lt;-</span> knife <span class="ot">`loadFrom`</span> openJar jelly</span>
+<span id="cb12-116"><a href="#cb12-116" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> bottomSlice <span class="ot">=</span> fetchSliceOfBread <span class="dt">Sourdough</span></span>
+<span id="cb12-117"><a href="#cb12-117" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> topSlice <span class="ot">=</span> fetchSliceOfBread <span class="dt">WholeGrain</span></span>
+<span id="cb12-118"><a href="#cb12-118" aria-hidden="true" tabindex="-1"></a>    sw <span class="ot">&lt;-</span> makeSandwich bottomSlice topSlice</span>
+<span id="cb12-119"><a href="#cb12-119" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span> <span class="st">&quot;Sandwich made!&quot;</span></span>
+<span id="cb12-120"><a href="#cb12-120" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-121"><a href="#cb12-121" aria-hidden="true" tabindex="-1"></a>  <span class="co">-- Successful sandwich making!</span></span>
+<span id="cb12-122"><a href="#cb12-122" aria-hidden="true" tabindex="-1"></a>  <span class="fu">either</span> printError <span class="fu">putStrLn</span> <span class="op">$</span> <span class="kw">do</span></span>
+<span id="cb12-123"><a href="#cb12-123" aria-hidden="true" tabindex="-1"></a>    (pbKnife, emptyPB) <span class="ot">&lt;-</span> knife <span class="ot">`loadFrom`</span> openJar pb</span>
+<span id="cb12-124"><a href="#cb12-124" aria-hidden="true" tabindex="-1"></a>    (jellyKnife, emptyJelly) <span class="ot">&lt;-</span> knife <span class="ot">`loadFrom`</span> openJar jelly</span>
+<span id="cb12-125"><a href="#cb12-125" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> bottomSlice <span class="ot">=</span> fetchSliceOfBread <span class="dt">Sourdough</span></span>
+<span id="cb12-126"><a href="#cb12-126" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> topSlice <span class="ot">=</span> fetchSliceOfBread <span class="dt">WholeGrain</span></span>
+<span id="cb12-127"><a href="#cb12-127" aria-hidden="true" tabindex="-1"></a>    (bottomSliceWithPB, cleanKnife) <span class="ot">&lt;-</span> smearSliceOfBread pbKnife <span class="dt">Top</span> bottomSlice</span>
+<span id="cb12-128"><a href="#cb12-128" aria-hidden="true" tabindex="-1"></a>    (topSliceWithJelly, cleanKnife) <span class="ot">&lt;-</span> smearSliceOfBread jellyKnife <span class="dt">Bottom</span> topSlice</span>
+<span id="cb12-129"><a href="#cb12-129" aria-hidden="true" tabindex="-1"></a>    sw <span class="ot">&lt;-</span> makeSandwich bottomSliceWithPB topSliceWithJelly</span>
+<span id="cb12-130"><a href="#cb12-130" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span> <span class="st">&quot;Sandwich made!&quot;</span></span>
+<span id="cb12-131"><a href="#cb12-131" aria-hidden="true" tabindex="-1"></a>  <span class="kw">where</span></span>
+<span id="cb12-132"><a href="#cb12-132" aria-hidden="true" tabindex="-1"></a><span class="ot">    printError ::</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">IO</span> ()</span>
+<span id="cb12-133"><a href="#cb12-133" aria-hidden="true" tabindex="-1"></a>    printError e <span class="ot">=</span> <span class="fu">putStrLn</span> (<span class="st">&quot;Error: &quot;</span> <span class="op">++</span> e)</span></code></pre></div>
+<p>To replace the <code>new</code> functions from the OOP-translated version, I included functions like <code>fetchCondimentJar</code>, which act similarly. The different naming convention (“fetch-” instead of “new-”) is because I started thinking of the instance-creating functions as being analogous to fetching something from the kitchen. When it’s time to get a condiment jar, we can use <code>fetchCondimentJar</code> to fetch one of the given condiments. Interestingly, these idiomatic functions still behave much like OOP constructors.</p>
+<p>I also merged the previous <code>Slice</code> and <code>Bread</code> into a single type, <code>SliceOfBread</code>:</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">SliceOfBread</span> <span class="ot">=</span> <span class="dt">SliceOfBread</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  {<span class="ot"> sobFlavour ::</span> <span class="dt">BreadFlavour</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  ,<span class="ot"> sobTop ::</span> <span class="dt">Maybe</span> <span class="dt">Condiment</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  ,<span class="ot"> sobBottom ::</span> <span class="dt">Maybe</span> <span class="dt">Condiment</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  }</span></code></pre></div>
+<p>A slice of bread has a top and bottom, both of which can be smeared with a condiment or nothing (hence the <code>Maybe Condiment</code> type). There’s no need for a separate type just for <code>Slice</code>.</p>
+<p>Another difference is the type definition for <code>Surface</code>. Instead of using a record, a surface only needs to represent the top or bottom of a slice of bread, so a surface can be a <strong>sum type</strong> (a choice between multiple values):</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">Surface</span> <span class="ot">=</span> <span class="dt">Top</span> <span class="op">|</span> <span class="dt">Bottom</span></span></code></pre></div>
+<p>As for the <code>Sandwich</code> type and its shortcomings discussed above, it has been updated in this version.</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">Sandwich</span> <span class="ot">=</span> <span class="dt">Sandwich</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  {<span class="ot"> swBottom ::</span> <span class="dt">SliceOfBread</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  ,<span class="ot"> swTop ::</span> <span class="dt">SliceOfBread</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  ,<span class="ot"> swPieces ::</span> [(<span class="dt">SliceOfBread</span>, <span class="dt">SliceOfBread</span>)]</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  }</span></code></pre></div>
+<p>Now, a sandwich doesn’t have a <code>built</code> property because if an instance of a sandwich exists, it is because it was built. Still, it could be improved. After all, with this definition, it’s easy to make a sandwich that doesn’t make sense:</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- A sandwich whose top and bottom slices are sourdough,</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="co">-- but consists of a single piece whose slices are whole grain</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>impossibleSandwich <span class="ot">=</span> <span class="dt">Sandwich</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  { swBottom <span class="ot">=</span> fetchSliceOfBread <span class="dt">Sourdough</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  , swTop <span class="ot">=</span> fetchSliceOfBread <span class="dt">Sourdough</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>  , swPieces <span class="ot">=</span> [(fetchSliceOfBread <span class="dt">WholeGrain</span>, fetchSliceOfBread <span class="dt">WholeGrain</span>)]</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>  }</span></code></pre></div>
+<p>No matter how much error handling we add along the way to making a sandwich, our definition of a sandwich makes it possible to skip the error checks and create an erroneous sandwich. Even if we force the user only to make a sandwich using the proper functions, we have to be sure we include checks for all the possible mistakes that could be made. Are we sure we didn’t miss one?</p>
+<p>The other approach is to avoid possible errors altogether by using type-safe definitions, making it so a sandwich can only be made when its type is fulfilled. To relate this to the <a href="https://www.youtube.com/watch?v=FN2RM-CHkuI">video</a>, the kids are frustrated because their father is failing in ways they didn’t expect him to fail. He’s doing things they didn’t want him to do. On the computer, why would we program the ability to do things we don’t want to happen? We don’t want it to be possible to attempt to put a knife in a closed jar, so we shouldn’t make a function where that can happen. Type systems can help us resolve this. Stay tuned for Part II…</p>
+<p>See the full Haskell code on GitHub: <a href="https://github.com/SlimTim10/simple-sandwich">https://github.com/SlimTim10/simple-sandwich</a></p>
+    </section>
+	<section class="read-more">
+	  <a href="/blog.html" class="btn btn-primary">Read More</a>
+	</section>
+    <section class="newsletter">
+      <script async data-uid="3c58182786" src="https://tim-johns.ck.page/3c58182786/index.js"></script>
+    </section>
+  </article>
+</main>
+
+	<footer>
+      <div class="newsletter">
+        <script async data-uid="907145579d" src="https://tim-johns.ck.page/907145579d/index.js"></script>
+      </div>
+	  <div class="social-icons">
+		<a href="mailto:johns.timf@gmail.com">
+		  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Pro 6.1.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path d="M464 64C490.5 64 512 85.49 512 112C512 127.1 504.9 141.3 492.8 150.4L275.2 313.6C263.8 322.1 248.2 322.1 236.8 313.6L19.2 150.4C7.113 141.3 0 127.1 0 112C0 85.49 21.49 64 48 64H464zM217.6 339.2C240.4 356.3 271.6 356.3 294.4 339.2L512 176V384C512 419.3 483.3 448 448 448H64C28.65 448 0 419.3 0 384V176L217.6 339.2z"/></svg>
+		</a>
+		<a href="https://www.linkedin.com/in/tim-johns/" target="_blank">
+		  <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>LinkedIn</title><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+		</a>
+		<a href="https://github.com/SlimTim10" target="_blank">
+		  <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>GitHub</title><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+		</a>
+		<a href="https://www.instagram.com/slimtim10_/" target="_blank">
+		  <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Instagram</title><path d="M12 0C8.74 0 8.333.015 7.053.072 5.775.132 4.905.333 4.14.63c-.789.306-1.459.717-2.126 1.384S.935 3.35.63 4.14C.333 4.905.131 5.775.072 7.053.012 8.333 0 8.74 0 12s.015 3.667.072 4.947c.06 1.277.261 2.148.558 2.913.306.788.717 1.459 1.384 2.126.667.666 1.336 1.079 2.126 1.384.766.296 1.636.499 2.913.558C8.333 23.988 8.74 24 12 24s3.667-.015 4.947-.072c1.277-.06 2.148-.262 2.913-.558.788-.306 1.459-.718 2.126-1.384.666-.667 1.079-1.335 1.384-2.126.296-.765.499-1.636.558-2.913.06-1.28.072-1.687.072-4.947s-.015-3.667-.072-4.947c-.06-1.277-.262-2.149-.558-2.913-.306-.789-.718-1.459-1.384-2.126C21.319 1.347 20.651.935 19.86.63c-.765-.297-1.636-.499-2.913-.558C15.667.012 15.26 0 12 0zm0 2.16c3.203 0 3.585.016 4.85.071 1.17.055 1.805.249 2.227.415.562.217.96.477 1.382.896.419.42.679.819.896 1.381.164.422.36 1.057.413 2.227.057 1.266.07 1.646.07 4.85s-.015 3.585-.074 4.85c-.061 1.17-.256 1.805-.421 2.227-.224.562-.479.96-.899 1.382-.419.419-.824.679-1.38.896-.42.164-1.065.36-2.235.413-1.274.057-1.649.07-4.859.07-3.211 0-3.586-.015-4.859-.074-1.171-.061-1.816-.256-2.236-.421-.569-.224-.96-.479-1.379-.899-.421-.419-.69-.824-.9-1.38-.165-.42-.359-1.065-.42-2.235-.045-1.26-.061-1.649-.061-4.844 0-3.196.016-3.586.061-4.861.061-1.17.255-1.814.42-2.234.21-.57.479-.96.9-1.381.419-.419.81-.689 1.379-.898.42-.166 1.051-.361 2.221-.421 1.275-.045 1.65-.06 4.859-.06l.045.03zm0 3.678c-3.405 0-6.162 2.76-6.162 6.162 0 3.405 2.76 6.162 6.162 6.162 3.405 0 6.162-2.76 6.162-6.162 0-3.405-2.76-6.162-6.162-6.162zM12 16c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4zm7.846-10.405c0 .795-.646 1.44-1.44 1.44-.795 0-1.44-.646-1.44-1.44 0-.794.646-1.439 1.44-1.439.793-.001 1.44.645 1.44 1.439z"/></svg>
+		</a>
+        <a href="/rss.xml">
+          <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M0 64C0 46.3 14.3 32 32 32c229.8 0 416 186.2 416 416c0 17.7-14.3 32-32 32s-32-14.3-32-32C384 253.6 226.4 96 32 96C14.3 96 0 81.7 0 64zM0 416a64 64 0 1 1 128 0A64 64 0 1 1 0 416zM32 160c159.1 0 288 128.9 288 288c0 17.7-14.3 32-32 32s-32-14.3-32-32c0-123.7-100.3-224-224-224c-17.7 0-32-14.3-32-32s14.3-32 32-32z"/></svg>
+        </a>
+	  </div>
+	  <small>
+		&copy; 2022 Tim Johns. All rights reserved.
+	  </small>
+	  <small>
+		Site proudly generated by
+		<a href="http://jaspervdj.be/hakyll" target="_blank">Hakyll</a>
+		||
+		<a href="https://github.com/SlimTim10/slimtim10.github.io" target="_blank">View source</a>
+	  </small>
+	  <small>
+		Illustrations by
+		<a href="https://undraw.co" target="_blank">unDraw</a>
+		and Tim Johns
+	  </small>
+    </footer>
+	<script async src="./js/script.js"></script>
+  </body>
+</html>

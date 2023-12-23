@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Tim Johns - Implementing a Genetic Algorithm in TypeScript</title>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="A brain dump of my implementation of the genetic algorithm in my previous post.">
+    <meta name="author" content="Tim Johns">
+    
+
+    <meta property="og:site_name" content="Tim Johns">
+    <meta property="og:title" content="Implementing a Genetic Algorithm in TypeScript">
+    <meta property="og:url" content="https://timjohns.ca/implementing-a-genetic-algorithm-in-typescript.html">
+    <meta property="og:description" content="A brain dump of my implementation of the genetic algorithm in my previous post.">
+    
+    <meta property="og:image" content="https://timjohns.ca./images/blog/genetic_algorithm_typescript.jpg">
+    
+    
+    <meta property="og:type" content="article">
+    
+
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inconsolata:wght@400;700&family=Inter:wght@300;400;500&family=Lato:wght@300;400;700;900&family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,1,0" />
+
+    <!-- Analytics -->
+    <script src="https://cdn.counter.dev/script.js" data-id="af659f42-a2fc-40d5-8e6c-a1036c76c51f" data-utcoffset="-4"></script>
+
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="canonical" href="https://timjohns.ca/implementing-a-genetic-algorithm-in-typescript.html">
+    <link rel="stylesheet" href="./css/reset.css" />
+    <link rel="stylesheet" href="./css/default.css" />
+    <link rel="stylesheet" href="./css/nav.css" />
+	<link rel="stylesheet" href="./css/vs2015.css" />
+	
+    <link rel="stylesheet" href="./css/post.css" />
+	
+  </head>
+  <body>
+	<header>
+	  <div>
+		<a href="/" id="logo">
+          <img alt="logo" src="./images/logo.svg"/>
+		</a>
+		<a href="#" id="toggle-menu" aria-label="Main Menu">
+		  <svg width="100" height="100" viewBox="0 0 100 100">
+			<path class="line line1" d="M 20,29.000046 H 80.000231 C 80.000231,29.000046 94.498839,28.817352 94.532987,66.711331 94.543142,77.980673 90.966081,81.670246 85.259173,81.668997 79.552261,81.667751 75.000211,74.999942 75.000211,74.999942 L 25.000021,25.000058" />
+			<path class="line line2" d="M 20,50 H 80" />
+			<path class="line line3" d="M 20,70.999954 H 80.000231 C 80.000231,70.999954 94.498839,71.182648 94.532987,33.288669 94.543142,22.019327 90.966081,18.329754 85.259173,18.331003 79.552261,18.332249 75.000211,25.000058 75.000211,25.000058 L 25.000021,74.999942" />
+		  </svg>
+		</a>
+	  </div>
+	  <nav class="collapsed">
+		<ul>
+		  <li><a href="/" >Home</a></li>
+		  <li><a href="/mentorship.html" >Mentorship</a></li>
+		  <li><a href="/events.html" >Events</a></li>
+		  <li><a href="/blog.html"  class="active" >Blog</a></li>
+		  <li><a href="/projects.html" >Projects</a></li>
+		  <li><a href="/about.html" >About</a></li>
+		  <li><a href="/contact.html" >Contact</a></li>
+		</ul>
+	  </nav>
+	</header>
+    <main>
+  <article id="blog-post">
+    <header>
+      <h1 class="writing">
+        Implementing a Genetic Algorithm in TypeScript
+      </h1>
+      <p class="writing">Aug 11, 2023</p>
+      
+    </header>
+	<img class="post-image" alt="A brain with a DNA strand overlaid in the middle." src="./images/blog/genetic_algorithm_typescript.jpg" />
+    <section class="content writing">
+	  <hr />
+<h1 id="overview">Overview</h1>
+<p>In my <a href="file:///build-your-own-genetic-algorithm.html#implementing-step-1-planning">previous post</a>, I described how to build a genetic algorithm in any programming language. Here, I want to give an example of a complete implementation in TypeScript. This is a brain dump style of post—just something to give you an idea of how I approach solving this problem. I have to admit, it’s not entirely accurate because I’m not including all the mistakes and backtracking along the way. Since this is a written post, and not a video, it makes it seem like my process is linear when it really isn’t. I would normally create functions with gaps to be filled, going back and forth between them a lot.</p>
+<p>Also important to note is that standard JavaScript/TypeScript is lacking in basic utility functions, so I will be making references to useful generic functions that I put in a separate module (<a href="https://github.com/SlimTim10/genetic-algorithm-math-string/blob/main/typescript/src/util.ts">util.ts</a>).</p>
+<p>If you want to skip this post and just see the code (with comments), here’s a link to the repo:</p>
+<p><a href="https://github.com/SlimTim10/genetic-algorithm-math-string">https://github.com/SlimTim10/genetic-algorithm-math-string</a></p>
+<h1 id="problem">Problem</h1>
+<p>Given a target number, find a string of single-digit numbers and basic arithmetic operators that equals that number. For example, if the target number is 10, some solutions would be:</p>
+<ul>
+<li><code>5 + 5</code></li>
+<li><code>5 * 2</code></li>
+<li><code>5 + 5 + 1 - 1 - 5 - 5 + 1 + 9 * 1 / 1</code></li>
+</ul>
+<p>The strings will be evaluated using the standard order of operations. So, <code>2 + 2 * 3 = 8</code>.</p>
+<h1 id="implementation">Implementation</h1>
+<p><em>See my <a href="file:///build-your-own-genetic-algorithm.html#implementing-step-1-planning">previous post</a> for a detailed plan that serves as the basis for this implementation.</em></p>
+<h2 id="implementing-step-1-planning">Implementing Step 1. Planning</h2>
+<p>I like to start by planning the essential pieces in terms of types.</p>
+<p>Going from big to small…</p>
+<p>An organism is made up of one chromosome and has a fitness number.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> Organism <span class="op">=</span> {</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  chromosome<span class="op">:</span> Chromosome<span class="op">;</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  fitness<span class="op">:</span> <span class="dt">number</span><span class="op">;</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>}<span class="op">;</span></span></code></pre></div>
+<p>A chromosome is a collection of genes, so I’m going to make it an array. I could define it as a tuple of genes if I wanted to hard-code the length of each chromosome, but I want their length to be variable so I can tweak it on different runs of the algorithm.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> Chromosome <span class="op">=</span> Gene[]<span class="op">;</span></span></code></pre></div>
+<p>A gene is a container for information. For my implementation, I’ve decided that every gene can either be a number gene or an operator gene. So I’m going to use a union type.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> Gene <span class="op">=</span> NumberGene <span class="op">|</span> OperatorGene<span class="op">;</span></span></code></pre></div>
+<p>For the number genes, I can use four bits to represent any single-digit number (0 through 9), with a few junk alleles left over.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> NumberGene <span class="op">=</span> [Bit<span class="op">,</span> Bit<span class="op">,</span> Bit<span class="op">,</span> Bit]<span class="op">;</span></span></code></pre></div>
+<div class="table-container">
+
+<table>
+<thead>
+<tr class="header">
+<th>allele</th>
+<th>value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>0000</code></td>
+<td><code>0</code></td>
+</tr>
+<tr class="even">
+<td><code>0001</code></td>
+<td><code>1</code></td>
+</tr>
+<tr class="odd">
+<td><code>0010</code></td>
+<td><code>2</code></td>
+</tr>
+<tr class="even">
+<td><code>0011</code></td>
+<td><code>3</code></td>
+</tr>
+<tr class="odd">
+<td><code>0100</code></td>
+<td><code>4</code></td>
+</tr>
+<tr class="even">
+<td><code>0101</code></td>
+<td><code>5</code></td>
+</tr>
+<tr class="odd">
+<td><code>0110</code></td>
+<td><code>6</code></td>
+</tr>
+<tr class="even">
+<td><code>0111</code></td>
+<td><code>7</code></td>
+</tr>
+<tr class="odd">
+<td><code>1000</code></td>
+<td><code>8</code></td>
+</tr>
+<tr class="even">
+<td><code>1001</code></td>
+<td><code>9</code></td>
+</tr>
+<tr class="odd">
+<td><code>1010</code></td>
+<td><code>(junk)</code></td>
+</tr>
+<tr class="even">
+<td><code>1011</code></td>
+<td><code>(junk)</code></td>
+</tr>
+<tr class="odd">
+<td><code>1100</code></td>
+<td><code>(junk)</code></td>
+</tr>
+<tr class="even">
+<td><code>1101</code></td>
+<td><code>(junk)</code></td>
+</tr>
+<tr class="odd">
+<td><code>1110</code></td>
+<td><code>(junk)</code></td>
+</tr>
+<tr class="even">
+<td><code>1111</code></td>
+<td><code>(junk)</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<p>For the four basic math operators (+, -, *, /), I only need two bits.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> OperatorGene <span class="op">=</span> [Bit<span class="op">,</span> Bit]<span class="op">;</span></span></code></pre></div>
+<p>A bit, of course, is either 1 or 0.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> Bit <span class="op">=</span> <span class="dv">0</span> <span class="op">|</span> <span class="dv">1</span><span class="op">;</span></span></code></pre></div>
+<p>I’m going to encode all the possible number alleles for the digits 0 through 9. This way, for any gene I’m working with, I can check what its allele represents.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> numberAlleles<span class="op">:</span> NumberGene[] <span class="op">=</span> [</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  [<span class="dv">0</span><span class="op">,</span> <span class="dv">0</span><span class="op">,</span> <span class="dv">0</span><span class="op">,</span> <span class="dv">0</span>]<span class="op">,</span> <span class="co">// 0</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  [<span class="dv">0</span><span class="op">,</span> <span class="dv">0</span><span class="op">,</span> <span class="dv">0</span><span class="op">,</span> <span class="dv">1</span>]<span class="op">,</span> <span class="co">// 1</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  [<span class="dv">0</span><span class="op">,</span> <span class="dv">0</span><span class="op">,</span> <span class="dv">1</span><span class="op">,</span> <span class="dv">0</span>]<span class="op">,</span> <span class="co">// 2</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  [<span class="dv">0</span><span class="op">,</span> <span class="dv">0</span><span class="op">,</span> <span class="dv">1</span><span class="op">,</span> <span class="dv">1</span>]<span class="op">,</span> <span class="co">// 3</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  [<span class="dv">0</span><span class="op">,</span> <span class="dv">1</span><span class="op">,</span> <span class="dv">0</span><span class="op">,</span> <span class="dv">0</span>]<span class="op">,</span> <span class="co">// 4</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  [<span class="dv">0</span><span class="op">,</span> <span class="dv">1</span><span class="op">,</span> <span class="dv">0</span><span class="op">,</span> <span class="dv">1</span>]<span class="op">,</span> <span class="co">// 5</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  [<span class="dv">0</span><span class="op">,</span> <span class="dv">1</span><span class="op">,</span> <span class="dv">1</span><span class="op">,</span> <span class="dv">0</span>]<span class="op">,</span> <span class="co">// 6</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  [<span class="dv">0</span><span class="op">,</span> <span class="dv">1</span><span class="op">,</span> <span class="dv">1</span><span class="op">,</span> <span class="dv">1</span>]<span class="op">,</span> <span class="co">// 7</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>  [<span class="dv">1</span><span class="op">,</span> <span class="dv">0</span><span class="op">,</span> <span class="dv">0</span><span class="op">,</span> <span class="dv">0</span>]<span class="op">,</span> <span class="co">// 8</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>  [<span class="dv">1</span><span class="op">,</span> <span class="dv">0</span><span class="op">,</span> <span class="dv">0</span><span class="op">,</span> <span class="dv">1</span>]<span class="op">,</span> <span class="co">// 9</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>]<span class="op">;</span></span></code></pre></div>
+<p>And the same for operators.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> operatorAlleles<span class="op">:</span> OperatorGene[] <span class="op">=</span> [</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  [<span class="dv">0</span><span class="op">,</span> <span class="dv">0</span>]<span class="op">,</span> <span class="co">// +</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  [<span class="dv">0</span><span class="op">,</span> <span class="dv">1</span>]<span class="op">,</span> <span class="co">// -</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  [<span class="dv">1</span><span class="op">,</span> <span class="dv">0</span>]<span class="op">,</span> <span class="co">// *</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  [<span class="dv">1</span><span class="op">,</span> <span class="dv">1</span>]<span class="op">,</span> <span class="co">// /</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>]<span class="op">;</span></span></code></pre></div>
+<p>Now I can make a function to convert any gene to its corresponding value. For this, I’ll collect all the possible values with a union type and make a function that takes a gene and returns its represented value.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> Value</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="op">=</span> <span class="st">&quot;0&quot;</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="op">|</span> <span class="st">&quot;1&quot;</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="op">|</span> <span class="st">&quot;2&quot;</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="op">|</span> <span class="st">&quot;3&quot;</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  <span class="op">|</span> <span class="st">&quot;4&quot;</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  <span class="op">|</span> <span class="st">&quot;5&quot;</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>  <span class="op">|</span> <span class="st">&quot;6&quot;</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>  <span class="op">|</span> <span class="st">&quot;7&quot;</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>  <span class="op">|</span> <span class="st">&quot;8&quot;</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>  <span class="op">|</span> <span class="st">&quot;9&quot;</span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>  <span class="op">|</span> <span class="st">&quot;+&quot;</span></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>  <span class="op">|</span> <span class="st">&quot;-&quot;</span></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>  <span class="op">|</span> <span class="st">&quot;*&quot;</span></span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>  <span class="op">|</span> <span class="st">&quot;/&quot;</span></span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>  <span class="op">|</span> <span class="st">&quot;(junk)&quot;</span><span class="op">;</span></span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a><span class="co">// Predicate for number genes.</span></span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> isNumber <span class="op">=</span> (gene<span class="op">:</span> Gene)<span class="op">:</span> gene <span class="kw">is</span> NumberGene <span class="kw">=&gt;</span> {</span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> numberAlleles<span class="op">.</span><span class="fu">some</span>((x<span class="op">:</span> NumberGene) <span class="kw">=&gt;</span> <span class="fu">eqArrays</span>(x<span class="op">,</span> gene))<span class="op">;</span></span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>}<span class="op">;</span></span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a><span class="co">// Predicate for operator genes.</span></span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> isOperator <span class="op">=</span> (gene<span class="op">:</span> Gene)<span class="op">:</span> gene <span class="kw">is</span> OperatorGene <span class="kw">=&gt;</span> {</span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> operatorAlleles<span class="op">.</span><span class="fu">some</span>((x<span class="op">:</span> OperatorGene) <span class="kw">=&gt;</span> <span class="fu">eqArrays</span>(x<span class="op">,</span> gene))<span class="op">;</span></span>
+<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a>}<span class="op">;</span></span>
+<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a><span class="co">// Take a gene and return its represented value.</span></span>
+<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> geneValue <span class="op">=</span> (gene<span class="op">:</span> Gene)<span class="op">:</span> Value <span class="kw">=&gt;</span> {</span>
+<span id="cb9-30"><a href="#cb9-30" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Numbers</span></span>
+<span id="cb9-31"><a href="#cb9-31" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">isNumber</span>(gene)) {</span>
+<span id="cb9-32"><a href="#cb9-32" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">eqArrays</span>(gene<span class="op">,</span> [<span class="dv">0</span><span class="op">,</span> <span class="dv">0</span><span class="op">,</span> <span class="dv">0</span><span class="op">,</span> <span class="dv">0</span>])) <span class="cf">return</span> <span class="st">&quot;0&quot;</span><span class="op">;</span></span>
+<span id="cb9-33"><a href="#cb9-33" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">eqArrays</span>(gene<span class="op">,</span> [<span class="dv">0</span><span class="op">,</span> <span class="dv">0</span><span class="op">,</span> <span class="dv">0</span><span class="op">,</span> <span class="dv">1</span>])) <span class="cf">return</span> <span class="st">&quot;1&quot;</span><span class="op">;</span></span>
+<span id="cb9-34"><a href="#cb9-34" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">eqArrays</span>(gene<span class="op">,</span> [<span class="dv">0</span><span class="op">,</span> <span class="dv">0</span><span class="op">,</span> <span class="dv">1</span><span class="op">,</span> <span class="dv">0</span>])) <span class="cf">return</span> <span class="st">&quot;2&quot;</span><span class="op">;</span></span>
+<span id="cb9-35"><a href="#cb9-35" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">eqArrays</span>(gene<span class="op">,</span> [<span class="dv">0</span><span class="op">,</span> <span class="dv">0</span><span class="op">,</span> <span class="dv">1</span><span class="op">,</span> <span class="dv">1</span>])) <span class="cf">return</span> <span class="st">&quot;3&quot;</span><span class="op">;</span></span>
+<span id="cb9-36"><a href="#cb9-36" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">eqArrays</span>(gene<span class="op">,</span> [<span class="dv">0</span><span class="op">,</span> <span class="dv">1</span><span class="op">,</span> <span class="dv">0</span><span class="op">,</span> <span class="dv">0</span>])) <span class="cf">return</span> <span class="st">&quot;4&quot;</span><span class="op">;</span></span>
+<span id="cb9-37"><a href="#cb9-37" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">eqArrays</span>(gene<span class="op">,</span> [<span class="dv">0</span><span class="op">,</span> <span class="dv">1</span><span class="op">,</span> <span class="dv">0</span><span class="op">,</span> <span class="dv">1</span>])) <span class="cf">return</span> <span class="st">&quot;5&quot;</span><span class="op">;</span></span>
+<span id="cb9-38"><a href="#cb9-38" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">eqArrays</span>(gene<span class="op">,</span> [<span class="dv">0</span><span class="op">,</span> <span class="dv">1</span><span class="op">,</span> <span class="dv">1</span><span class="op">,</span> <span class="dv">0</span>])) <span class="cf">return</span> <span class="st">&quot;6&quot;</span><span class="op">;</span></span>
+<span id="cb9-39"><a href="#cb9-39" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">eqArrays</span>(gene<span class="op">,</span> [<span class="dv">0</span><span class="op">,</span> <span class="dv">1</span><span class="op">,</span> <span class="dv">1</span><span class="op">,</span> <span class="dv">1</span>])) <span class="cf">return</span> <span class="st">&quot;7&quot;</span><span class="op">;</span></span>
+<span id="cb9-40"><a href="#cb9-40" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">eqArrays</span>(gene<span class="op">,</span> [<span class="dv">1</span><span class="op">,</span> <span class="dv">0</span><span class="op">,</span> <span class="dv">0</span><span class="op">,</span> <span class="dv">0</span>])) <span class="cf">return</span> <span class="st">&quot;8&quot;</span><span class="op">;</span></span>
+<span id="cb9-41"><a href="#cb9-41" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">eqArrays</span>(gene<span class="op">,</span> [<span class="dv">1</span><span class="op">,</span> <span class="dv">0</span><span class="op">,</span> <span class="dv">0</span><span class="op">,</span> <span class="dv">1</span>])) <span class="cf">return</span> <span class="st">&quot;9&quot;</span><span class="op">;</span></span>
+<span id="cb9-42"><a href="#cb9-42" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb9-43"><a href="#cb9-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-44"><a href="#cb9-44" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Operators</span></span>
+<span id="cb9-45"><a href="#cb9-45" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">isOperator</span>(gene)) {</span>
+<span id="cb9-46"><a href="#cb9-46" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">eqArrays</span>(gene<span class="op">,</span> [<span class="dv">0</span><span class="op">,</span> <span class="dv">0</span>])) <span class="cf">return</span> <span class="st">&quot;+&quot;</span><span class="op">;</span></span>
+<span id="cb9-47"><a href="#cb9-47" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">eqArrays</span>(gene<span class="op">,</span> [<span class="dv">0</span><span class="op">,</span> <span class="dv">1</span>])) <span class="cf">return</span> <span class="st">&quot;-&quot;</span><span class="op">;</span></span>
+<span id="cb9-48"><a href="#cb9-48" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">eqArrays</span>(gene<span class="op">,</span> [<span class="dv">1</span><span class="op">,</span> <span class="dv">0</span>])) <span class="cf">return</span> <span class="st">&quot;*&quot;</span><span class="op">;</span></span>
+<span id="cb9-49"><a href="#cb9-49" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">eqArrays</span>(gene<span class="op">,</span> [<span class="dv">1</span><span class="op">,</span> <span class="dv">1</span>])) <span class="cf">return</span> <span class="st">&quot;/&quot;</span><span class="op">;</span></span>
+<span id="cb9-50"><a href="#cb9-50" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb9-51"><a href="#cb9-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-52"><a href="#cb9-52" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Any other value is junk</span></span>
+<span id="cb9-53"><a href="#cb9-53" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> <span class="st">&quot;(junk)&quot;</span><span class="op">;</span></span>
+<span id="cb9-54"><a href="#cb9-54" aria-hidden="true" tabindex="-1"></a>}<span class="op">;</span></span></code></pre></div>
+<p>And now I have all the pieces needed to get an organism’s phenotype. With a function that takes in an organism, I can convert each gene to its value and join them into a space-separated string.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> phenotype <span class="op">=</span> (organism<span class="op">:</span> Organism)<span class="op">:</span> <span class="dt">string</span> <span class="kw">=&gt;</span> {</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> organism<span class="op">.</span><span class="at">chromosome</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">map</span>(geneValue)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">join</span>(<span class="st">&quot; &quot;</span>)<span class="op">;</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>}<span class="op">;</span></span></code></pre></div>
+<p>Since a phenotype can contain junk, I also want a way to get an organism’s cleaned-up phenotype, which will be safe to evaluate. That means I first need a way to clean the genes of a chromosome, in accordance with the <a href="file:///build-your-own-genetic-algorithm.html#implementing-step-1-planning">plan</a>: remove any junk genes along with their immediately preceeding gene.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> cleanChromosome <span class="op">=</span> (chromosome<span class="op">:</span> Chromosome)<span class="op">:</span> Chromosome <span class="kw">=&gt;</span> {</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Add a &quot;plus&quot; gene to the beginning so I can deal with pairs safely.</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> genes<span class="op">:</span> Gene[] <span class="op">=</span> [ [<span class="dv">0</span><span class="op">,</span> <span class="dv">0</span>]<span class="op">,</span> <span class="op">...</span>chromosome]<span class="op">;</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> pairs <span class="op">=</span> <span class="fu">chunksOf</span>(<span class="dv">2</span><span class="op">,</span> genes)<span class="op">;</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> pairs</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">filter</span>(pair <span class="kw">=&gt;</span> pair<span class="op">.</span><span class="at">length</span> <span class="op">===</span> <span class="dv">2</span>)</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">filter</span>(([_<span class="op">,</span> num]) <span class="kw">=&gt;</span> <span class="fu">geneValue</span>(num) <span class="op">!==</span> <span class="st">&quot;(junk)&quot;</span>)</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">reduce</span>((acc<span class="op">,</span> pair) <span class="kw">=&gt;</span> [<span class="op">...</span>acc<span class="op">,</span> <span class="op">...</span>pair]<span class="op">,</span> [])</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">slice</span>(<span class="dv">1</span>)<span class="op">;</span> <span class="co">// Remove the initial &quot;plus&quot; gene.</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>}<span class="op">;</span></span></code></pre></div>
+<p>And now, I can easily apply the chromosome cleaning operation to an organism as a whole.</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> cleanPhenotype <span class="op">=</span> (organism<span class="op">:</span> Organism)<span class="op">:</span> <span class="dt">string</span> <span class="kw">=&gt;</span> {</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> <span class="fu">phenotype</span>({</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">...</span>organism<span class="op">,</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    chromosome<span class="op">:</span> <span class="fu">cleanChromosome</span>(organism<span class="op">.</span><span class="at">chromosome</span>)</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  })<span class="op">;</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>}<span class="op">;</span></span></code></pre></div>
+<p>To evaluate the phenotype of an organism as a math string, I’m going to take the easy route and use the built-in eval function, with the assumption that the string is already cleaned. But I need to be careful here! For one, I need to be aware that using this evaluation method means the standard order of operations is being applied. That’s what I want, so that’s fine. But also, it’s possible for the result to be <code>NaN</code> or <code>Infinity</code> if a division by 0 happens. I’ll have to remember to handle these special cases when doing fitness evaluation.</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> evaluateMath <span class="op">=</span> (mathStr<span class="op">:</span> <span class="dt">string</span>)<span class="op">:</span> <span class="dt">number</span> <span class="kw">=&gt;</span> <span class="bu">Number</span>(<span class="pp">eval</span>(mathStr))<span class="op">;</span></span></code></pre></div>
+<p>Now to evaluate the fitness of an organism. This part is a bit tricky because I want organisms to have their fitness stored as part of their data. If an organism is a chromosome along with fitness, I can’t have my fitness evaluating function take in an organism. I need to deal with chromosomes directly. The resulting fitness score will be a number between 0 and 1, with 1 being perfect fitness. I can combine a chromosome and its fitness score into an organism somewhere else.</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> evaluateFitness <span class="op">=</span> (chromosome<span class="op">:</span> Chromosome<span class="op">,</span> target<span class="op">:</span> <span class="dt">number</span>)<span class="op">:</span> <span class="dt">number</span> <span class="kw">=&gt;</span> {</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> mathStr <span class="op">=</span> <span class="fu">cleanChromosome</span>(chromosome)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">map</span>(geneValue)</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">join</span>(<span class="st">&quot; &quot;</span>)<span class="op">;</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> n <span class="op">=</span> <span class="fu">evaluateMath</span>(mathStr)<span class="op">;</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="pp">isNaN</span>(n) <span class="op">||</span> n <span class="op">===</span> <span class="kw">Infinity</span>) {</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>    <span class="co">// This is as far from the target number as it can be, so let&#39;s just say the fitness is 0.</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="dv">1</span> <span class="op">/</span> (<span class="bu">Math</span><span class="op">.</span><span class="fu">abs</span>(target <span class="op">-</span> n) <span class="op">+</span> <span class="dv">1</span>)<span class="op">;</span></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>}<span class="op">;</span></span></code></pre></div>
+<h2 id="implementing-step-2-setting-parameters">Implementing Step 2. Setting parameters</h2>
+<p>For running the algorithm, I’m going to make a main function with the tweakable parameters. For this specific application, I need a couple extra parameters: the chromosome length for each organism and the target number.</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> runAlgorithm <span class="op">=</span> (</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  populationSize<span class="op">:</span> <span class="dt">number</span><span class="op">,</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  crossoverRate<span class="op">:</span> <span class="dt">number</span><span class="op">,</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  mutationRate<span class="op">:</span> <span class="dt">number</span><span class="op">,</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  generationLimit<span class="op">:</span> <span class="dt">number</span><span class="op">,</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  chromosomeLength<span class="op">:</span> <span class="dt">number</span><span class="op">,</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>  target<span class="op">:</span> <span class="dt">number</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>)<span class="op">:</span> <span class="dt">void</span> <span class="kw">=&gt;</span> {</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>  <span class="op">...</span></span></code></pre></div>
+<p>From here on, writing the code is not linear. I’m going to fill in the steps of the algorithm as needed.</p>
+<h2 id="implementing-step-3-create-initial-population">Implementing Step 3. Create initial population</h2>
+<p>Since fitness evaluation is to be done in batch, I’m going to make a population of chromosomes instead of organisms.</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Inside runAlgorithm()</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> initialChromPopulation<span class="op">:</span> Chromosome[] <span class="op">=</span> <span class="fu">buildArray</span>(populationSize)</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="op">.</span><span class="fu">map</span>(_ <span class="kw">=&gt;</span> <span class="fu">randomChromosome</span>(chromosomeLength))<span class="op">;</span></span></code></pre></div>
+<p>And the helpers to create random chromosomes can go outside the main function…</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Create a randomized chromosome of a desired length.</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> randomChromosome <span class="op">=</span> (length<span class="op">:</span> <span class="dt">number</span>)<span class="op">:</span> Chromosome <span class="kw">=&gt;</span> {</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> numberGenes<span class="op">:</span> Gene[] <span class="op">=</span> <span class="fu">buildArray</span>(<span class="bu">Math</span><span class="op">.</span><span class="fu">floor</span>(length <span class="op">/</span> <span class="dv">2</span>))</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">map</span>(_ <span class="kw">=&gt;</span> <span class="fu">randomGene</span>(<span class="st">&quot;number&quot;</span>))<span class="op">;</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> operatorGenes<span class="op">:</span> Gene[] <span class="op">=</span> <span class="fu">buildArray</span>(<span class="bu">Math</span><span class="op">.</span><span class="fu">floor</span>(length <span class="op">/</span> <span class="dv">2</span> <span class="op">-</span> <span class="dv">1</span>))</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">map</span>(_ <span class="kw">=&gt;</span> <span class="fu">randomGene</span>(<span class="st">&quot;operator&quot;</span>))<span class="op">;</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> <span class="fu">zip</span>(numberGenes<span class="op">,</span> operatorGenes)</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">flat</span>()</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>    <span class="op">.</span><span class="fu">concat</span>([<span class="fu">last</span>(numberGenes)])<span class="op">;</span></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>}<span class="op">;</span></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a><span class="kw">type</span> NumberOrOperator <span class="op">=</span> <span class="st">&quot;number&quot;</span> <span class="op">|</span> <span class="st">&quot;operator&quot;</span><span class="op">;</span></span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a><span class="co">// Create a randomized number or operator gene.</span></span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> randomGene <span class="op">=</span> (numberOrOperator<span class="op">:</span> NumberOrOperator)<span class="op">:</span> Gene <span class="kw">=&gt;</span> {</span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>  <span class="cf">switch</span> (numberOrOperator) {</span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">case</span> <span class="st">&quot;number&quot;</span><span class="op">:</span></span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a>      <span class="cf">return</span> [<span class="fu">randomBit</span>()<span class="op">,</span> <span class="fu">randomBit</span>()<span class="op">,</span> <span class="fu">randomBit</span>()<span class="op">,</span> <span class="fu">randomBit</span>()]<span class="op">;</span></span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a>    <span class="cf">case</span> <span class="st">&quot;operator&quot;</span><span class="op">:</span></span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a>      <span class="cf">return</span> [<span class="fu">randomBit</span>()<span class="op">,</span> <span class="fu">randomBit</span>()]<span class="op">;</span></span>
+<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a>}<span class="op">;</span></span>
+<span id="cb17-23"><a href="#cb17-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-24"><a href="#cb17-24" aria-hidden="true" tabindex="-1"></a><span class="co">// Generate a random bit (0 or 1).</span></span>
+<span id="cb17-25"><a href="#cb17-25" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> randomBit <span class="op">=</span> ()<span class="op">:</span> Bit <span class="kw">=&gt;</span> (<span class="bu">Math</span><span class="op">.</span><span class="fu">random</span>() <span class="op">&lt;</span> <span class="fl">0.5</span>) <span class="op">?</span> <span class="dv">0</span> <span class="op">:</span> <span class="dv">1</span><span class="op">;</span></span></code></pre></div>
+<h2 id="the-main-loop">The main loop</h2>
+<p>Now I’m going to set up the main loop as a recursive function. This will consist of Steps 4 through 8; fitness evaluation, selection, crossover, mutation, and replacing the population. Each iteration will produce a new generation.</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Inside runAlgorithm()</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> generationalStep <span class="op">=</span> (chromPopulation<span class="op">:</span> Chromosome[]<span class="op">,</span> generation<span class="op">:</span> <span class="dt">number</span>)<span class="op">:</span> Chromosome[] <span class="kw">=&gt;</span> {</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Check for the stopping condition.</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (generation <span class="op">&gt;=</span> generationLimit) {</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> chromPopulation<span class="op">;</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>  <span class="op">...</span></span></code></pre></div>
+<h2 id="implementing-step-4-fitness-evaluation">Implementing Step 4. Fitness evaluation</h2>
+<p>Since I’ve already made the fitness evaluation function, here I simply need to apply it to the entire population of chromosomes, turning it into a population of organisms.</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Inside generationalStep()</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> population<span class="op">:</span> Organism[] <span class="op">=</span> chromPopulation<span class="op">.</span><span class="fu">map</span>(chromosome <span class="kw">=&gt;</span> ({</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  chromosome<span class="op">,</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  fitness<span class="op">:</span> <span class="fu">evaluateFitness</span>(chromosome<span class="op">,</span> target)</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>}))<span class="op">;</span></span></code></pre></div>
+<h2 id="implementing-step-5-selection">Implementing Step 5. Selection</h2>
+<p>This is the first step in the reproduction process. I need to select two organisms from the population using the <a href="file:///build-your-own-genetic-algorithm.html#step-5-selection">roulette wheel strategy</a>.</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Inside generationalStep()</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> reproduce <span class="op">=</span> ()<span class="op">:</span> [Chromosome<span class="op">,</span> Chromosome] <span class="kw">=&gt;</span> {</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> parent1 <span class="op">=</span> <span class="fu">rouletteWheelSelection</span>(population)<span class="op">;</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> parent2 <span class="op">=</span> <span class="fu">rouletteWheelSelection</span>(population)<span class="op">;</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>  <span class="op">...</span></span></code></pre></div>
+<p>And the roulette wheel selection function can live outside the main function.</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Select an organism from a population using the roulette wheel strategy.</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> rouletteWheelSelection <span class="op">=</span> (population<span class="op">:</span> Organism[])<span class="op">:</span> Organism <span class="kw">=&gt;</span> {</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> fitnesses<span class="op">:</span> <span class="dt">number</span>[] <span class="op">=</span> population<span class="op">.</span><span class="fu">map</span>(({fitness}) <span class="kw">=&gt;</span> fitness)<span class="op">;</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> totalFitness<span class="op">:</span> <span class="dt">number</span> <span class="op">=</span> <span class="fu">sum</span>(fitnesses)<span class="op">;</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> cumulFitnesses<span class="op">:</span> <span class="dt">number</span>[] <span class="op">=</span> <span class="fu">scan</span>((x<span class="op">:</span> <span class="dt">number</span><span class="op">,</span> y<span class="op">:</span> <span class="dt">number</span>) <span class="kw">=&gt;</span> x <span class="op">+</span> y<span class="op">,</span> fitnesses[<span class="dv">0</span>]<span class="op">,</span> fitnesses)<span class="op">;</span></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> withCumulativeFitnesses<span class="op">:</span> [Organism<span class="op">,</span> <span class="dt">number</span>][] <span class="op">=</span> <span class="fu">zip</span>(population<span class="op">,</span> cumulFitnesses)<span class="op">;</span></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> r<span class="op">:</span> <span class="dt">number</span> <span class="op">=</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">random</span>() <span class="op">*</span> totalFitness<span class="op">;</span></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> found<span class="op">:</span> [Organism<span class="op">,</span> <span class="dt">number</span>] <span class="op">|</span> <span class="dt">undefined</span> <span class="op">=</span> withCumulativeFitnesses<span class="op">.</span><span class="fu">find</span>(([_<span class="op">,</span> cf]) <span class="kw">=&gt;</span> cf <span class="op">&gt;=</span> r)<span class="op">;</span></span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (found <span class="op">===</span> <span class="kw">undefined</span>) {</span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>    <span class="co">// In case an organism is not found, return the last one.</span></span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> population[population<span class="op">.</span><span class="at">length</span> <span class="op">-</span> <span class="dv">1</span>]<span class="op">;</span></span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> [organism<span class="op">,</span> _] <span class="op">=</span> found<span class="op">;</span></span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> organism<span class="op">;</span></span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a>}<span class="op">;</span></span></code></pre></div>
+<h2 id="implementing-step-6-crossover">Implementing Step 6. Crossover</h2>
+<p>The next step for reproduction is crossing over the two previously selected organisms. At this point, I’m going to deal with chromosomes instead of organisms, since their fitnesses won’t be evaluated until later.</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Inside reproduce()</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> [chrom1<span class="op">,</span> chrom2] <span class="op">=</span> <span class="fu">crossover</span>(parent1<span class="op">.</span><span class="at">chromosome</span><span class="op">,</span> parent2<span class="op">.</span><span class="at">chromosome</span><span class="op">,</span> crossoverRate)<span class="op">;</span></span></code></pre></div>
+<p>Again, I can write the crossover function outside the main function.</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Crossover (or clone) two chromosomes.</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> crossover <span class="op">=</span> (x<span class="op">:</span> Chromosome<span class="op">,</span> y<span class="op">:</span> Chromosome<span class="op">,</span> crossoverRate<span class="op">:</span> <span class="dt">number</span>)<span class="op">:</span> [Chromosome<span class="op">,</span> Chromosome] <span class="kw">=&gt;</span> {</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> r<span class="op">:</span> <span class="dt">number</span> <span class="op">=</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">random</span>()<span class="op">;</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (r <span class="op">&lt;=</span> crossoverRate) {</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> position<span class="op">:</span> <span class="dt">number</span> <span class="op">=</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">floor</span>(<span class="bu">Math</span><span class="op">.</span><span class="fu">random</span>() <span class="op">*</span> x<span class="op">.</span><span class="at">length</span>)<span class="op">;</span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> xNew <span class="op">=</span> [<span class="op">...</span>x<span class="op">.</span><span class="fu">slice</span>(<span class="dv">0</span><span class="op">,</span> position)<span class="op">,</span> <span class="op">...</span>y<span class="op">.</span><span class="fu">slice</span>(position)]<span class="op">;</span></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> yNew <span class="op">=</span> [<span class="op">...</span>y<span class="op">.</span><span class="fu">slice</span>(<span class="dv">0</span><span class="op">,</span> position)<span class="op">,</span> <span class="op">...</span>x<span class="op">.</span><span class="fu">slice</span>(position)]<span class="op">;</span></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> [xNew<span class="op">,</span> yNew]<span class="op">;</span></span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> [x<span class="op">,</span> y]<span class="op">;</span></span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>}<span class="op">;</span></span></code></pre></div>
+<h2 id="implementing-step-7-mutation">Implementing Step 7. Mutation</h2>
+<p>And now for the last step for reproduction: mutating those two chromosomes. After being mutated, the chromosomes can be returned as the pair of produced offspring to end the function.</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Inside reproduce()</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> chrom1Mutated <span class="op">=</span> <span class="fu">mutate</span>(chrom1<span class="op">,</span> mutationRate)<span class="op">;</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> chrom2Mutated <span class="op">=</span> <span class="fu">mutate</span>(chrom2<span class="op">,</span> mutationRate)<span class="op">;</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a><span class="cf">return</span> [chrom1Mutated<span class="op">,</span> chrom2Mutated]<span class="op">;</span></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a><span class="co">// This ends reproduce()</span></span></code></pre></div>
+<p>Once more, the code for mutating can be outside the main function.</p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Flip a bit from 0 to 1, or 1 to 0.</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> flipBit <span class="op">=</span> (bit<span class="op">:</span> Bit)<span class="op">:</span> Bit <span class="kw">=&gt;</span> bit <span class="op">===</span> <span class="dv">0</span> <span class="op">?</span> <span class="dv">1</span> <span class="op">:</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="co">// Mutate a chromosome.</span></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> mutate <span class="op">=</span> (chromosome<span class="op">:</span> Chromosome<span class="op">,</span> mutationRate<span class="op">:</span> <span class="dt">number</span>)<span class="op">:</span> Chromosome <span class="kw">=&gt;</span> {</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Mutate a bit.</span></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> mutateBit <span class="op">=</span> (bit<span class="op">:</span> Bit)<span class="op">:</span> Bit <span class="kw">=&gt;</span> {</span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>    <span class="kw">const</span> r<span class="op">:</span> <span class="dt">number</span> <span class="op">=</span> <span class="bu">Math</span><span class="op">.</span><span class="fu">random</span>()<span class="op">;</span></span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> r <span class="op">&lt;=</span> mutationRate</span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>      <span class="op">?</span> <span class="fu">flipBit</span>(bit)</span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>      <span class="op">:</span> bit<span class="op">;</span></span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>  }<span class="op">;</span></span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Mutate each gene.</span></span>
+<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> chromosome<span class="op">.</span><span class="fu">map</span>(gene <span class="kw">=&gt;</span> {</span>
+<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">isNumber</span>(gene)) {</span>
+<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a>      <span class="kw">const</span> [a<span class="op">,</span> b<span class="op">,</span> c<span class="op">,</span> d] <span class="op">=</span> gene<span class="op">;</span></span>
+<span id="cb25-18"><a href="#cb25-18" aria-hidden="true" tabindex="-1"></a>      <span class="cf">return</span> [<span class="fu">mutateBit</span>(a)<span class="op">,</span> <span class="fu">mutateBit</span>(b)<span class="op">,</span> <span class="fu">mutateBit</span>(c)<span class="op">,</span> <span class="fu">mutateBit</span>(d)]<span class="op">;</span></span>
+<span id="cb25-19"><a href="#cb25-19" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb25-20"><a href="#cb25-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-21"><a href="#cb25-21" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">isOperator</span>(gene)) {</span>
+<span id="cb25-22"><a href="#cb25-22" aria-hidden="true" tabindex="-1"></a>      <span class="kw">const</span> [a<span class="op">,</span> b] <span class="op">=</span> gene<span class="op">;</span></span>
+<span id="cb25-23"><a href="#cb25-23" aria-hidden="true" tabindex="-1"></a>      <span class="cf">return</span> [<span class="fu">mutateBit</span>(a)<span class="op">,</span> <span class="fu">mutateBit</span>(b)]<span class="op">;</span></span>
+<span id="cb25-24"><a href="#cb25-24" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb25-25"><a href="#cb25-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-26"><a href="#cb25-26" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> gene<span class="op">;</span></span>
+<span id="cb25-27"><a href="#cb25-27" aria-hidden="true" tabindex="-1"></a>  })<span class="op">;</span></span>
+<span id="cb25-28"><a href="#cb25-28" aria-hidden="true" tabindex="-1"></a>}<span class="op">;</span></span></code></pre></div>
+<h2 id="implementing-step-8-replace-population">Implementing Step 8. Replace population</h2>
+<p>That finishes the <code>reproduce()</code> function, but I’m not done with <code>generationalStep()</code> yet! I need to make use of the reproduction to make a new population of chromosomes, which will replace the old one.</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Inside generationalStep()</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> newChromPopulation<span class="op">:</span> Chromosome[] <span class="op">=</span> <span class="fu">buildArray</span>(<span class="bu">Math</span><span class="op">.</span><span class="fu">floor</span>(populationSize <span class="op">/</span> <span class="dv">2</span>))</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="op">.</span><span class="fu">map</span>(reproduce)</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>  <span class="op">.</span><span class="fu">flat</span>()<span class="op">;</span></span></code></pre></div>
+<h2 id="implementing-step-9-repeat-until-the-stopping-condition-is-met">Implementing Step 9. Repeat until the stopping condition is met</h2>
+<p>To repeat the generation cycle, I can simply call <code>generationalStep()</code> recursively, passing in the new population and increasing the generation counter.</p>
+<div class="sourceCode" id="cb27"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Inside generationalStep()</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="cf">return</span> <span class="fu">generationalStep</span>(newChromPopulation<span class="op">,</span> generation <span class="op">+</span> <span class="dv">1</span>)</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="co">// This ends generationalStep()</span></span></code></pre></div>
+<h2 id="implementing-step-10-pick-the-winner">Implementing Step 10. Pick the winner</h2>
+<p>Time for the last step! This is where I need to trigger the generational cycle to start, with the initial population of chromosomes, and let it run until the final population.</p>
+<div class="sourceCode" id="cb28"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Inside runAlgorithm()</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> finalChromPopulation<span class="op">:</span> Chromosome[] <span class="op">=</span> <span class="fu">generationalStep</span>(initialChromPopulation<span class="op">,</span> <span class="dv">0</span>)<span class="op">;</span></span></code></pre></div>
+<p>Then evaluate the fitness of each chromosome so I have a population of organisms.</p>
+<div class="sourceCode" id="cb29"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Inside runAlgorithm()</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> finalPopulation<span class="op">:</span> Organism[] <span class="op">=</span> finalChromPopulation<span class="op">.</span><span class="fu">map</span>(chromosome <span class="kw">=&gt;</span> ({</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>  chromosome<span class="op">,</span></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>  fitness<span class="op">:</span> <span class="fu">evaluateFitness</span>(chromosome<span class="op">,</span> target)</span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>}))<span class="op">;</span></span></code></pre></div>
+<p>And finally, pick the chromosome with the best fitness!</p>
+<div class="sourceCode" id="cb30"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Inside runAlgorithm()</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> winner <span class="op">=</span> finalPopulation<span class="op">.</span><span class="fu">reduce</span>((best<span class="op">,</span> organism) <span class="kw">=&gt;</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  (organism<span class="op">.</span><span class="at">fitness</span> <span class="op">&gt;</span> best<span class="op">.</span><span class="at">fitness</span>) <span class="op">?</span> organism <span class="op">:</span> best)<span class="op">;</span></span></code></pre></div>
+<p>I want to print the winner’s information in detail so I can see if the algorithm is producing good results.</p>
+<div class="sourceCode" id="cb31"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Inside runAlgorithm()</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="bu">console</span><span class="op">.</span><span class="fu">log</span>()<span class="op">;</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a><span class="bu">console</span><span class="op">.</span><span class="fu">log</span>(<span class="vs">`The winner is...`</span>)<span class="op">;</span></span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a><span class="bu">console</span><span class="op">.</span><span class="fu">log</span>(<span class="vs">`Phenotype: </span><span class="sc">${</span><span class="fu">phenotype</span>(winner)<span class="sc">}</span><span class="vs">`</span>)<span class="op">;</span></span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a><span class="bu">console</span><span class="op">.</span><span class="fu">log</span>(<span class="vs">`Clean phenotype: </span><span class="sc">${</span><span class="fu">cleanPhenotype</span>(winner)<span class="sc">}</span><span class="vs">`</span>)<span class="op">;</span></span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a><span class="bu">console</span><span class="op">.</span><span class="fu">log</span>(<span class="vs">`Result: </span><span class="sc">${</span><span class="fu">evaluateMath</span>(<span class="fu">cleanPhenotype</span>(winner))<span class="sc">}</span><span class="vs">`</span>)<span class="op">;</span></span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a><span class="bu">console</span><span class="op">.</span><span class="fu">log</span>(<span class="vs">`Fitness: </span><span class="sc">${</span><span class="fu">evaluateFitness</span>(winner<span class="op">.</span><span class="at">chromosome</span><span class="op">,</span> target)<span class="sc">}</span><span class="vs">`</span>)<span class="op">;</span></span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a><span class="co">// This ends runAlgorithm()</span></span></code></pre></div>
+<h2 id="running-the-algorithm">Running the algorithm</h2>
+<p>After playing with the parameters, I found that these values gave pretty consistently interesting results, and relatively fast.</p>
+<div class="sourceCode" id="cb32"><pre class="sourceCode typescript"><code class="sourceCode typescript"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> populationSize <span class="op">=</span> <span class="dv">200</span><span class="op">;</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> crossoverRate <span class="op">=</span> <span class="fl">0.6</span><span class="op">;</span></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> mutationRate <span class="op">=</span> <span class="fl">0.05</span><span class="op">;</span></span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> generationLimit <span class="op">=</span> <span class="dv">20</span><span class="op">;</span></span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> chromosomeLength <span class="op">=</span> <span class="dv">20</span><span class="op">;</span></span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> target <span class="op">=</span> <span class="dv">42</span><span class="op">;</span></span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a><span class="fu">runAlgorithm</span>(</span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>  populationSize<span class="op">,</span></span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a>  crossoverRate<span class="op">,</span></span>
+<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a>  mutationRate<span class="op">,</span></span>
+<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a>  generationLimit<span class="op">,</span></span>
+<span id="cb32-12"><a href="#cb32-12" aria-hidden="true" tabindex="-1"></a>  chromosomeLength<span class="op">,</span></span>
+<span id="cb32-13"><a href="#cb32-13" aria-hidden="true" tabindex="-1"></a>  target)<span class="op">;</span></span></code></pre></div>
+<p>Try it out yourself! What happens when you change the values of the parameters? Can you make it accurate <em>and</em> fast?</p>
+<p><a href="https://github.com/SlimTim10/genetic-algorithm-math-string">https://github.com/SlimTim10/genetic-algorithm-math-string</a></p>
+    </section>
+	<section class="read-more">
+	  <a href="/blog.html" class="btn btn-primary">Read More</a>
+	</section>
+    <section class="newsletter">
+      <script async data-uid="3c58182786" src="https://tim-johns.ck.page/3c58182786/index.js"></script>
+    </section>
+  </article>
+</main>
+
+	<footer>
+      <div class="newsletter">
+        <script async data-uid="907145579d" src="https://tim-johns.ck.page/907145579d/index.js"></script>
+      </div>
+	  <div class="social-icons">
+		<a href="mailto:johns.timf@gmail.com">
+		  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Pro 6.1.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path d="M464 64C490.5 64 512 85.49 512 112C512 127.1 504.9 141.3 492.8 150.4L275.2 313.6C263.8 322.1 248.2 322.1 236.8 313.6L19.2 150.4C7.113 141.3 0 127.1 0 112C0 85.49 21.49 64 48 64H464zM217.6 339.2C240.4 356.3 271.6 356.3 294.4 339.2L512 176V384C512 419.3 483.3 448 448 448H64C28.65 448 0 419.3 0 384V176L217.6 339.2z"/></svg>
+		</a>
+		<a href="https://www.linkedin.com/in/tim-johns/" target="_blank">
+		  <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>LinkedIn</title><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+		</a>
+		<a href="https://github.com/SlimTim10" target="_blank">
+		  <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>GitHub</title><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+		</a>
+		<a href="https://www.instagram.com/slimtim10_/" target="_blank">
+		  <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Instagram</title><path d="M12 0C8.74 0 8.333.015 7.053.072 5.775.132 4.905.333 4.14.63c-.789.306-1.459.717-2.126 1.384S.935 3.35.63 4.14C.333 4.905.131 5.775.072 7.053.012 8.333 0 8.74 0 12s.015 3.667.072 4.947c.06 1.277.261 2.148.558 2.913.306.788.717 1.459 1.384 2.126.667.666 1.336 1.079 2.126 1.384.766.296 1.636.499 2.913.558C8.333 23.988 8.74 24 12 24s3.667-.015 4.947-.072c1.277-.06 2.148-.262 2.913-.558.788-.306 1.459-.718 2.126-1.384.666-.667 1.079-1.335 1.384-2.126.296-.765.499-1.636.558-2.913.06-1.28.072-1.687.072-4.947s-.015-3.667-.072-4.947c-.06-1.277-.262-2.149-.558-2.913-.306-.789-.718-1.459-1.384-2.126C21.319 1.347 20.651.935 19.86.63c-.765-.297-1.636-.499-2.913-.558C15.667.012 15.26 0 12 0zm0 2.16c3.203 0 3.585.016 4.85.071 1.17.055 1.805.249 2.227.415.562.217.96.477 1.382.896.419.42.679.819.896 1.381.164.422.36 1.057.413 2.227.057 1.266.07 1.646.07 4.85s-.015 3.585-.074 4.85c-.061 1.17-.256 1.805-.421 2.227-.224.562-.479.96-.899 1.382-.419.419-.824.679-1.38.896-.42.164-1.065.36-2.235.413-1.274.057-1.649.07-4.859.07-3.211 0-3.586-.015-4.859-.074-1.171-.061-1.816-.256-2.236-.421-.569-.224-.96-.479-1.379-.899-.421-.419-.69-.824-.9-1.38-.165-.42-.359-1.065-.42-2.235-.045-1.26-.061-1.649-.061-4.844 0-3.196.016-3.586.061-4.861.061-1.17.255-1.814.42-2.234.21-.57.479-.96.9-1.381.419-.419.81-.689 1.379-.898.42-.166 1.051-.361 2.221-.421 1.275-.045 1.65-.06 4.859-.06l.045.03zm0 3.678c-3.405 0-6.162 2.76-6.162 6.162 0 3.405 2.76 6.162 6.162 6.162 3.405 0 6.162-2.76 6.162-6.162 0-3.405-2.76-6.162-6.162-6.162zM12 16c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4zm7.846-10.405c0 .795-.646 1.44-1.44 1.44-.795 0-1.44-.646-1.44-1.44 0-.794.646-1.439 1.44-1.439.793-.001 1.44.645 1.44 1.439z"/></svg>
+		</a>
+        <a href="/rss.xml">
+          <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M0 64C0 46.3 14.3 32 32 32c229.8 0 416 186.2 416 416c0 17.7-14.3 32-32 32s-32-14.3-32-32C384 253.6 226.4 96 32 96C14.3 96 0 81.7 0 64zM0 416a64 64 0 1 1 128 0A64 64 0 1 1 0 416zM32 160c159.1 0 288 128.9 288 288c0 17.7-14.3 32-32 32s-32-14.3-32-32c0-123.7-100.3-224-224-224c-17.7 0-32-14.3-32-32s14.3-32 32-32z"/></svg>
+        </a>
+	  </div>
+	  <small>
+		&copy; 2022 Tim Johns. All rights reserved.
+	  </small>
+	  <small>
+		Site proudly generated by
+		<a href="http://jaspervdj.be/hakyll" target="_blank">Hakyll</a>
+		||
+		<a href="https://github.com/SlimTim10/slimtim10.github.io" target="_blank">View source</a>
+	  </small>
+	  <small>
+		Illustrations by
+		<a href="https://undraw.co" target="_blank">unDraw</a>
+		and Tim Johns
+	  </small>
+    </footer>
+	<script async src="./js/script.js"></script>
+  </body>
+</html>

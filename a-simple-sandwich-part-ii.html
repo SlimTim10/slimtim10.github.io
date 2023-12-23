@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Tim Johns - A Simple Sandwich, Part II</title>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="A continuation of a philosophical exploration about programming.">
+    <meta name="author" content="Tim Johns">
+    
+
+    <meta property="og:site_name" content="Tim Johns">
+    <meta property="og:title" content="A Simple Sandwich, Part II">
+    <meta property="og:url" content="https://timjohns.ca/a-simple-sandwich-part-ii.html">
+    <meta property="og:description" content="A continuation of a philosophical exploration about programming.">
+    
+    <meta property="og:image" content="https://timjohns.ca./images/blog/a_simple_sandwich_ii.jpg">
+    
+    
+    <meta property="og:type" content="article">
+    
+
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inconsolata:wght@400;700&family=Inter:wght@300;400;500&family=Lato:wght@300;400;700;900&family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,1,0" />
+
+    <!-- Analytics -->
+    <script src="https://cdn.counter.dev/script.js" data-id="af659f42-a2fc-40d5-8e6c-a1036c76c51f" data-utcoffset="-4"></script>
+
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="canonical" href="https://timjohns.ca/a-simple-sandwich-part-ii.html">
+    <link rel="stylesheet" href="./css/reset.css" />
+    <link rel="stylesheet" href="./css/default.css" />
+    <link rel="stylesheet" href="./css/nav.css" />
+	<link rel="stylesheet" href="./css/vs2015.css" />
+	
+    <link rel="stylesheet" href="./css/post.css" />
+	
+  </head>
+  <body>
+	<header>
+	  <div>
+		<a href="/" id="logo">
+          <img alt="logo" src="./images/logo.svg"/>
+		</a>
+		<a href="#" id="toggle-menu" aria-label="Main Menu">
+		  <svg width="100" height="100" viewBox="0 0 100 100">
+			<path class="line line1" d="M 20,29.000046 H 80.000231 C 80.000231,29.000046 94.498839,28.817352 94.532987,66.711331 94.543142,77.980673 90.966081,81.670246 85.259173,81.668997 79.552261,81.667751 75.000211,74.999942 75.000211,74.999942 L 25.000021,25.000058" />
+			<path class="line line2" d="M 20,50 H 80" />
+			<path class="line line3" d="M 20,70.999954 H 80.000231 C 80.000231,70.999954 94.498839,71.182648 94.532987,33.288669 94.543142,22.019327 90.966081,18.329754 85.259173,18.331003 79.552261,18.332249 75.000211,25.000058 75.000211,25.000058 L 25.000021,74.999942" />
+		  </svg>
+		</a>
+	  </div>
+	  <nav class="collapsed">
+		<ul>
+		  <li><a href="/" >Home</a></li>
+		  <li><a href="/mentorship.html" >Mentorship</a></li>
+		  <li><a href="/events.html" >Events</a></li>
+		  <li><a href="/blog.html"  class="active" >Blog</a></li>
+		  <li><a href="/projects.html" >Projects</a></li>
+		  <li><a href="/about.html" >About</a></li>
+		  <li><a href="/contact.html" >Contact</a></li>
+		</ul>
+	  </nav>
+	</header>
+    <main>
+  <article id="blog-post">
+    <header>
+      <h1 class="writing">
+        A Simple Sandwich, Part II
+      </h1>
+      <p class="writing">Jan 17, 2023</p>
+      
+    </header>
+	<img class="post-image" alt="Drawing of a sandwich" src="./images/blog/a_simple_sandwich_ii.jpg" />
+    <section class="content writing">
+	  <p>(This is a continuation from <a href="./a-simple-sandwich-part-i.html">Part I</a>, a philosophical exploration about programming, with sandwiches. Go read it first, if you haven’t yet.)</p>
+<p>In <a href="./a-simple-sandwich-part-i.html">Part I</a>, I talked about error handling, mutability and state, and programming paradigms. Now it’s time to look at a problem from the perspective of using <strong>type theory</strong>. My original plan was, after writing an idiomatic Haskell solution to making abstract sandwiches, to write a Haskell solution using type-level programming techniques. Writing an Agda solution was going to be the last step. Well, plans change. After some attempts at trying to write a meaningful type-level Haskell solution, I realized that Haskell’s type system is simply not equipped to express these kinds of ideas nearly as well as Agda’s.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> Let me explain.</p>
+<h1 id="defining-a-sandwich-as-a-type">Defining a Sandwich as a Type</h1>
+<p>At the end of <a href="./a-simple-sandwich-part-i.html">Part I</a>, I explained how it’s easily possible to make an impossible sandwich with the previously proposed solution. Let’s see how we can fix that.</p>
+<p>In the context of this exploration, I’m going to define a sandwich as follows:</p>
+<blockquote>
+<p>A sandwich consists of a bottom and a top, which are both slices of bread. Neither the bottom or top can be smeared on the outside. At least one of the bottom or top must be smeared on the inside. A sandwich may be in one or more pieces (i.e., it can be cut).</p>
+</blockquote>
+<p>I know, this doesn’t cover nearly all the exotic sandwiches you have in mind. I want to keep the scope of this problem small so the code is easier to understand, so we’re just going to deal with peanut butter and/or jelly sandwiches. To be clear, the reason sandwiches can’t be smeared on the outside is it makes them icky to hold.</p>
+<p>So, with that definition in mind, let’s look at the Haskell sandwich from <a href="./a-simple-sandwich-part-i.html">Part I</a> and see where it falls short.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">Sandwich</span> <span class="ot">=</span> <span class="dt">Sandwich</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  {<span class="ot"> bottom ::</span> <span class="dt">SliceOfBread</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  ,<span class="ot"> top ::</span> <span class="dt">SliceOfBread</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  ,<span class="ot"> pieces ::</span> <span class="dt">Integer</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  }</span></code></pre></div>
+<p>(This isn’t exactly what I had in <a href="./a-simple-sandwich-part-i.html">Part I</a>. Here, I’ve made a small change to simplify the problem: instead of keeping track of the pieces and their details, we’re only interested in the <em>number</em> of pieces.)</p>
+<p>What we have here is a definition of a <code>Sandwich</code> <strong>type</strong> in Haskell. The concept of <strong>type theory</strong> is that there are <strong>types</strong> and <strong>values</strong> (also called <strong>terms</strong> or <strong>elements</strong>). A value belongs to a certain type. No value exists without a type. When we think or program in type theory, we define <strong>what something is</strong> by making a new type for it. Then, we can make values of that type. Just like I gave an English definition of a sandwich (<strong>type</strong>), I can now go make an actual sandwich (<strong>value</strong>) and say that it fits the definition. For object-oriented programmers, it can help to think of types as being like classes and values as being like instances of a class.</p>
+<p>Taking our <code>Sandwich</code> type and reverse engineering it into English, we get:</p>
+<blockquote>
+<p>A sandwich consists of a bottom and a top, both slices of bread. (Off to a great start!) A sandwich may be in any number of pieces.</p>
+</blockquote>
+<p>Hmm. This doesn’t quite match our desired definition. First, there’s nothing about smearing. And, the sandwich can be in zero or even negative pieces! Now, to be fair, the smearing is included in the <code>SliceOfBread</code> type:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">SliceOfBread</span> <span class="ot">=</span> <span class="dt">SliceOfBread</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  {<span class="ot"> flavour ::</span> <span class="dt">BreadFlavour</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  ,<span class="ot"> top ::</span> <span class="dt">Maybe</span> <span class="dt">Condiment</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  ,<span class="ot"> bottom ::</span> <span class="dt">Maybe</span> <span class="dt">Condiment</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  }</span></code></pre></div>
+<p>This type says, “a slice of bread is of a certain flavour and may be smeared with a condiment on the top and/or bottom.”</p>
+<p>So, there is something about smearing, but it doesn’t have the restriction we want, about the sandwich’s bottom and top being smeared only on the inside. In fact, with Haskell’s type system, we <em>can’t</em> represent that! Our only option is to leave the type as it is and handle the proper making of a sandwich in the logic of functions and thread error handling through all those functions (using <code>Either</code>). But, as we’ve seen (in <a href="./a-simple-sandwich-part-i.html">Part I</a>), that still leaves us with the ability to make improper sandwiches if we forego the use of those functions. For example:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- Two plain slices of bread shouldn&#39;t be considered a sandwich.</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co">-- Not to mention it&#39;s in 0 pieces. What is this? An eaten sandwich?</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>badSandwich <span class="ot">=</span> <span class="dt">Sandwich</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  { bottom <span class="ot">=</span> <span class="dt">SliceOfBread</span> { flavour<span class="ot">=</span><span class="dt">Sourdough</span>, top<span class="ot">=</span><span class="dt">Nothing</span>, bottom<span class="ot">=</span><span class="dt">Nothing</span> }</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  , top <span class="ot">=</span> <span class="dt">SliceOfBread</span> { flavour<span class="ot">=</span><span class="dt">Sourdough</span>, top<span class="ot">=</span><span class="dt">Nothing</span>, bottom<span class="ot">=</span><span class="dt">Nothing</span> }</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  , pieces <span class="ot">=</span> <span class="dv">0</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  }</span></code></pre></div>
+<p>The purpose of embedding our ideal definitions in types is to make it impossible to do things wrong. I don’t want it to be possible to make an improper sandwich, or even fail at any step along the way. That brings us to Agda.</p>
+<p>Agda is a <strong>dependently typed</strong> programming language. Dependent types allow us to represent things intuitively. A dependent type is a type whose definition depends on a value. In the <code>Sandwich</code> type, its <code>bottom</code> has the type <code>SliceOfBread</code>, but that’s not enough information. We want it to be a <code>SliceOfBread</code> that is not smeared on its bottom. In other words, its type should be a <code>SliceOfBread</code> whose value looks something like this:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="dt">SliceOfBread</span> { flavour<span class="op">=?</span>, top<span class="op">=?</span>, bottom<span class="ot">=</span><span class="dt">Nothing</span> }</span></code></pre></div>
+<p>All this to say, the type of a sandwich’s bottom slice <strong>depends on its value</strong>.</p>
+<p>In Agda, we can represent a sandwich like this:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode agda"><code class="sourceCode agda"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">record</span> Sandwich <span class="ot">:</span> Type <span class="kw">where</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">field</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    top <span class="ot">:</span> SliceOfBread</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    bottom <span class="ot">:</span> SliceOfBread</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    shellOk <span class="ot">:</span> checkShell top bottom</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    pieces <span class="ot">:</span> Σ n ꞉ ℕ , n ≥ <span class="dv">1</span></span></code></pre></div>
+<p>In English, this means:</p>
+<blockquote>
+<p>A sandwich must have all of the following properties:</p>
+<ul>
+<li>a top, which is a slice of bread</li>
+<li>a bottom, which is a slice of bread</li>
+<li>a proof that the shell is OK</li>
+<li>be cut into 1 or more pieces</li>
+</ul>
+</blockquote>
+<p>Where’s the part about smearing? Well, that’s covered by the “proof that the shell is OK”. I’m calling the top and bottom slices of the sandwich its “shell”. The <code>checkShell</code> function looks like this:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode agda"><code class="sourceCode agda"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>checkShell <span class="ot">:</span> SliceOfBread <span class="ot">→</span> SliceOfBread <span class="ot">→</span> Type</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>checkShell top bottom <span class="ot">=</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="co">-- The top slice is not smeared on its top</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  is-nothing <span class="ot">(</span>smearedTop top<span class="ot">)</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="co">-- and the bottom slice is not smeared on its bottom</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  × is-nothing <span class="ot">(</span>smearedBottom bottom<span class="ot">)</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  <span class="co">-- and either the bottom is smeared on its top or the top is smeared on its bottom (or both).</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  × <span class="ot">(</span>is-just <span class="ot">(</span>smearedBottom top<span class="ot">)</span> ∔ is-just <span class="ot">(</span>smearedTop bottom<span class="ot">))</span></span></code></pre></div>
+<p>The type signature of this <code>checkShell</code> function says it takes in two slices of bread (a top and a bottom) and returns a <strong>type</strong>. Not a value of a specific type, like a boolean, but rather a value that is a type itself. A function returning a type as a value might seem like an odd thing, and it should, because it only makes sense in Agda-land. What does it mean? Why not return a boolean (true or false)? Well, if we return a boolean, we will have to check if the function returns <code>true</code> wherever we use it. But remember, we’re trying to make it impossible to build an improper sandwich. So, instead of checking that the function returned the right value, we can have a function that can <em>only</em> return a value if its arguments pass its validation check. This idea from type theory, often called “propositions as types”, is the idea that <strong>an element of a type is a proof of a theorem</strong>. In <code>checkShell</code>, the only elements of its resulting type are proofs that the top and bottom slices are smeared appropriately, as checked by the body of the function. Take a moment to digest this. Now, the <code>Sandwich</code> property <code>shellOk</code> has the type of <code>checkShell top bottom</code>, which means <code>shellOk</code> is a proof that the shell of the sandwich is OK! Anytime we want to make a value of the type <code>Sandwich</code>, we need to provide a proof that its shell is OK.</p>
+<p>Altogether, this means we can only create a value of type <code>Sandwich</code> if it is a proper sandwich! And the type of <code>Sandwich</code> (together with <code>checkShell</code>) represents our original definition accurately:</p>
+<blockquote>
+<p>A sandwich consists of a bottom and a top, which are both slices of bread. Neither the bottom or top can be smeared on the outside. At least one of the bottom or top must be smeared on the inside. A sandwich may be in one or more pieces (i.e., it can be cut).</p>
+</blockquote>
+<h1 id="dependently-typed-utensils">Dependently Typed Utensils</h1>
+<p>In <a href="./a-simple-sandwich-part-i.html">Part I</a>, I encoded utensils in Haskell like this:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">Condiment</span> <span class="ot">=</span> <span class="dt">PeanutButter</span> <span class="op">|</span> <span class="dt">Jelly</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">UtensilShape</span> <span class="ot">=</span> <span class="dt">Knife</span> <span class="op">|</span> <span class="dt">Spoon</span> <span class="op">|</span> <span class="dt">Fork</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> <span class="dt">Utensil</span> <span class="ot">=</span> <span class="dt">Utensil</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  {<span class="ot"> shape ::</span> <span class="dt">UtensilShape</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  ,<span class="ot"> loadedWith ::</span> <span class="dt">Maybe</span> <span class="dt">Condiment</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  }</span></code></pre></div>
+<p>These are type definitions. A utensil has a shape (knife, spoon, or fork) and may be loaded with a condiment. Now, the problem is, I <em>wanted</em> to say that a utensil has a shape and may be loaded with a condiment <em>if its shape is a knife</em>. But we can’t write that in Haskell because <code>loadedWith</code> would <strong>depend</strong> on the value of <code>shape</code>.</p>
+<p>Since Agda is dependently typed, we can easily write this!</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode agda"><code class="sourceCode agda"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- We only have peanut butter and jelly in the pantry.</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> Condiment <span class="ot">:</span> Type <span class="kw">where</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  peanutButter jelly <span class="ot">:</span> Condiment</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="kw">data</span> UtensilShape <span class="ot">:</span> Type <span class="kw">where</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  knife spoon fork <span class="ot">:</span> UtensilShape</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="kw">record</span> Utensil <span class="ot">:</span> Type <span class="kw">where</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>  <span class="kw">field</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>    shape <span class="ot">:</span> UtensilShape</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>    loadedWith <span class="ot">:</span> Maybe <span class="ot">((</span>shape ≡ knife<span class="ot">)</span> × Condiment<span class="ot">)</span></span></code></pre></div>
+<p>The <code>Maybe</code> type works the same as in Haskell, where the possible values of <code>Maybe a</code> are:</p>
+<ul>
+<li><code>nothing</code>, or</li>
+<li><code>just x</code>, where <code>x</code> is a value of type <code>a</code>.</li>
+</ul>
+<p>The part <code>(shape ≡ knife) × Condiment</code> describes a pair of values <code>(x , y)</code>, where <code>x</code> is a proof that the shape is a knife and <code>y</code> is a condiment.</p>
+<p>Now, the only possible values of <code>loadedWith</code> are:</p>
+<ul>
+<li><code>nothing</code></li>
+<li><code>just (refl knife , peanutButter)</code></li>
+<li><code>just (refl knife , jelly)</code></li>
+</ul>
+<p><code>refl knife</code> is a proof that the shape is a knife (when it is, in fact, a knife).</p>
+<p>We can make a knife loaded with peanut butter like this:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode agda"><code class="sourceCode agda"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>pbKnife <span class="ot">:</span> Utensil</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>pbKnife <span class="ot">=</span> utensil knife <span class="ot">(</span>just <span class="ot">(</span>refl knife , peanutButter<span class="ot">))</span></span></code></pre></div>
+<p>If we try to make a fork loaded with peanut butter, we can’t:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode agda"><code class="sourceCode agda"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>pbFork <span class="ot">:</span> Utensil</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>pbFork <span class="ot">=</span> utensil fork <span class="ot">(</span>just <span class="ot">(</span>? , peanutButter<span class="ot">))</span></span></code></pre></div>
+<p>Nothing fits in the question mark! We would need to provide a proof that <code>fork ≡ knife</code>, which is obviously impossible. We can only make a fork that’s clean:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode agda"><code class="sourceCode agda"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>cleanFork <span class="ot">:</span> Utensil</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>cleanFork <span class="ot">=</span> utensil fork nothing</span></code></pre></div>
+<h1 id="dependently-typed-actions">Dependently Typed Actions</h1>
+<p>Now, for the sake of exploration, I wanted to see how far I could take this. So far, I’ve only shown implementions for static things, like sandwiches and utensils, but there’s more to the problem. In the Haskell code from <a href="./a-simple-sandwich-part-i.html">Part I</a>, there’s a function to fetch a utensil of a specified shape:</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="ot">fetchUtensil ::</span> <span class="dt">UtensilShape</span> <span class="ot">-&gt;</span> <span class="dt">Utensil</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>fetchUtensil s <span class="ot">=</span> <span class="dt">Utensil</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  { shape <span class="ot">=</span> s</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  , loadedWith <span class="ot">=</span> <span class="dt">Nothing</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  }</span></code></pre></div>
+<p>This function takes a utensil shape and returns a clean utensil of that shape. However, the type signature of the function only says it takes a utensil shape and returns a utensil. It doesn’t specify that the returned utensil will be the right shape or that it will be clean; that’s left to the body of the function. The common approach to making sure this function is implemented correctly is to write tests for it:</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="ot">testFetchUtensil ::</span> <span class="dt">IO</span> ()</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>testFetchUtensil <span class="ot">=</span> <span class="kw">do</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span> (fetchUtensil <span class="dt">Knife</span> <span class="op">==</span> <span class="dt">Utensil</span> { shape <span class="ot">=</span> <span class="dt">Knife</span>, loadedWith <span class="ot">=</span> <span class="dt">Nothing</span> })</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span> (fetchUtensil <span class="dt">Fork</span> <span class="op">==</span> <span class="dt">Utensil</span> { shape <span class="ot">=</span> <span class="dt">Fork</span>, loadedWith <span class="ot">=</span> <span class="dt">Nothing</span> })</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span> (fetchUtensil <span class="dt">Spoon</span> <span class="op">==</span> <span class="dt">Utensil</span> { shape <span class="ot">=</span> <span class="dt">Spoon</span>, loadedWith <span class="ot">=</span> <span class="dt">Nothing</span> })</span></code></pre></div>
+<p>Now, if we accidentally wrote <code>fetchUtensil</code> to always return a knife,</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="ot">fetchUtensil ::</span> <span class="dt">UtensilShape</span> <span class="ot">-&gt;</span> <span class="dt">Utensil</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>fetchUtensil s <span class="ot">=</span> <span class="dt">Utensil</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  { shape <span class="ot">=</span> <span class="dt">Knife</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  , loadedWith <span class="ot">=</span> <span class="dt">Nothing</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  }</span></code></pre></div>
+<p>our tests would catch the mistake.</p>
+<p>But there’s another approach we can take. Using dependent types in Agda, we can give the function the type of “taking a utensil shape and returning a clean utensil of that shape”, just like I wanted to describe it.</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode agda"><code class="sourceCode agda"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>fetchUtensil</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="ot">:</span> <span class="ot">(</span>s <span class="ot">:</span> UtensilShape<span class="ot">)</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="ot">→</span> Σ u ꞉ Utensil , <span class="ot">(</span>shape u ≡ s<span class="ot">)</span> × is-nothing <span class="ot">(</span>loadedWith u<span class="ot">)</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>fetchUtensil s <span class="ot">=</span> utensil s nothing , refl s , refl</span></code></pre></div>
+<p>What this type really says is, “take a utensil shape and return a pair of values <code>(u , p)</code> where <code>u</code> is a utensil and <code>p</code> is a proof that <code>u</code> has the given shape and is clean.” Then, the function body has no choice but to implement exactly that type. If we implement it any other way, the code won’t compile! This is the difference: having our mistakes caught during <strong>compiling</strong> versus <strong>running</strong> the code. If the function’s meaning is encoded in its type, our code <em>won’t compile</em> unless the function’s body honors that type.</p>
+<p>To be clear, I’m not advocating for all programs to be written in Agda. It’s not a programming language meant for producing general purpose applications. In fact, it’s only meant for writing (mathematical) proofs. But! It’s a great tool for discovering, planning, and expressing ideas rigorously. If the kids in the <a href="https://www.youtube.com/watch?v=FN2RM-CHkuI">Exact Instructions Challenge video</a> had planned the steps to making a sandwich in Agda, they would have left no room for their dad to make mistakes. Silly dad, dependent types are for kids!</p>
+<p>Just for fun, here’s the most complex part of the sandwich solution in Agda versus in Haskell. Not for the faint of heart!</p>
+<p>Haskell:</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="ot">loadFrom ::</span> <span class="dt">Utensil</span> <span class="ot">-&gt;</span> <span class="dt">CondimentJar</span> <span class="ot">-&gt;</span> <span class="dt">Either</span> <span class="dt">String</span> (<span class="dt">Utensil</span>, <span class="dt">CondimentJar</span>)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>loadFrom _ <span class="dt">CondimentJar</span>{lid<span class="ot">=</span><span class="dt">Closed</span>} <span class="ot">=</span> <span class="dt">Left</span> <span class="st">&quot;The jar is closed and knife-impermeable.&quot;</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>loadFrom _ <span class="dt">CondimentJar</span>{condiment<span class="ot">=</span><span class="dt">Nothing</span>} <span class="ot">=</span> <span class="dt">Left</span> <span class="st">&quot;The jar is empty. How disappointing.&quot;</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>loadFrom <span class="dt">Utensil</span>{shape<span class="ot">=</span><span class="dt">Fork</span>} _ <span class="ot">=</span> <span class="dt">Left</span> <span class="st">&quot;Forks aren&#39;t the right shape for condiments.&quot;</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>loadFrom u cj<span class="op">@</span><span class="dt">CondimentJar</span>{condiment<span class="ot">=</span><span class="dt">Just</span> c}</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>  <span class="ot">=</span> <span class="dt">Right</span> (u { loadedWith <span class="ot">=</span> <span class="dt">Just</span> c }, cj { condiment <span class="ot">=</span> <span class="dt">Nothing</span> })</span></code></pre></div>
+<p>Agda:</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode agda"><code class="sourceCode agda"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co">-- A Maybe value is left unchanged if we map it to the second value of a pair and project that second value.</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="co">-- Needed to prove this for part of loadFrom (following).</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>map-pr₂-pair-refl</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="ot">:</span> <span class="ot">{</span>A B <span class="ot">:</span> Type<span class="ot">}</span> <span class="ot">{</span>b <span class="ot">:</span> B<span class="ot">}</span> <span class="ot">(</span>ma <span class="ot">:</span> Maybe A<span class="ot">)</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="ot">→</span> ma ≡ map pr₂ <span class="ot">(</span>map <span class="ot">(λ</span> <span class="ot">(</span>a <span class="ot">:</span> A<span class="ot">)</span> <span class="ot">→</span> <span class="ot">(</span>b , a<span class="ot">))</span> ma<span class="ot">)</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>map-pr₂-pair-refl <span class="ot">{</span>A<span class="ot">}</span> <span class="ot">{</span>B<span class="ot">}</span> <span class="ot">{</span>b<span class="ot">}</span> <span class="ot">(</span>just x<span class="ot">)</span> <span class="ot">=</span> refl <span class="ot">(</span>just x<span class="ot">)</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>map-pr₂-pair-refl <span class="ot">{</span>A<span class="ot">}</span> <span class="ot">{</span>B<span class="ot">}</span> <span class="ot">{</span>b<span class="ot">}</span> nothing <span class="ot">=</span> refl nothing</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a><span class="co">-- Load a clean knife with a condiment from a jar that is open and full.</span></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a><span class="co">-- Take a utensil that is a knife and clean.</span></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a><span class="co">-- Take a condiment jar that is full and open.</span></span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a><span class="co">-- Return the knife, now loaded with the condiment from the jar,</span></span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a><span class="co">--   and the condiment jar, still open but now empty.</span></span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>loadFrom</span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>  <span class="ot">:</span> <span class="ot">(</span>uₛ <span class="ot">:</span> Σ u ꞉ Utensil , <span class="ot">(</span>shape u ≡ knife<span class="ot">)</span> × is-nothing <span class="ot">(</span>loadedWith u<span class="ot">))</span></span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>    <span class="ot">(</span>cjₛ <span class="ot">:</span> Σ cj ꞉ CondimentJar , is-just <span class="ot">(</span>condiment cj<span class="ot">)</span> × <span class="ot">(</span>state cj ≡ open&#39;<span class="ot">))</span></span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>  <span class="ot">→</span> Σ <span class="ot">(</span>u&#39; , cj&#39;<span class="ot">)</span> ꞉ Utensil × CondimentJar</span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a>    , <span class="ot">(</span>shape u&#39; ≡ shape <span class="ot">(</span>pr₁ uₛ<span class="ot">))</span> <span class="co">-- Same shape (*the* knife)</span></span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a>      × <span class="ot">(</span>condiment <span class="ot">(</span>pr₁ cjₛ<span class="ot">)</span> ≡ map pr₂ <span class="ot">(</span>loadedWith u&#39;<span class="ot">))</span> <span class="co">-- Loaded with condiment from jar</span></span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a>      × <span class="ot">(</span>state cj&#39; ≡ state <span class="ot">(</span>pr₁ cjₛ<span class="ot">))</span> <span class="co">-- State unchanged (still open)</span></span>
+<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a>      × is-nothing <span class="ot">(</span>condiment cj&#39;<span class="ot">)</span> <span class="co">-- Now empty</span></span>
+<span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a>loadFrom</span>
+<span id="cb17-23"><a href="#cb17-23" aria-hidden="true" tabindex="-1"></a>  <span class="ot">(</span>u , isKnife , notLoaded<span class="ot">)</span></span>
+<span id="cb17-24"><a href="#cb17-24" aria-hidden="true" tabindex="-1"></a>  <span class="ot">(</span>cj , isFull , isOpen<span class="ot">)</span></span>
+<span id="cb17-25"><a href="#cb17-25" aria-hidden="true" tabindex="-1"></a>  <span class="ot">=</span> <span class="ot">(</span><span class="kw">record</span> u <span class="ot">{</span> loadedWith <span class="ot">=</span> loadedWith&#39; <span class="ot">}</span> , <span class="kw">record</span> cj <span class="ot">{</span> condiment <span class="ot">=</span> nothing <span class="ot">})</span></span>
+<span id="cb17-26"><a href="#cb17-26" aria-hidden="true" tabindex="-1"></a>    , refl <span class="ot">(</span>shape u<span class="ot">)</span> , isLoaded&#39; , refl <span class="ot">(</span>state cj<span class="ot">)</span> , refl</span>
+<span id="cb17-27"><a href="#cb17-27" aria-hidden="true" tabindex="-1"></a>  <span class="kw">where</span></span>
+<span id="cb17-28"><a href="#cb17-28" aria-hidden="true" tabindex="-1"></a>  loadedWith&#39; <span class="ot">:</span> Maybe <span class="ot">((</span>shape u ≡ knife<span class="ot">)</span> × Condiment<span class="ot">)</span></span>
+<span id="cb17-29"><a href="#cb17-29" aria-hidden="true" tabindex="-1"></a>  loadedWith&#39; <span class="ot">=</span> map <span class="ot">(λ</span> x <span class="ot">→</span> <span class="ot">(</span>isKnife , x<span class="ot">))</span> <span class="ot">(</span>condiment cj<span class="ot">)</span></span>
+<span id="cb17-30"><a href="#cb17-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-31"><a href="#cb17-31" aria-hidden="true" tabindex="-1"></a>  isLoaded&#39; <span class="ot">:</span> condiment cj ≡ map pr₂ loadedWith&#39;</span>
+<span id="cb17-32"><a href="#cb17-32" aria-hidden="true" tabindex="-1"></a>  isLoaded&#39; <span class="ot">=</span> map-pr₂-pair-refl <span class="ot">(</span>condiment cj<span class="ot">)</span></span></code></pre></div>
+<h1 id="making-a-sandwich">Making a Sandwich</h1>
+<p>Now that I’ve shown how static things and actions can be written in Agda, how about using these individual parts together to make a sandwich? Remember, the main goal of this whole exercise is to demonstrate what it would be like to program a computer to make a sandwich (without ending up with a real sandwich being squeezed out the USB port).</p>
+<p>I’m going to show a few examples of attempts at making a sandwich and how mistakes are caught. To be clear, a failed attempt doesn’t mean something is wrong with the functions for making sandwiches; it’s the opposite! It’s showing how the code forces us to make proper sandwiches. In each of these attempts, I’m going to mock getting items from the kitchen by invoking fetching functions like <code>fetchUtensil</code>, but it should be understood that any method of creating a value of a certain type equates to fetching it in the real world (things don’t magically come into existence).</p>
+<h2 id="attempt-1-forgot-to-open-the-jar-of-peanut-butter">Attempt 1: Forgot to open the jar of peanut butter</h2>
+<p>This attempt didn’t result in a completed sandwich because we forgot to open the jar of peanut butter.</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode agda"><code class="sourceCode agda"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>sandwichAttempt1 <span class="ot">:</span> Sandwich</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>sandwichAttempt1 <span class="ot">=</span> <span class="ot">{!!}</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">where</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="co">-- Get a knife with peanut butter.</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>  step1 <span class="ot">:</span> Σ <span class="ot">_</span> ꞉ Utensil × CondimentJar , <span class="ot">_</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>  step1 <span class="ot">=</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>      newKnife <span class="ot">:</span> Utensil</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>      newKnife <span class="ot">=</span> pr₁ <span class="ot">(</span>fetchUtensil knife<span class="ot">)</span></span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>      pb <span class="ot">:</span> CondimentJar</span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>      pb <span class="ot">=</span> pr₁ <span class="ot">(</span>fetchCondimentJar peanutButter<span class="ot">)</span></span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>    <span class="co">-- Not possible because the pb jar isn&#39;t open!</span></span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>    <span class="kw">in</span> loadFrom <span class="ot">(</span>newKnife , <span class="ot">(</span>refl knife , refl<span class="ot">))</span> <span class="ot">(</span>pb , <span class="ot">((</span>peanutButter , refl<span class="ot">)</span> , <span class="ot">{!!}))</span> <span class="co">-- closed ≡ open&#39;</span></span></code></pre></div>
+<p>In Agda, <code>{!!}</code> denotes a hole to be filled with some value of the expected type. When writing Agda code, it’s typical to have lots of holes, and the goal is to fill them all with appropriate types (and with interactive assistance of Agda, which is really cool!). The first hole, in <code>sandwichAttempt1 = {!!}</code> is expecting a value of type <code>Sandwich</code>. Since this is a failed attempt at making a sandwich, this hole will be left unfilled. The real evidence that this attempt isn’t going to work is on the last line:</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode agda"><code class="sourceCode agda"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>loadFrom <span class="ot">(</span>newKnife , <span class="ot">(</span>refl knife , refl<span class="ot">))</span> <span class="ot">(</span>pb , <span class="ot">((</span>peanutButter , refl<span class="ot">)</span> , <span class="ot">{!!}))</span></span></code></pre></div>
+<p>The hole at the end of that line is expecting a value of the type <code>closed ≡ open'</code>, meaning a proof that <code>closed</code> is the same as <code>open</code>. It’s expecting this type because <code>loadFrom</code> takes an open condiment jar as its second argument and we’ve given it a closed one, <code>pb</code>. Obviously, we can’t supply a proof that the given jar is open because it’s not! So this hole <em>must</em> remain unfilled, and we’ll stay hungry.</p>
+<h2 id="attempt-2-tried-to-make-a-sandwich-without-condiments">Attempt 2: Tried to make a sandwich without condiments</h2>
+<div class="sourceCode" id="cb20"><pre class="sourceCode agda"><code class="sourceCode agda"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>sandwichAttempt2 <span class="ot">:</span> Sandwich</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>sandwichAttempt2 <span class="ot">=</span> sandwich topSlice&#39; bottomSlice&#39; <span class="ot">(</span>refl , refl , <span class="ot">{!!})</span> <span class="ot">(</span><span class="dv">1</span> , ⋆<span class="ot">)</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">where</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="co">-- Get a knife with peanut butter.</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>  step1 <span class="ot">:</span> Σ <span class="ot">_</span> ꞉ Utensil × CondimentJar , <span class="ot">_</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>  step1 <span class="ot">=</span></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>      newKnife <span class="ot">:</span> Utensil</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>      newKnife <span class="ot">=</span> pr₁ <span class="ot">(</span>fetchUtensil knife<span class="ot">)</span></span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>      pb <span class="ot">:</span> CondimentJar</span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>      pb <span class="ot">=</span> pr₁ <span class="ot">(</span>fetchCondimentJar peanutButter<span class="ot">)</span></span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>    <span class="kw">in</span> loadFrom <span class="ot">(</span>newKnife , <span class="ot">(</span>refl knife , refl<span class="ot">))</span> <span class="ot">(</span>pr₁ <span class="ot">(</span>openJar pb<span class="ot">)</span> , <span class="ot">((</span>peanutButter , refl<span class="ot">)</span> , refl open&#39;<span class="ot">))</span></span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>  <span class="co">-- Get a couple slices of bread.</span></span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a>  topSlice&#39; <span class="ot">:</span> SliceOfBread</span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a>  topSlice&#39; <span class="ot">=</span> pr₁ <span class="ot">(</span>fetchSliceOfBread wholeGrain<span class="ot">)</span></span>
+<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a>  bottomSlice&#39; <span class="ot">:</span> SliceOfBread</span>
+<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a>  bottomSlice&#39; <span class="ot">=</span> pr₁ <span class="ot">(</span>fetchSliceOfBread sourdough<span class="ot">)</span></span></code></pre></div>
+<p>This time, we got closer to making a proper sandwich! In <code>step1</code>, we got a knife and loaded it with peanut butter from a jar. Then, we got a couple slices of bread. We didn’t bother to use our knife or spread any condiments on either slice; we just left them plain. When we tried to make a sandwich out of these plain slices, we ended up with a hole:</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode agda"><code class="sourceCode agda"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>sandwich topSlice&#39; bottomSlice&#39; <span class="ot">(</span>refl , refl , <span class="ot">{!!})</span> <span class="ot">(</span><span class="dv">1</span> , ⋆<span class="ot">)</span></span></code></pre></div>
+<p>This hole is expecting a value of the type <code>is-just (smearedBottom topSlice') ∔ is-just (smearedTop bottomSlice')</code>, which means a proof that the top slice is smeared on its bottom or the bottom slice is smeared on its top. Since our slices are plain, we can’t provide that!</p>
+<h2 id="attempt-3-successful-sandwich-making">Attempt 3: Successful sandwich making!</h2>
+<p>Okay, this is a long one. Hey, it takes a lot of work to make a proper sandwich!</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode agda"><code class="sourceCode agda"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>sandwichAttempt3 <span class="ot">:</span> Sandwich</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>sandwichAttempt3 <span class="ot">=</span> sandwich topSliceWithJelly bottomSliceWithPB <span class="ot">(</span>refl , <span class="ot">(</span>refl , inl <span class="ot">(</span>jelly , refl<span class="ot">)))</span> <span class="ot">(</span><span class="dv">1</span> , ⋆<span class="ot">)</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>  <span class="kw">where</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  <span class="co">-- Get a knife with peanut butter.</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>  step1 <span class="ot">:</span> Σ <span class="ot">_</span> ꞉ Utensil × CondimentJar , <span class="ot">_</span></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>  step1 <span class="ot">=</span></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span></span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>      newKnife <span class="ot">:</span> Utensil</span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>      newKnife <span class="ot">=</span> pr₁ <span class="ot">(</span>fetchUtensil knife<span class="ot">)</span></span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>      pb <span class="ot">:</span> CondimentJar</span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>      pb <span class="ot">=</span> pr₁ <span class="ot">(</span>fetchCondimentJar peanutButter<span class="ot">)</span></span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>    <span class="kw">in</span> loadFrom <span class="ot">(</span>newKnife , refl knife , refl<span class="ot">)</span> <span class="ot">(</span>pr₁ <span class="ot">(</span>openJar pb<span class="ot">)</span> , <span class="ot">(</span>peanutButter , refl<span class="ot">)</span> , refl open&#39;<span class="ot">)</span></span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>  <span class="co">-- Get a slice of bread and smear it with the PB knife.</span></span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a>  step2 <span class="ot">:</span> Σ <span class="ot">_</span> ꞉ SliceOfBread × Utensil , <span class="ot">_</span></span>
+<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a>  step2 <span class="ot">=</span></span>
+<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span></span>
+<span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a>      bottomSlice <span class="ot">:</span> SliceOfBread</span>
+<span id="cb22-19"><a href="#cb22-19" aria-hidden="true" tabindex="-1"></a>      bottomSlice <span class="ot">=</span> pr₁ <span class="ot">(</span>fetchSliceOfBread sourdough<span class="ot">)</span></span>
+<span id="cb22-20"><a href="#cb22-20" aria-hidden="true" tabindex="-1"></a>      pbKnife <span class="ot">:</span> Utensil</span>
+<span id="cb22-21"><a href="#cb22-21" aria-hidden="true" tabindex="-1"></a>      pbKnife <span class="ot">=</span> pr₁ <span class="ot">(</span>pr₁ step1<span class="ot">)</span></span>
+<span id="cb22-22"><a href="#cb22-22" aria-hidden="true" tabindex="-1"></a>      emptyPB <span class="ot">:</span> CondimentJar</span>
+<span id="cb22-23"><a href="#cb22-23" aria-hidden="true" tabindex="-1"></a>      emptyPB <span class="ot">=</span> pr₂ <span class="ot">(</span>pr₁ step1<span class="ot">)</span></span>
+<span id="cb22-24"><a href="#cb22-24" aria-hidden="true" tabindex="-1"></a>    <span class="kw">in</span></span>
+<span id="cb22-25"><a href="#cb22-25" aria-hidden="true" tabindex="-1"></a>      smearSliceOfBread</span>
+<span id="cb22-26"><a href="#cb22-26" aria-hidden="true" tabindex="-1"></a>      <span class="ot">(</span>pbKnife , <span class="ot">(</span>refl <span class="ot">(</span>shape pbKnife<span class="ot">))</span> , <span class="ot">((</span>refl <span class="ot">(</span>shape pbKnife<span class="ot">))</span> , peanutButter<span class="ot">)</span> , refl<span class="ot">)</span></span>
+<span id="cb22-27"><a href="#cb22-27" aria-hidden="true" tabindex="-1"></a>      top</span>
+<span id="cb22-28"><a href="#cb22-28" aria-hidden="true" tabindex="-1"></a>      <span class="ot">(</span>bottomSlice , <span class="ot">(</span>inl <span class="ot">(</span>refl top , refl<span class="ot">)))</span></span>
+<span id="cb22-29"><a href="#cb22-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-30"><a href="#cb22-30" aria-hidden="true" tabindex="-1"></a>  <span class="co">-- Our successfuly smeared slice to be used as the bottom of the sandwich!</span></span>
+<span id="cb22-31"><a href="#cb22-31" aria-hidden="true" tabindex="-1"></a>  bottomSliceWithPB <span class="ot">:</span> SliceOfBread</span>
+<span id="cb22-32"><a href="#cb22-32" aria-hidden="true" tabindex="-1"></a>  bottomSliceWithPB <span class="ot">=</span> pr₁ <span class="ot">(</span>pr₁ step2<span class="ot">)</span></span>
+<span id="cb22-33"><a href="#cb22-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-34"><a href="#cb22-34" aria-hidden="true" tabindex="-1"></a>  <span class="co">-- Get another slice of bread and smear it with jelly, using the same knife as before.</span></span>
+<span id="cb22-35"><a href="#cb22-35" aria-hidden="true" tabindex="-1"></a>  step3 <span class="ot">:</span> Σ <span class="ot">_</span> ꞉ SliceOfBread × Utensil , <span class="ot">_</span></span>
+<span id="cb22-36"><a href="#cb22-36" aria-hidden="true" tabindex="-1"></a>  step3 <span class="ot">=</span></span>
+<span id="cb22-37"><a href="#cb22-37" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span></span>
+<span id="cb22-38"><a href="#cb22-38" aria-hidden="true" tabindex="-1"></a>      jellyKnife <span class="ot">:</span> Utensil</span>
+<span id="cb22-39"><a href="#cb22-39" aria-hidden="true" tabindex="-1"></a>      jellyKnife <span class="ot">=</span></span>
+<span id="cb22-40"><a href="#cb22-40" aria-hidden="true" tabindex="-1"></a>        <span class="kw">let</span></span>
+<span id="cb22-41"><a href="#cb22-41" aria-hidden="true" tabindex="-1"></a>          <span class="co">-- The knife is now clean after having spread all its peanut butter on the other slice.</span></span>
+<span id="cb22-42"><a href="#cb22-42" aria-hidden="true" tabindex="-1"></a>          usedKnife <span class="ot">:</span> Utensil</span>
+<span id="cb22-43"><a href="#cb22-43" aria-hidden="true" tabindex="-1"></a>          usedKnife <span class="ot">=</span> pr₂ <span class="ot">(</span>pr₁ step2<span class="ot">)</span></span>
+<span id="cb22-44"><a href="#cb22-44" aria-hidden="true" tabindex="-1"></a>          j <span class="ot">:</span> CondimentJar</span>
+<span id="cb22-45"><a href="#cb22-45" aria-hidden="true" tabindex="-1"></a>          j <span class="ot">=</span> pr₁ <span class="ot">(</span>fetchCondimentJar jelly<span class="ot">)</span></span>
+<span id="cb22-46"><a href="#cb22-46" aria-hidden="true" tabindex="-1"></a>        <span class="kw">in</span> pr₁ <span class="ot">(</span>pr₁ <span class="ot">(</span>loadFrom <span class="ot">(</span>usedKnife , <span class="ot">(</span>refl knife , refl<span class="ot">))</span> <span class="ot">(</span>pr₁ <span class="ot">(</span>openJar j<span class="ot">)</span> , <span class="ot">(</span>jelly , refl<span class="ot">)</span> , refl open&#39;<span class="ot">)))</span></span>
+<span id="cb22-47"><a href="#cb22-47" aria-hidden="true" tabindex="-1"></a>      topSlice <span class="ot">:</span> SliceOfBread</span>
+<span id="cb22-48"><a href="#cb22-48" aria-hidden="true" tabindex="-1"></a>      topSlice <span class="ot">=</span> pr₁ <span class="ot">(</span>fetchSliceOfBread wholeGrain<span class="ot">)</span></span>
+<span id="cb22-49"><a href="#cb22-49" aria-hidden="true" tabindex="-1"></a>    <span class="kw">in</span></span>
+<span id="cb22-50"><a href="#cb22-50" aria-hidden="true" tabindex="-1"></a>      smearSliceOfBread</span>
+<span id="cb22-51"><a href="#cb22-51" aria-hidden="true" tabindex="-1"></a>      <span class="ot">(</span>jellyKnife , <span class="ot">(</span>refl knife , <span class="ot">(</span>refl knife , jelly<span class="ot">)</span> , refl<span class="ot">))</span></span>
+<span id="cb22-52"><a href="#cb22-52" aria-hidden="true" tabindex="-1"></a>      bottom</span>
+<span id="cb22-53"><a href="#cb22-53" aria-hidden="true" tabindex="-1"></a>      <span class="ot">(</span>topSlice , <span class="ot">(</span>inr <span class="ot">(</span>refl bottom , refl<span class="ot">)))</span></span>
+<span id="cb22-54"><a href="#cb22-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-55"><a href="#cb22-55" aria-hidden="true" tabindex="-1"></a>  <span class="co">-- Our successfully smeared slice to be used as the top of the sandwich!</span></span>
+<span id="cb22-56"><a href="#cb22-56" aria-hidden="true" tabindex="-1"></a>  topSliceWithJelly <span class="ot">:</span> SliceOfBread</span>
+<span id="cb22-57"><a href="#cb22-57" aria-hidden="true" tabindex="-1"></a>  topSliceWithJelly <span class="ot">=</span> pr₁ <span class="ot">(</span>pr₁ step3<span class="ot">)</span></span></code></pre></div>
+<p>I broke it down into steps (<code>step1</code>, <code>step2</code>, <code>step3</code>) so it’s a bit easier to follow. The important part is we have our sandwich:</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode agda"><code class="sourceCode agda"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>sandwich topSliceWithJelly bottomSliceWithPB <span class="ot">(</span>refl , <span class="ot">(</span>refl , inl <span class="ot">(</span>jelly , refl<span class="ot">)))</span> <span class="ot">(</span><span class="dv">1</span> , ⋆<span class="ot">)</span></span></code></pre></div>
+<p>It has a top slice, a bottom slice, proof that the slices are smeared appropriately, and it’s in 1 piece.</p>
+<p>For most of you, it’s probably really difficult to try reading a foreign language in an unfamiliar paradigm. Don’t worry about piecing together every little bit. What you should be looking at are the types of the variables and what things they refer to. For example:</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode agda"><code class="sourceCode agda"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>usedKnife <span class="ot">:</span> Utensil</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>usedKnife <span class="ot">=</span> pr₂ <span class="ot">(</span>pr₁ step2<span class="ot">)</span></span></code></pre></div>
+<p>The first line tells us <code>usedKnife</code> is a utensil. And, in the second line, we can see it comes from <code>step2</code>, which involved a knife being used to smear a slice of bread with peanut butter, as the comment says. So, now we know <code>usedKnife</code> is not just any utensil, but a knife, and the one we used previously.</p>
+<p>See the full code on GitHub: <a href="https://github.com/SlimTim10/simple-sandwich">https://github.com/SlimTim10/simple-sandwich</a></p>
+<h1 id="conclusion">Conclusion</h1>
+<p>I hope you enjoyed this exploration with me! <a href="./contact.html">Send me a message</a> if you have any comments or feedback. I love to chat about this stuff! Many thanks to <a href="https://neckdeep.dev/">Danny</a> for sparking this idea and sharing the journey. Go check out his blog, it’s a real treat to read.</p>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1"><p>There have been attempts to extend Haskell’s type system, but they’re very hacky and ugly compared to Agda. It’s still <a href="https://serokell.io/blog/why-dependent-haskell">being worked on</a>, but it’s not quite there yet.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+    </section>
+	<section class="read-more">
+	  <a href="/blog.html" class="btn btn-primary">Read More</a>
+	</section>
+    <section class="newsletter">
+      <script async data-uid="3c58182786" src="https://tim-johns.ck.page/3c58182786/index.js"></script>
+    </section>
+  </article>
+</main>
+
+	<footer>
+      <div class="newsletter">
+        <script async data-uid="907145579d" src="https://tim-johns.ck.page/907145579d/index.js"></script>
+      </div>
+	  <div class="social-icons">
+		<a href="mailto:johns.timf@gmail.com">
+		  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Pro 6.1.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path d="M464 64C490.5 64 512 85.49 512 112C512 127.1 504.9 141.3 492.8 150.4L275.2 313.6C263.8 322.1 248.2 322.1 236.8 313.6L19.2 150.4C7.113 141.3 0 127.1 0 112C0 85.49 21.49 64 48 64H464zM217.6 339.2C240.4 356.3 271.6 356.3 294.4 339.2L512 176V384C512 419.3 483.3 448 448 448H64C28.65 448 0 419.3 0 384V176L217.6 339.2z"/></svg>
+		</a>
+		<a href="https://www.linkedin.com/in/tim-johns/" target="_blank">
+		  <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>LinkedIn</title><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+		</a>
+		<a href="https://github.com/SlimTim10" target="_blank">
+		  <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>GitHub</title><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+		</a>
+		<a href="https://www.instagram.com/slimtim10_/" target="_blank">
+		  <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Instagram</title><path d="M12 0C8.74 0 8.333.015 7.053.072 5.775.132 4.905.333 4.14.63c-.789.306-1.459.717-2.126 1.384S.935 3.35.63 4.14C.333 4.905.131 5.775.072 7.053.012 8.333 0 8.74 0 12s.015 3.667.072 4.947c.06 1.277.261 2.148.558 2.913.306.788.717 1.459 1.384 2.126.667.666 1.336 1.079 2.126 1.384.766.296 1.636.499 2.913.558C8.333 23.988 8.74 24 12 24s3.667-.015 4.947-.072c1.277-.06 2.148-.262 2.913-.558.788-.306 1.459-.718 2.126-1.384.666-.667 1.079-1.335 1.384-2.126.296-.765.499-1.636.558-2.913.06-1.28.072-1.687.072-4.947s-.015-3.667-.072-4.947c-.06-1.277-.262-2.149-.558-2.913-.306-.789-.718-1.459-1.384-2.126C21.319 1.347 20.651.935 19.86.63c-.765-.297-1.636-.499-2.913-.558C15.667.012 15.26 0 12 0zm0 2.16c3.203 0 3.585.016 4.85.071 1.17.055 1.805.249 2.227.415.562.217.96.477 1.382.896.419.42.679.819.896 1.381.164.422.36 1.057.413 2.227.057 1.266.07 1.646.07 4.85s-.015 3.585-.074 4.85c-.061 1.17-.256 1.805-.421 2.227-.224.562-.479.96-.899 1.382-.419.419-.824.679-1.38.896-.42.164-1.065.36-2.235.413-1.274.057-1.649.07-4.859.07-3.211 0-3.586-.015-4.859-.074-1.171-.061-1.816-.256-2.236-.421-.569-.224-.96-.479-1.379-.899-.421-.419-.69-.824-.9-1.38-.165-.42-.359-1.065-.42-2.235-.045-1.26-.061-1.649-.061-4.844 0-3.196.016-3.586.061-4.861.061-1.17.255-1.814.42-2.234.21-.57.479-.96.9-1.381.419-.419.81-.689 1.379-.898.42-.166 1.051-.361 2.221-.421 1.275-.045 1.65-.06 4.859-.06l.045.03zm0 3.678c-3.405 0-6.162 2.76-6.162 6.162 0 3.405 2.76 6.162 6.162 6.162 3.405 0 6.162-2.76 6.162-6.162 0-3.405-2.76-6.162-6.162-6.162zM12 16c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4zm7.846-10.405c0 .795-.646 1.44-1.44 1.44-.795 0-1.44-.646-1.44-1.44 0-.794.646-1.439 1.44-1.439.793-.001 1.44.645 1.44 1.439z"/></svg>
+		</a>
+        <a href="/rss.xml">
+          <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M0 64C0 46.3 14.3 32 32 32c229.8 0 416 186.2 416 416c0 17.7-14.3 32-32 32s-32-14.3-32-32C384 253.6 226.4 96 32 96C14.3 96 0 81.7 0 64zM0 416a64 64 0 1 1 128 0A64 64 0 1 1 0 416zM32 160c159.1 0 288 128.9 288 288c0 17.7-14.3 32-32 32s-32-14.3-32-32c0-123.7-100.3-224-224-224c-17.7 0-32-14.3-32-32s14.3-32 32-32z"/></svg>
+        </a>
+	  </div>
+	  <small>
+		&copy; 2022 Tim Johns. All rights reserved.
+	  </small>
+	  <small>
+		Site proudly generated by
+		<a href="http://jaspervdj.be/hakyll" target="_blank">Hakyll</a>
+		||
+		<a href="https://github.com/SlimTim10/slimtim10.github.io" target="_blank">View source</a>
+	  </small>
+	  <small>
+		Illustrations by
+		<a href="https://undraw.co" target="_blank">unDraw</a>
+		and Tim Johns
+	  </small>
+    </footer>
+	<script async src="./js/script.js"></script>
+  </body>
+</html>

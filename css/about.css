@@ -1,0 +1,1 @@
+#about .about-me-image img{width:100%}#about .about-me-text{display:flex;flex-direction:column;gap:1rem}@media screen and (min-width:100rem){#about .content{flex-direction:row;max-width:116rem}#about .about-me-image{flex:1;width:0;align-self:stretch}#about .about-me-image img{height:100%;object-fit:cover;object-position:left}#about .about-me-text{flex:1;max-width:50rem}}

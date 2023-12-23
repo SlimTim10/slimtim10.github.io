@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Tim Johns - When to use currying in JavaScript</title>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="A look at currying and when it's actually useful in JavaScript.">
+    <meta name="author" content="Tim Johns">
+    
+
+    <meta property="og:site_name" content="Tim Johns">
+    <meta property="og:title" content="When to use currying in JavaScript">
+    <meta property="og:url" content="https://timjohns.ca/when-to-use-currying-in-javascript.html">
+    <meta property="og:description" content="A look at currying and when it's actually useful in JavaScript.">
+    
+    <meta property="og:image" content="https://timjohns.ca./images/blog/when_to_use_currying_in_javascript.jpg">
+    
+    
+    <meta property="og:type" content="article">
+    
+
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inconsolata:wght@400;700&family=Inter:wght@300;400;500&family=Lato:wght@300;400;700;900&family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,1,0" />
+
+    <!-- Analytics -->
+    <script src="https://cdn.counter.dev/script.js" data-id="af659f42-a2fc-40d5-8e6c-a1036c76c51f" data-utcoffset="-4"></script>
+
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="canonical" href="https://timjohns.ca/when-to-use-currying-in-javascript.html">
+    <link rel="stylesheet" href="./css/reset.css" />
+    <link rel="stylesheet" href="./css/default.css" />
+    <link rel="stylesheet" href="./css/nav.css" />
+	<link rel="stylesheet" href="./css/vs2015.css" />
+	
+    <link rel="stylesheet" href="./css/post.css" />
+	
+  </head>
+  <body>
+	<header>
+	  <div>
+		<a href="/" id="logo">
+          <img alt="logo" src="./images/logo.svg"/>
+		</a>
+		<a href="#" id="toggle-menu" aria-label="Main Menu">
+		  <svg width="100" height="100" viewBox="0 0 100 100">
+			<path class="line line1" d="M 20,29.000046 H 80.000231 C 80.000231,29.000046 94.498839,28.817352 94.532987,66.711331 94.543142,77.980673 90.966081,81.670246 85.259173,81.668997 79.552261,81.667751 75.000211,74.999942 75.000211,74.999942 L 25.000021,25.000058" />
+			<path class="line line2" d="M 20,50 H 80" />
+			<path class="line line3" d="M 20,70.999954 H 80.000231 C 80.000231,70.999954 94.498839,71.182648 94.532987,33.288669 94.543142,22.019327 90.966081,18.329754 85.259173,18.331003 79.552261,18.332249 75.000211,25.000058 75.000211,25.000058 L 25.000021,74.999942" />
+		  </svg>
+		</a>
+	  </div>
+	  <nav class="collapsed">
+		<ul>
+		  <li><a href="/" >Home</a></li>
+		  <li><a href="/mentorship.html" >Mentorship</a></li>
+		  <li><a href="/events.html" >Events</a></li>
+		  <li><a href="/blog.html"  class="active" >Blog</a></li>
+		  <li><a href="/projects.html" >Projects</a></li>
+		  <li><a href="/about.html" >About</a></li>
+		  <li><a href="/contact.html" >Contact</a></li>
+		</ul>
+	  </nav>
+	</header>
+    <main>
+  <article id="blog-post">
+    <header>
+      <h1 class="writing">
+        When to use currying in JavaScript
+      </h1>
+      <p class="writing">Apr 11, 2023</p>
+      
+    </header>
+	<img class="post-image" alt="Photo of a bowl of curry with a keyboard next to it." src="./images/blog/when_to_use_currying_in_javascript.jpg" />
+    <section class="content writing">
+	  <p>This post is about the concept of <strong>currying</strong>, from functional programming, and when you should use it in JavaScript.</p>
+<p>I’m going to be honest. You probably don’t need to use currying in JavaScript. In fact, trying to fit it in your code is going to do more harm than good, unless it’s just for fun. Currying only becomes useful when you fully embrace functional programming, which, in JavaScript, means using a library like <a href="https://ramdajs.com/">Ramda</a> instead of the standard built-in functions.</p>
+<p>In this article, I’m going to start by explaining what currying is, then show how it can be useful <strong>in a functional programming context</strong>.</p>
+<h1 id="what-is-currying">What is currying?</h1>
+<p>Currying is the concept that functions never need to take multiple arguments; every function only takes a single argument. If a function needs to <strong>behave</strong> as if it takes multiple arguments, it returns another function instead.</p>
+<p>A regular, non-curried function is what you’re used to seeing:</p>
+<div class="sourceCode" id="cb1" data-org-language="js"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> add <span class="op">=</span> (x<span class="op">,</span> y) <span class="kw">=&gt;</span> x <span class="op">+</span> y</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="bu">console</span><span class="op">.</span><span class="fu">log</span>(</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add</span>(<span class="dv">2</span><span class="op">,</span> <span class="dv">3</span>) <span class="co">// 2 + 3</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>) <span class="co">// prints 5</span></span></code></pre></div>
+<p>This is a simple function that takes two numbers and returns their sum.</p>
+<p>A curried version of the same function looks like this:</p>
+<div class="sourceCode" id="cb2" data-org-language="js"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> addCurried <span class="op">=</span> x <span class="kw">=&gt;</span> y <span class="kw">=&gt;</span> x <span class="op">+</span> y</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="bu">console</span><span class="op">.</span><span class="fu">log</span>(</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">addCurried</span>(<span class="dv">2</span>)(<span class="dv">3</span>) <span class="co">// 2 + 3</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>) <span class="co">// prints 5</span></span></code></pre></div>
+<p>Instead of the function taking two arguments, it takes one argument, then returns <strong>another function</strong> that takes one argument and returns the sum. Notice how we have to pass the arguments to the function using more brackets, since the arguments are passed one at a time to each nested function.</p>
+<p>We can have as many arguments as we want this way:</p>
+<div class="sourceCode" id="cb3" data-org-language="js"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> addMore <span class="op">=</span> a <span class="kw">=&gt;</span> b <span class="kw">=&gt;</span> c <span class="kw">=&gt;</span> d <span class="kw">=&gt;</span> e <span class="kw">=&gt;</span> a <span class="op">+</span> b <span class="op">+</span> c <span class="op">+</span> d <span class="op">+</span> e</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="bu">console</span><span class="op">.</span><span class="fu">log</span>(</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">addMore</span>(<span class="dv">1</span>)(<span class="dv">2</span>)(<span class="dv">3</span>)(<span class="dv">4</span>)(<span class="dv">5</span>) <span class="co">// 1 + 2 + 3 + 4 + 5</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>) <span class="co">// prints 15</span></span></code></pre></div>
+<p>Because of the way a curried function works, we can do something called <strong>partial application</strong>. This is when we give a function fewer arguments than it can take:</p>
+<div class="sourceCode" id="cb4" data-org-language="js"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> addCurried <span class="op">=</span> x <span class="kw">=&gt;</span> y <span class="kw">=&gt;</span> x <span class="op">+</span> y</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="bu">console</span><span class="op">.</span><span class="fu">log</span>(</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">addCurried</span>(<span class="dv">2</span>) <span class="co">// y =&gt; 2 + y</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>) <span class="co">// [Function (anonymous)]</span></span></code></pre></div>
+<p>If we only pass <code>addCurried</code> one argument, the result is a function that expects another argument. In other words, the <code>2</code> went into the <code>x</code> argument, so we’re left with <code>y =&gt; 2 + y</code>. If we want, we can store this partially applied function into a variable so we can use it after the fact:</p>
+<div class="sourceCode" id="cb5" data-org-language="js"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> addCurried <span class="op">=</span> x <span class="kw">=&gt;</span> y <span class="kw">=&gt;</span> x <span class="op">+</span> y</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> add2 <span class="op">=</span> <span class="fu">addCurried</span>(<span class="dv">2</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co">// This is the same as:</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co">// const add2 = y =&gt; 2 + y</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="bu">console</span><span class="op">.</span><span class="fu">log</span>(</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add2</span>(<span class="dv">3</span>) <span class="co">// 2 + 3</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>) <span class="co">// prints 5</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="bu">console</span><span class="op">.</span><span class="fu">log</span>(</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add2</span>(<span class="dv">10</span>) <span class="co">// 2 + 10</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>) <span class="co">// prints 12</span></span></code></pre></div>
+<p>Now we have a function <code>add2</code>, which is expecting a single argument. Whatever we give it, it will add 2 to it.</p>
+<h1 id="when-is-currying-useful">When is currying useful?</h1>
+<p>Like I said, in a typical JavaScript codebase, it’s not. You can probably tell that the <code>addCurried</code> example is very contrived and doesn’t demonstrate any real benefit. But if you want to go deeper down the functional programming rabbit hole, let me show you how using curried functions can be even more elegant than the typical practice.</p>
+<p>It’s all about composition.</p>
+<p>In functional programming, <strong>composing</strong> functions is a fundamental concept. This means using <strong>one function after another</strong> on some data. It’s in using composition that curried functions really shine.</p>
+<p>In JavaScript, the way to compose two functions looks like this:</p>
+<div class="sourceCode" id="cb6" data-org-language="js"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> compose <span class="op">=</span> (f<span class="op">,</span> g) <span class="kw">=&gt;</span> x <span class="kw">=&gt;</span> <span class="fu">f</span>(<span class="fu">g</span>(x))</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> addCurried <span class="op">=</span> x <span class="kw">=&gt;</span> y <span class="kw">=&gt;</span> x <span class="op">+</span> y</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="bu">console</span><span class="op">.</span><span class="fu">log</span>(</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">compose</span>(<span class="fu">addCurried</span>(<span class="dv">2</span>)<span class="op">,</span> <span class="fu">addCurried</span>(<span class="dv">3</span>))(<span class="dv">10</span>) <span class="co">// 10 + 3 + 2 = 15</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>) <span class="co">// prints 15</span></span></code></pre></div>
+<p>When using composition, you should read it as operations being done on some data from right to left. In the above example, the starting data is <code>10</code>, which goes through <code>adding 3</code>, followed by <code>adding 2</code>, resulting in <code>15</code>.</p>
+<p>Let me show by example how composing a series of curried functions looks when compared to idiomatic functional JavaScript. I’m going to use an example based on a real problem I had to solve that doesn’t call for any particular programming style or language.</p>
+<p>The objective is to make a function <code>cleanExpression</code> that takes in a basic math expression as a string (e.g., “1 + 10 / 2”) and returns a cleaned version of it. The cleaning process is to remove extra spaces and make sure the expression alternates numbers and operators (there should never be two numbers or two operators next to each other). We’re dealing with single-digit numbers only.</p>
+<p>For example, “1    + 2 2 / 3 *” cleaned would be “1 + 2 / 3”.</p>
+<p>The following is an idiomatic functional JavaScript solution. Let’s call this “functional-lite”.</p>
+<div class="sourceCode" id="cb7" data-org-language="js"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Helper functions</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> isOperator <span class="op">=</span> x <span class="kw">=&gt;</span> <span class="st">&quot;+-*/&quot;</span><span class="op">.</span><span class="fu">includes</span>(x)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> isDigit <span class="op">=</span> x <span class="kw">=&gt;</span> <span class="st">&quot;1234567890&quot;</span><span class="op">.</span><span class="fu">includes</span>(x)</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> last <span class="op">=</span> xs <span class="kw">=&gt;</span> xs[xs<span class="op">.</span><span class="at">length</span> <span class="op">-</span> <span class="dv">1</span>]</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> init <span class="op">=</span> xs <span class="kw">=&gt;</span> xs<span class="op">.</span><span class="fu">slice</span>(<span class="dv">0</span><span class="op">,</span> <span class="op">-</span><span class="dv">1</span>)</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> intersperse <span class="op">=</span> (sep<span class="op">,</span> xs) <span class="kw">=&gt;</span> xs<span class="op">.</span><span class="fu">map</span>(x <span class="kw">=&gt;</span> [sep<span class="op">,</span> x])<span class="op">.</span><span class="fu">flat</span>()</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="co">// The main function</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> cleanExpression <span class="op">=</span> expr <span class="kw">=&gt;</span> {</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> parseNext <span class="op">=</span> ([acc<span class="op">,</span> shouldBe]<span class="op">,</span> x) <span class="kw">=&gt;</span> {</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (shouldBe <span class="op">===</span> <span class="st">&#39;digit&#39;</span> <span class="op">&amp;&amp;</span> <span class="fu">isDigit</span>(x)) {</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>      <span class="cf">return</span> [[<span class="op">...</span>acc<span class="op">,</span> x]<span class="op">,</span> <span class="st">&#39;operator&#39;</span>]</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> <span class="cf">if</span> (shouldBe <span class="op">===</span> <span class="st">&#39;operator&#39;</span> <span class="op">&amp;&amp;</span> <span class="fu">isOperator</span>(x)) {</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>      <span class="cf">return</span> [[<span class="op">...</span>acc<span class="op">,</span> x]<span class="op">,</span> <span class="st">&#39;digit&#39;</span>]</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>      <span class="cf">return</span> [acc<span class="op">,</span> shouldBe]</span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> chars <span class="op">=</span> expr<span class="op">.</span><span class="fu">split</span>(<span class="st">&#39;&#39;</span>)</span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> alternating <span class="op">=</span> chars<span class="op">.</span><span class="fu">reduce</span>(parseNext<span class="op">,</span> [<span class="st">&#39;&#39;</span><span class="op">,</span> <span class="st">&#39;digit&#39;</span>])[<span class="dv">0</span>]</span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> cleaned <span class="op">=</span> <span class="fu">isOperator</span>(<span class="fu">last</span>(alternating)) <span class="op">?</span> <span class="fu">init</span>(alternating) <span class="op">:</span> alternating</span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> <span class="fu">intersperse</span>(<span class="st">&#39; &#39;</span><span class="op">,</span> cleaned)<span class="op">.</span><span class="fu">join</span>(<span class="st">&#39;&#39;</span>)</span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a><span class="bu">console</span><span class="op">.</span><span class="fu">log</span>(</span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cleanExpression</span>(<span class="st">&#39;1    + 2 2 / 3 *&#39;</span>)</span>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<p>And here is a more functional JavaScript solution using the <a href="https://ramdajs.com/">Ramda</a> library in-place of built-in functions:</p>
+<div class="sourceCode" id="cb8" data-org-language="js"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> R <span class="op">=</span> <span class="pp">require</span>(<span class="st">&#39;ramda&#39;</span>)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> isOperator <span class="op">=</span> x <span class="kw">=&gt;</span> R<span class="op">.</span><span class="fu">includes</span>(x<span class="op">,</span> <span class="st">&quot;+-*/&quot;</span>)</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> isDigit <span class="op">=</span> x <span class="kw">=&gt;</span> R<span class="op">.</span><span class="fu">includes</span>(x<span class="op">,</span> <span class="st">&quot;1234567890&quot;</span>)</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> cleanExpression <span class="op">=</span> expr <span class="kw">=&gt;</span> {</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  <span class="kw">const</span> parseNext <span class="op">=</span> ([acc<span class="op">,</span> shouldBe]<span class="op">,</span> x) <span class="kw">=&gt;</span> {</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (shouldBe <span class="op">===</span> <span class="st">&#39;digit&#39;</span> <span class="op">&amp;&amp;</span> <span class="fu">isDigit</span>(x)) {</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>      <span class="cf">return</span> [acc <span class="op">+</span> x<span class="op">,</span> <span class="st">&#39;operator&#39;</span>]</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> <span class="cf">if</span> (shouldBe <span class="op">===</span> <span class="st">&#39;operator&#39;</span> <span class="op">&amp;&amp;</span> <span class="fu">isOperator</span>(x)) {</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>      <span class="cf">return</span> [acc <span class="op">+</span> x<span class="op">,</span> <span class="st">&#39;digit&#39;</span>]</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>    } <span class="cf">else</span> {</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>      <span class="cf">return</span> [acc<span class="op">,</span> shouldBe]</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> R<span class="op">.</span><span class="fu">compose</span>(</span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>    R<span class="op">.</span><span class="fu">join</span>(<span class="st">&#39;&#39;</span>)<span class="op">,</span></span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>    R<span class="op">.</span><span class="fu">intersperse</span>(<span class="st">&#39; &#39;</span>)<span class="op">,</span></span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>    (xs <span class="kw">=&gt;</span> <span class="fu">isOperator</span>(R<span class="op">.</span><span class="fu">last</span>(xs)) <span class="op">?</span> R<span class="op">.</span><span class="fu">init</span>(xs) <span class="op">:</span> xs)<span class="op">,</span></span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>    R<span class="op">.</span><span class="at">head</span><span class="op">,</span></span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>    R<span class="op">.</span><span class="fu">reduce</span>(parseNext<span class="op">,</span> [<span class="st">&#39;&#39;</span><span class="op">,</span> <span class="st">&#39;digit&#39;</span>])<span class="op">,</span></span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>    R<span class="op">.</span><span class="fu">split</span>(<span class="st">&#39;&#39;</span>)</span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>  )(expr)</span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a><span class="bu">console</span><span class="op">.</span><span class="fu">log</span>(</span>
+<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cleanExpression</span>(<span class="st">&#39;1    + 2 2 / 3 *&#39;</span>)</span>
+<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div>
+<p>Fewer helper functions are needed because Ramda implements the others, but that’s not what’s important. The main lines to compare are in the body of <code>cleanExpression</code>:</p>
+<div class="sourceCode" id="cb9" data-org-language="js"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co">// functional-lite</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> chars <span class="op">=</span> expr<span class="op">.</span><span class="fu">split</span>(<span class="st">&#39;&#39;</span>)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> alternating <span class="op">=</span> chars<span class="op">.</span><span class="fu">reduce</span>(parseNext<span class="op">,</span> [<span class="st">&#39;&#39;</span><span class="op">,</span> <span class="st">&#39;digit&#39;</span>])[<span class="dv">0</span>]</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> cleaned <span class="op">=</span> <span class="fu">isOperator</span>(<span class="fu">last</span>(alternating)) <span class="op">?</span> <span class="fu">init</span>(alternating) <span class="op">:</span> alternating</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="cf">return</span> <span class="fu">intersperse</span>(<span class="st">&#39; &#39;</span><span class="op">,</span> cleaned)<span class="op">.</span><span class="fu">join</span>(<span class="st">&#39;&#39;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb10" data-org-language="js"><pre class="sourceCode javascript"><code class="sourceCode javascript"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co">// more functional</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="cf">return</span> R<span class="op">.</span><span class="fu">compose</span>(</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  R<span class="op">.</span><span class="fu">join</span>(<span class="st">&#39;&#39;</span>)<span class="op">,</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  R<span class="op">.</span><span class="fu">intersperse</span>(<span class="st">&#39; &#39;</span>)<span class="op">,</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  (xs <span class="kw">=&gt;</span> <span class="fu">isOperator</span>(R<span class="op">.</span><span class="fu">last</span>(xs)) <span class="op">?</span> R<span class="op">.</span><span class="fu">init</span>(xs) <span class="op">:</span> xs)<span class="op">,</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  R<span class="op">.</span><span class="at">head</span><span class="op">,</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  R<span class="op">.</span><span class="fu">reduce</span>(parseNext<span class="op">,</span> [<span class="st">&#39;&#39;</span><span class="op">,</span> <span class="st">&#39;digit&#39;</span>])<span class="op">,</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  R<span class="op">.</span><span class="fu">split</span>(<span class="st">&#39;&#39;</span>)</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>)(expr)</span></code></pre></div>
+<p>Ramda’s <code>compose</code> function extends function composition to any number of functions instead of only two. Still, it should be read from right to left (or bottom to top). The above example can be understood as:</p>
+<ul>
+<li>Feed in <code>expr</code> as the data to be operated on, which in this case should be a math expression as a string.</li>
+<li>Split the string, turning it into an array of characters.</li>
+<li>Use <code>reduce</code> to walk through the expression, building a new version that alternates digits and operators (beginning with a digit).</li>
+<li>Take the first element of the previous result (because it returned a pair and we only need the new expression).</li>
+<li>Remove the last character if it is an operator.</li>
+<li>Intersperse the new expression with spaces.</li>
+<li>Finally, Convert the new expression into a string.</li>
+</ul>
+<p>This way, we can think of the solution as processing some data through a pipeline (bottom to top). The output of each step feeds into the input of the next one until we reach the end, which gets returned as a final result.</p>
+<p>The steps of the solution are the same in both versions, but the second version looks more linear and we can clearly see each step.</p>
+<p>For the <strong>most functional</strong> version, here’s the same solution in Haskell, where all functions are curried by default and the composition operator is a dot (<code>.</code>) :</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode haskell"><code class="sourceCode haskell"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="ot">isOperator ::</span> <span class="dt">Char</span> <span class="ot">-&gt;</span> <span class="dt">Bool</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>isOperator x <span class="ot">=</span> x <span class="ot">`elem`</span> <span class="st">&quot;+-*/&quot;</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="fu">isDigit</span><span class="ot"> ::</span> <span class="dt">Char</span> <span class="ot">-&gt;</span> <span class="dt">Bool</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="fu">isDigit</span> x <span class="ot">=</span> x <span class="ot">`elem`</span> <span class="st">&quot;1234567890&quot;</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="ot">intersperse ::</span> <span class="dt">Char</span> <span class="ot">-&gt;</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">String</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>intersperse sep <span class="ot">=</span> <span class="fu">init</span> <span class="op">.</span> <span class="fu">concat</span> <span class="op">.</span> <span class="fu">map</span> (\x <span class="ot">-&gt;</span> [x, sep])</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a><span class="ot">cleanExpression ::</span> <span class="dt">String</span> <span class="ot">-&gt;</span> <span class="dt">String</span></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>cleanExpression <span class="ot">=</span></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>  intersperse <span class="ch">&#39; &#39;</span></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>  <span class="op">.</span> (\xs <span class="ot">-&gt;</span> <span class="kw">if</span> isOperator (<span class="fu">last</span> xs) <span class="kw">then</span> <span class="fu">init</span> xs <span class="kw">else</span> xs)</span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>  <span class="op">.</span> <span class="fu">fst</span></span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>  <span class="op">.</span> <span class="fu">foldl</span> parseNext (<span class="st">&quot;&quot;</span>, <span class="st">&quot;digit&quot;</span>)</span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>  <span class="kw">where</span></span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a><span class="ot">    parseNext ::</span> (<span class="dt">String</span>, <span class="dt">String</span>) <span class="ot">-&gt;</span> <span class="dt">Char</span> <span class="ot">-&gt;</span> (<span class="dt">String</span>, <span class="dt">String</span>)</span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>    parseNext (acc, shouldBe) x</span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>      <span class="op">|</span> shouldBe <span class="op">==</span> <span class="st">&quot;digit&quot;</span> <span class="op">&amp;&amp;</span> <span class="fu">isDigit</span> x <span class="ot">=</span></span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>        (acc <span class="op">++</span> [x], <span class="st">&quot;operator&quot;</span>)</span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a>      <span class="op">|</span> shouldBe <span class="op">==</span> <span class="st">&quot;operator&quot;</span> <span class="op">&amp;&amp;</span> isOperator x <span class="ot">=</span></span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a>        (acc <span class="op">++</span> [x], <span class="st">&quot;digit&quot;</span>)</span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a>      <span class="op">|</span> <span class="fu">otherwise</span> <span class="ot">=</span> (acc, shouldBe)</span>
+<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a><span class="ot">main ::</span> <span class="dt">IO</span> ()</span>
+<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a>main <span class="ot">=</span> <span class="kw">do</span></span>
+<span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span> <span class="op">$</span> cleanExpression <span class="st">&quot;1    + 2 2 / 3 *&quot;</span> <span class="op">==</span> <span class="st">&quot;1 + 2 / 3&quot;</span></span></code></pre></div>
+<h1 id="conclusion">Conclusion</h1>
+<p>Currying is not a very complicated concept, but most people are unfamiliar with it because they have no use for it. And for good reason! It only shines when you decide to write <strong>very functional</strong> code and use composition everywhere. Languages like Haskell take advantage of this by defining all functions to be curried by default and having a very small operator for composing functions (like a dot).</p>
+<p>For a fun exercise, try implementing Ramda’s <code>compose</code> function on your own! It should be able to compose any number of functions, not just two.</p>
+    </section>
+	<section class="read-more">
+	  <a href="/blog.html" class="btn btn-primary">Read More</a>
+	</section>
+    <section class="newsletter">
+      <script async data-uid="3c58182786" src="https://tim-johns.ck.page/3c58182786/index.js"></script>
+    </section>
+  </article>
+</main>
+
+	<footer>
+      <div class="newsletter">
+        <script async data-uid="907145579d" src="https://tim-johns.ck.page/907145579d/index.js"></script>
+      </div>
+	  <div class="social-icons">
+		<a href="mailto:johns.timf@gmail.com">
+		  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Pro 6.1.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path d="M464 64C490.5 64 512 85.49 512 112C512 127.1 504.9 141.3 492.8 150.4L275.2 313.6C263.8 322.1 248.2 322.1 236.8 313.6L19.2 150.4C7.113 141.3 0 127.1 0 112C0 85.49 21.49 64 48 64H464zM217.6 339.2C240.4 356.3 271.6 356.3 294.4 339.2L512 176V384C512 419.3 483.3 448 448 448H64C28.65 448 0 419.3 0 384V176L217.6 339.2z"/></svg>
+		</a>
+		<a href="https://www.linkedin.com/in/tim-johns/" target="_blank">
+		  <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>LinkedIn</title><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+		</a>
+		<a href="https://github.com/SlimTim10" target="_blank">
+		  <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>GitHub</title><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+		</a>
+		<a href="https://www.instagram.com/slimtim10_/" target="_blank">
+		  <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Instagram</title><path d="M12 0C8.74 0 8.333.015 7.053.072 5.775.132 4.905.333 4.14.63c-.789.306-1.459.717-2.126 1.384S.935 3.35.63 4.14C.333 4.905.131 5.775.072 7.053.012 8.333 0 8.74 0 12s.015 3.667.072 4.947c.06 1.277.261 2.148.558 2.913.306.788.717 1.459 1.384 2.126.667.666 1.336 1.079 2.126 1.384.766.296 1.636.499 2.913.558C8.333 23.988 8.74 24 12 24s3.667-.015 4.947-.072c1.277-.06 2.148-.262 2.913-.558.788-.306 1.459-.718 2.126-1.384.666-.667 1.079-1.335 1.384-2.126.296-.765.499-1.636.558-2.913.06-1.28.072-1.687.072-4.947s-.015-3.667-.072-4.947c-.06-1.277-.262-2.149-.558-2.913-.306-.789-.718-1.459-1.384-2.126C21.319 1.347 20.651.935 19.86.63c-.765-.297-1.636-.499-2.913-.558C15.667.012 15.26 0 12 0zm0 2.16c3.203 0 3.585.016 4.85.071 1.17.055 1.805.249 2.227.415.562.217.96.477 1.382.896.419.42.679.819.896 1.381.164.422.36 1.057.413 2.227.057 1.266.07 1.646.07 4.85s-.015 3.585-.074 4.85c-.061 1.17-.256 1.805-.421 2.227-.224.562-.479.96-.899 1.382-.419.419-.824.679-1.38.896-.42.164-1.065.36-2.235.413-1.274.057-1.649.07-4.859.07-3.211 0-3.586-.015-4.859-.074-1.171-.061-1.816-.256-2.236-.421-.569-.224-.96-.479-1.379-.899-.421-.419-.69-.824-.9-1.38-.165-.42-.359-1.065-.42-2.235-.045-1.26-.061-1.649-.061-4.844 0-3.196.016-3.586.061-4.861.061-1.17.255-1.814.42-2.234.21-.57.479-.96.9-1.381.419-.419.81-.689 1.379-.898.42-.166 1.051-.361 2.221-.421 1.275-.045 1.65-.06 4.859-.06l.045.03zm0 3.678c-3.405 0-6.162 2.76-6.162 6.162 0 3.405 2.76 6.162 6.162 6.162 3.405 0 6.162-2.76 6.162-6.162 0-3.405-2.76-6.162-6.162-6.162zM12 16c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4zm7.846-10.405c0 .795-.646 1.44-1.44 1.44-.795 0-1.44-.646-1.44-1.44 0-.794.646-1.439 1.44-1.439.793-.001 1.44.645 1.44 1.439z"/></svg>
+		</a>
+        <a href="/rss.xml">
+          <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M0 64C0 46.3 14.3 32 32 32c229.8 0 416 186.2 416 416c0 17.7-14.3 32-32 32s-32-14.3-32-32C384 253.6 226.4 96 32 96C14.3 96 0 81.7 0 64zM0 416a64 64 0 1 1 128 0A64 64 0 1 1 0 416zM32 160c159.1 0 288 128.9 288 288c0 17.7-14.3 32-32 32s-32-14.3-32-32c0-123.7-100.3-224-224-224c-17.7 0-32-14.3-32-32s14.3-32 32-32z"/></svg>
+        </a>
+	  </div>
+	  <small>
+		&copy; 2022 Tim Johns. All rights reserved.
+	  </small>
+	  <small>
+		Site proudly generated by
+		<a href="http://jaspervdj.be/hakyll" target="_blank">Hakyll</a>
+		||
+		<a href="https://github.com/SlimTim10/slimtim10.github.io" target="_blank">View source</a>
+	  </small>
+	  <small>
+		Illustrations by
+		<a href="https://undraw.co" target="_blank">unDraw</a>
+		and Tim Johns
+	  </small>
+    </footer>
+	<script async src="./js/script.js"></script>
+  </body>
+</html>

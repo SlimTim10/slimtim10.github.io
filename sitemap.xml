@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:mobile="http://www.google.com/schemas/sitemap-mobile/1.0" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
+  <url>
+    <loc>https://timjohns.ca</loc>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <url>
+    <loc>https://timjohns.ca/typescripts-hidden-feature-subtypes.html</loc>
+    <lastmod>Dec  6, 2023</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://timjohns.ca/the-dangers-of-learning-to-code-with-training-wheels.html</loc>
+    <lastmod>Oct 14, 2023</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://timjohns.ca/implementing-a-genetic-algorithm-in-typescript.html</loc>
+    <lastmod>Aug 11, 2023</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://timjohns.ca/build-your-own-genetic-algorithm.html</loc>
+    <lastmod>Jun  5, 2023</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://timjohns.ca/when-to-use-currying-in-javascript.html</loc>
+    <lastmod>Apr 11, 2023</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://timjohns.ca/a-simple-sandwich-part-ii.html</loc>
+    <lastmod>Jan 17, 2023</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://timjohns.ca/a-simple-sandwich-part-i.html</loc>
+    <lastmod>Dec 28, 2022</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://timjohns.ca/how-to-learn-web-development-on-your-own.html</loc>
+    <lastmod>Dec 15, 2022</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://timjohns.ca/5-tips-to-make-the-most-of-a-coding-mentorship.html</loc>
+    <lastmod>Nov  8, 2022</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://timjohns.ca/6-tips-to-make-the-most-of-a-coding-bootcamp.html</loc>
+    <lastmod>Oct 24, 2022</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://timjohns.ca/breaking-the-order-coding-challenge-analysis-1.html</loc>
+    <lastmod>Aug 26, 2022</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <url>
+    <loc>https://timjohns.ca/imperative-vs-declarative-with-pumpkin-pie.html</loc>
+    <lastmod>Jun 30, 2022</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+</urlset>

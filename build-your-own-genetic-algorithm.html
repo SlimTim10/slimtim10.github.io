@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Tim Johns - Build Your Own Genetic Algorithm</title>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="An introduction to genetic algorithms along with an example problem to solve with your own code.">
+    <meta name="author" content="Tim Johns">
+    
+
+    <meta property="og:site_name" content="Tim Johns">
+    <meta property="og:title" content="Build Your Own Genetic Algorithm">
+    <meta property="og:url" content="https://timjohns.ca/build-your-own-genetic-algorithm.html">
+    <meta property="og:description" content="An introduction to genetic algorithms along with an example problem to solve with your own code.">
+    
+    <meta property="og:image" content="https://timjohns.ca./images/blog/genetic_algorithm.jpg">
+    
+    
+    <meta property="og:type" content="article">
+    
+
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inconsolata:wght@400;700&family=Inter:wght@300;400;500&family=Lato:wght@300;400;700;900&family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@48,400,1,0" />
+
+    <!-- Analytics -->
+    <script src="https://cdn.counter.dev/script.js" data-id="af659f42-a2fc-40d5-8e6c-a1036c76c51f" data-utcoffset="-4"></script>
+
+    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="canonical" href="https://timjohns.ca/build-your-own-genetic-algorithm.html">
+    <link rel="stylesheet" href="./css/reset.css" />
+    <link rel="stylesheet" href="./css/default.css" />
+    <link rel="stylesheet" href="./css/nav.css" />
+	<link rel="stylesheet" href="./css/vs2015.css" />
+	
+    <link rel="stylesheet" href="./css/post.css" />
+	
+  </head>
+  <body>
+	<header>
+	  <div>
+		<a href="/" id="logo">
+          <img alt="logo" src="./images/logo.svg"/>
+		</a>
+		<a href="#" id="toggle-menu" aria-label="Main Menu">
+		  <svg width="100" height="100" viewBox="0 0 100 100">
+			<path class="line line1" d="M 20,29.000046 H 80.000231 C 80.000231,29.000046 94.498839,28.817352 94.532987,66.711331 94.543142,77.980673 90.966081,81.670246 85.259173,81.668997 79.552261,81.667751 75.000211,74.999942 75.000211,74.999942 L 25.000021,25.000058" />
+			<path class="line line2" d="M 20,50 H 80" />
+			<path class="line line3" d="M 20,70.999954 H 80.000231 C 80.000231,70.999954 94.498839,71.182648 94.532987,33.288669 94.543142,22.019327 90.966081,18.329754 85.259173,18.331003 79.552261,18.332249 75.000211,25.000058 75.000211,25.000058 L 25.000021,74.999942" />
+		  </svg>
+		</a>
+	  </div>
+	  <nav class="collapsed">
+		<ul>
+		  <li><a href="/" >Home</a></li>
+		  <li><a href="/mentorship.html" >Mentorship</a></li>
+		  <li><a href="/events.html" >Events</a></li>
+		  <li><a href="/blog.html"  class="active" >Blog</a></li>
+		  <li><a href="/projects.html" >Projects</a></li>
+		  <li><a href="/about.html" >About</a></li>
+		  <li><a href="/contact.html" >Contact</a></li>
+		</ul>
+	  </nav>
+	</header>
+    <main>
+  <article id="blog-post">
+    <header>
+      <h1 class="writing">
+        Build Your Own Genetic Algorithm
+      </h1>
+      <p class="writing">Jun  5, 2023</p>
+      
+    </header>
+	<img class="post-image" alt="Digital drawing of DNA surrounded by binary code." src="./images/blog/genetic_algorithm.jpg" />
+    <section class="content writing">
+	  <hr />
+<p><em>I’m extremely grateful to <a href="https://neckdeep.dev/">Danny Fekete</a> and his wife, Carolyn Piccinin, for their indispensable help with editing and vetting the bulk of this work for accuracy. And my partner, <a href="https://lzduque.github.io/">Leticia Duque</a>, for her patience in reviewing and her valuable insights.</em></p>
+<hr />
+<h1 id="overview">Overview</h1>
+<p>Years ago, I stumbled upon <a href="http://www.ai-junkie.com/ga/intro/gat1.html">a tutorial</a> on genetic algorithms that ended up being one of the most interesting coding exercises I’ve ever done. I still think about it often to this day and I want to bring that same joy to others by providing my own explanation of the subject. This tutorial is meant to be approachable by anyone who knows at least one programming language, beginners and experts alike. Doing this exercise is a great a way to practice a new programming language you’re learning, improve with one you’re already familiar with, or rekindle your passion for programming. Even better, it will also give you a deeper understanding of how evolution works in the real world after simulating it in code.</p>
+<p>I’m going to start by explaining the general steps of a standard genetic algorithm. Afterwards, and this is the fun part, I’m going to outline a problem to solve so you can start coding right away! Your resulting program only needs to take a single number as input and print a string as output, so it can have a simple command-line user interface or you can make a fancy web UI—it’s up to you how far you want to take it.</p>
+<p>Throughout this tutorial, I’ll be using terms from the topics of natural selection and genetics. You do not need to understand the terms in depth in order to follow along. If you want to learn more about how these things work in the real world, check out <a href="https://neckdeep.dev/blog/2023-06-05-the-non-computer-science-behind-genetic-algorithms/">this article</a> by <a href="https://neckdeep.dev/">Danny Fekete</a>.</p>
+<h1 id="a-standard-genetic-algorithm">A Standard Genetic Algorithm</h1>
+<p>Very broadly, <strong>genetic algorithms</strong> attempt to mimic principles of natural selection and genetics to find optimal solutions to problems. The overall idea is, given a target problem, we’re going to encode potential solutions to the problem. Thinking of these potential solutions as <strong>organisms</strong>, we’ll simulate natural selection, allowing them to evolve into better solutions, and then hopefully leaving us with the kind of great solution we were looking for.</p>
+<p>The kinds of problems genetic algorithms are well-suited for are problems in which we know what a good solution would look like, but can’t easily come up with one ourselves. Some use-cases are: the <a href="https://en.wikipedia.org/wiki/Travelling_salesman_problem">travelling salesman problem</a>, employee shift scheduling (e.g., the <a href="https://en.wikipedia.org/wiki/Nurse_scheduling_problem">nurse scheduling problem</a>), and <a href="https://en.wikipedia.org/wiki/List_of_genetic_algorithm_applications">many more</a>.</p>
+<p>In this tutorial, I’m going to describe a <em>standard</em> genetic algorithm, which is easy to code and also recommended by experts. The idea is, once you understand how to code this version of a genetic algorithm, when you have a new problem to solve, you can attempt to apply this algorithm as-is or make modifications to the steps as needed.</p>
+<blockquote>
+<p>Start by using an “off the shelf” GA (genetic algorithm). It is pointless developing a complex GA, if your problem can be solved using a simple and standard implementation.</p>
+<p>– Sastry, K., Goldberg, D., Kendall, G. (2005). <a href="https://doi.org/10.1007/0-387-28356-0_4">Genetic Algorithms</a>.</p>
+</blockquote>
+<p>Before we dive into details, here’s a high-level overview of the steps of the algorithm:</p>
+<ul>
+<li><strong>Planning:</strong> Before writing any code, we need to answer the question: <em>How do we encode a potential solution to the target problem?</em></li>
+<li><strong>Setting parameters:</strong> There are a few key parameters that need to be set, which will heavily influence the performance of the algorithm each time we run it.</li>
+<li><strong>Create initial population:</strong> The first population of organisms is created.</li>
+<li><strong>Fitness evaluation:</strong> The fitness of each organism in the entire population is evaluated.</li>
+<li><strong>Selection:</strong> Two organisms are selected as parents to reproduce.</li>
+<li><strong>Crossover:</strong> The parents produce two offspring by potentially undergoing <em>crossover</em>.</li>
+<li><strong>Mutation:</strong> Some genes in the offspring might get mutated.</li>
+<li><strong>Replace population:</strong> When there’s enough offspring to form a new population, the old population gets replaced.</li>
+<li><strong>Pick the winner:</strong> The fittest organism in the remaining population is your solution!</li>
+</ul>
+<div class="center">
+<p><img src="images/blog/genetic_algorithm/genetic_algorithm_flow.svg" /></p>
+</div>
+<h2 id="step-1-planning">Step 1. Planning</h2>
+<p>The first step towards building your own genetic algorithm for a target problem is to plan how potential solutions to the problem will be encoded as organisms. More specifically, how to represent genes and chromosomes, and how to evaluate the fitness of an organism.</p>
+<p>Breaking it down from the top, each <strong>organism</strong> will only be made up of a single <strong>chromosome</strong>, so the two terms are often interchangeable. (This also means an organism’s entire genome and DNA will be encoded in its one-and-only chromosome, which makes things much simpler than with most real organisms.) All of the information for a potential solution must be encoded in this chromosome.</p>
+<p>As in nature, a chromosome is made up of <strong>genes</strong>, which are like numbered containers for information. In this algorithm, and unlike in nature, chromosomes should all be the same length (i.e., they should contain the same number of genes). This is necessary in order for the <em>crossover</em> step to work as it is described in Step 6.</p>
+<p>Each gene’s information only has so many possible variations. A particular variant of a gene is called an <strong>allele</strong>. Breaking down this last piece, an allele is made up of <strong>nucleotides</strong> (the building blocks of DNA), which are essentially units of information. In our code, each nucleotide will be represented by one <strong>bit</strong> (<code>0</code> or <code>1</code>), since this is the smallest piece of information on a computer.</p>
+<p>Genes, each having their own position in a chromosome, can be different sizes. To determine the size of a particular gene, we need to decide on the number of possible alleles needed for the target problem at that gene. For example, if you choose a gene to be 3 bits in size, that gives</p>
+<div class="center">
+<p><strong>(size of bit)<sup>(size of gene)</sup> = 2<sup>3</sup> = 8</strong></p>
+</div>
+<p>different possible variants of the gene. (The size of a bit is always 2, since there are only two possible values: <code>0</code> or <code>1</code>.)</p>
+<p>Each organism should represent a potential solution to the operating problem. An organism’s representation is called its <strong>phenotype</strong>. For instance, if the expected solution to an operating problem is an English word, each gene in that organism could be expressed as a letter (e.g., “d”). The combined result of its genes would be its phenotype: a string of letters (e.g., “dwnlode”). In this example, we only need one kind of gene because each part of a chromosome is a letter all the same.<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a></p>
+<p>To allow for 26 (lowercase) letters, we would need genes to be at least 5 bits in length (2<sup>5</sup> would give us the necessary headroom of 32 possible alleles):</p>
+<div class="table-container">
+
+<table>
+<thead>
+<tr class="header">
+<th>allele</th>
+<th>value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>00001</code></td>
+<td><code>a</code></td>
+</tr>
+<tr class="even">
+<td><code>00010</code></td>
+<td><code>b</code></td>
+</tr>
+<tr class="odd">
+<td><code>00011</code></td>
+<td><code>c</code></td>
+</tr>
+<tr class="even">
+<td>…</td>
+<td>…</td>
+</tr>
+<tr class="odd">
+<td><code>11010</code></td>
+<td><code>z</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<p>Here’s a breakdown of an example chromosome that could be used for that kind of word-based operating problem:</p>
+<div class="center">
+<p><img src="images/blog/genetic_algorithm/chromosome_explanation.svg" /></p>
+</div>
+<p>The first gene in the above chromosome has the allele that represents the value “a”.</p>
+<p>Now for fitness. For whatever problem we want our algorithm to solve, we need to know what a good solution looks like because we need some way of knowing which organisms are better than others. The idea here is to come up with a way to <strong>evaluate</strong> each organism and give it a <strong>fitness</strong> score (a decimal number). The higher the fitness score, the closer the organism is to an ideal solution. It’s difficult to be more descriptive than this because fitness evaluation varies a lot depending on the problem, so I’ll explain by example.</p>
+<p>Let’s say the target problem is to find the best values for <code>a</code>, <code>b</code>, <code>c</code>, and <code>d</code> in the equation <code>a + 2b + 3c + 4d = 30</code>.<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> Each organism’s phenotype is its particular values for <code>a</code>, <code>b</code>, <code>c</code>, and <code>d</code>. The fitness evaluation for this problem could be:</p>
+<div class="center">
+<pre class="example"><code>1 / (abs((a + 2b + 3c + 4d) - 30) + 1)
+</code></pre>
+</div>
+<p>Where <code>abs</code> gives the absolute value of a number. This evaluation is designed to give a higher fitness score for better values, with 1 being a perfect score. The range is <code>(0, 1]</code>, meaning from 0 (exclusive) to 1 (inclusive).</p>
+<p>So, an organism with the values <code>a = 0</code>, <code>b = 0</code>, <code>c = 10</code>, and <code>d = 0</code> would have a fitness of 1…</p>
+<div class="center">
+<pre class="example"><code>1 / (((a + 2b + 3c + 4d) - 30) + 1)
+= 1 / (((0 + 2(0) + 3(10) + 4(0)) - 30) + 1)
+= 1 / (0 + 1)
+= 1
+</code></pre>
+</div>
+<p>…which is a perfect score! This makes sense, because these values perfectly satisfy the target equation.</p>
+<div class="center">
+<pre class="example"><code>a + 2b + 3c + 4d = 30
+0 + 2(0) + 3(10) + 4(0) = 30
+30 = 30
+</code></pre>
+</div>
+<h2 id="step-2" id="step-2-setting-parameters">Step 2. Setting parameters</h2>
+<p>The algorithm has four major parameters that must be set. These will affect how well the algorithm performs each time it runs on a target problem. Once you’ve finished implementing your algorithm, these are the parameters you’ll want to play with and see how it performs differently.</p>
+<h3 id="population-size">Population size</h3>
+<p>This is the number of organisms in the population for each generation. We’ll call this parameter <code>populationSize</code>.</p>
+<p>A good starting point is <code>populationSize = 50</code>.</p>
+<h3 id="crossover-rate">Crossover rate</h3>
+<p>As pairs of organisms are selected to reproduce for the next generation, they may produce exact copies or be combined (like sexual reproduction in the real world). The crossover rate is the <strong>probability</strong> that each pair of selected organisms will be crossed over, which will be explained in Step 6. We’ll call this parameter <code>crossoverRate</code>.</p>
+<p>A good starting point is <code>crossoverRate = 0.6</code>.</p>
+<h3 id="mutation-rate">Mutation rate</h3>
+<p>Every bit of information in every chromosome has a (low) chance to be mutated, which will be explained in Step 7. Mutations can spark new traits that can then be carried to future generations, adding diversity to the population. We’ll call this parameter <code>mutationRate</code>.</p>
+<p>A good starting point is <code>mutationRate = 0.05</code>.</p>
+<h3 id="stopping-condition">Stopping condition</h3>
+<p>At some point, the algorithm has to stop, otherwise you’ve created an infinite loop! The easiest stopping condition to implement is to set a limit on the <strong>number of generations</strong>. When the limit is reached, take the organism with the highest fitness from the last generation’s population and you have a solution!</p>
+<p>Alternately, you could let the stopping condition be a <strong>fitness threshold</strong>. When a organism’s fitness meets the threshold, halt and deem it the winner!</p>
+<h2 id="step-3-create-initial-population">Step 3. Create initial population</h2>
+<p>The first generation of organisms needs to come from somewhere. A good way to make the first population is to randomly generate every bit of information in every organism’s chromosome until the number of organisms is equal to <code>populationSize</code>. That way, all the organisms in the population will have completely random genes.</p>
+<h2 id="step-4-fitness-evaluation">Step 4. Fitness evaluation</h2>
+<p>Let the games begin! Evaluate the fitness of every organism in the population and store this information to be used in the next step.<a href="#fn3" class="footnote-ref" id="fnref3" role="doc-noteref"><sup>3</sup></a></p>
+<h2 id="step-5-selection">Step 5. Selection</h2>
+<p>This step begins the reproduction process (along with the next two steps). The current population needs to be used to form a new population (the next generation). Essentially, we’re going to select pairs of organisms from the current population and have them reproduce to form offspring. Each pair will produce two offspring, and once we have enough offspring (determined by <code>populationSize</code>), they will replace the current population.</p>
+<p>Since the goal of the algorithm is to work towards a better solution, this step is where we simulate competition. In nature, not all members will reproduce equally—some will thrive and have lots of offspring while others will be less successful by comparison (due to death, inability to find a mate, etc.). Instead of just selecting organisms at random, the probability that an organism is selected should be proportional to its fitness. After all, this is the purpose of an organism’s fitness! It should be more likely for high-performing organisms to be selected for reproduction than their lower-performing peers. For this, we’re going to use the <strong>roulette wheel</strong> strategy.</p>
+<p>Let’s say we have a population of five organisms:</p>
+<div class="table-container">
+
+<table>
+<thead>
+<tr class="header">
+<th>Organism</th>
+<th>Chromosome</th>
+<th>Fitness</th>
+<th>Percent of population fitness</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><span style="color:#9933FF">&#9632;</span> 1</td>
+<td><code>0011 0110</code></td>
+<td>0.23</td>
+<td>9.9%</td>
+</tr>
+<tr class="even">
+<td><span style="color:#333333">&#9632;</span> 2</td>
+<td><code>0001 1010</code></td>
+<td>0.68</td>
+<td>29.2%</td>
+</tr>
+<tr class="odd">
+<td><span style="color:#61C0FF">&#9632;</span> 3</td>
+<td><code>1001 1011</code></td>
+<td>0.1</td>
+<td>4.3%</td>
+</tr>
+<tr class="even">
+<td><span style="color:#17C22E">&#9632;</span> 4</td>
+<td><code>1010 0111</code></td>
+<td>0.95</td>
+<td>40.8%</td>
+</tr>
+<tr class="odd">
+<td><span style="color:#EB0000">&#9632;</span> 5</td>
+<td><code>0101 0010</code></td>
+<td>0.37</td>
+<td>15.9%</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<p>(Don’t pay much attention to the chromosome values in this example. I made them up randomly.)</p>
+<p>At a casino, every segment of a roulette wheel is equal in size. But our goal is to make a rigged roulette wheel where the segments are proportional to their fitness:</p>
+<div class="center">
+<p><img src="images/blog/genetic_algorithm/genetic_algorithm_roulette.png" /></p>
+</div>
+<p>Now, when we spin the wheel to select an organism, it’s obvious there will be a bigger chance to land on <strong>organism 4</strong> than any other organism.</p>
+<p>If you want more direct instructions on implementing the roulette wheel strategy in code, click/tap below. Or, you can enjoy devising the algorithm on your own!</p>
+<details>
+<summary>Show roulette wheel instructions</summary>
+
+<p>To implement roulette wheel selection in code, this is what you need to do:</p>
+<ul>
+<li>(Your organisms must be kept in order. The way they’re ordered doesn’t matter, so long as the order doesn’t change.)</li>
+<li>Calculate the total fitness of the population (sum the fitnesses of all organisms).</li>
+<li>Calculate the cumulative fitness of each organism. The cumulative fitness of an organism is its fitness plus the sum of the fitnesses of all the organisms before it.</li>
+<li>Generate a random number, <code>r</code>, between 0 (exclusive) and the total fitness (inclusive).</li>
+<li>Find the first organism whose cumulative fitness is greater than or equal to <code>r</code>.</li>
+</ul>
+<p>For example, if we calculate the cumulative fitnesses of our organisms…</p>
+<div class="table-container">
+
+<table>
+<thead>
+<tr class="header">
+<th>Organism</th>
+<th>Chromosome</th>
+<th>Fitness</th>
+<th>Cumulative fitness</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1</td>
+<td><code>0011 0110</code></td>
+<td>0.23</td>
+<td>0.23</td>
+</tr>
+<tr class="even">
+<td>2</td>
+<td><code>0001 1010</code></td>
+<td>0.68</td>
+<td>0.91</td>
+</tr>
+<tr class="odd">
+<td>3</td>
+<td><code>1001 1011</code></td>
+<td>0.1</td>
+<td>1.01</td>
+</tr>
+<tr class="even">
+<td>4</td>
+<td><code>1010 0111</code></td>
+<td>0.95</td>
+<td>1.96</td>
+</tr>
+<tr class="odd">
+<td>5</td>
+<td><code>0101 0010</code></td>
+<td>0.37</td>
+<td>2.33</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<p>…and if <code>r</code> turns out to be 1.89, that means we select <strong>organism 4</strong>.</p>
+<div class="center">
+<p><img src="images/blog/genetic_algorithm/roulette_wheel_cumulative.svg" /></p>
+</div>
+</details>
+
+<p>We have now met the overall goal of this step: to <strong>select two organisms while accounting for their fitness</strong>, which will be used in the next step to produce a pair of offspring.<a href="#fn4" class="footnote-ref" id="fnref4" role="doc-noteref"><sup>4</sup></a></p>
+<h2 id="step-6-crossover">Step 6. Crossover</h2>
+<p>The purpose of this step is to involve an important aspect of natural selection: heredity. Offspring tend to resemble some combination of their parents (and diminishingly, their more distant ancestors). We’re going to achieve this through reproduction by breeding or cloning. The offspring of the two previously selected organisms will either inherit a combination of their traits (genes from both parents) or be clones of the parents.</p>
+<p>To check if a crossover should happen, generate a random number, <code>r</code>, between 0 and 1. If <code>r</code> is less than or equal to <code>crossoverRate</code>, perform a crossover. Otherwise, let the offspring be exact copies of the parents (put simply, the parents become the offspring).</p>
+<p>To crossover two organisms, pick a random position between the genes of a chromosome and swap all the alleles to the right in the first chromosome with the corresponding alleles in the second chromosome. (Remember, our chromosomes are supposed to contain the same number of genes, so this makes it easy to line them up and cut them at the same spot.)</p>
+<div class="center">
+<p><img src="images/blog/genetic_algorithm/crossover.svg" /></p>
+</div>
+<h2 id="step-7-mutation">Step 7. Mutation</h2>
+<p>Due to mutation in nature, novel or modified characteristics occasionally show up that do not appear to have belonged to an ancestor, but can still be passed on to offspring like any other trait. Combined with heredity, this suggests that a population has a capacity for change beyond just an endless recombination of preexisting traits. And due to fitness-based selection, occasionally a novel trait will arise that confers a competitive advantage (e.g., the organism that has that new trait is better able to survive and reproduce because of it). These traits will then enter and proliferate across the population through subsequent generations.</p>
+<p>To simulate genetic mutation in code, we allow the newly formed offspring the potential to mutate. For each bit in each offspring’s chromosome:</p>
+<ul>
+<li>Generate a random number, <code>r</code>, between 0 and 1.</li>
+<li>If <code>r</code> is less than or equal to <code>mutationRate</code>, mutate the bit. To mutate, simply flip the bit (<code>0</code> to <code>1</code>, or <code>1</code> to <code>0</code>).</li>
+</ul>
+<h2 id="step-8-replace-population">Step 8. Replace population</h2>
+<p>Steps 5 to 7 (selection, crossover, and mutation) taken as a cycle together form the reproduction process. Each cycle produces two offspring. We need to repeat the cycle until we get enough offspring to form a new population (<code>populationSize</code>), which immediately replaces the old population. The old population won’t be needed anymore (everything dies…). (For practical purposes, this means offspring never reproduce with the previous generation.)</p>
+<h2 id="step-9-repeat-until-the-stopping-condition-is-met">Step 9. Repeat until the stopping condition is met</h2>
+<p>As the gods of this artificial world of digital organisms, we decide when the simulation ends.</p>
+<p>Steps 4 to 8 form the main loop of the algorithm. Each iteration of that loop is one generation. The planned stopping condition marks the end of the loop, which leaves us with the last generation’s population. If the stopping condition is a limit on the number of generations, say 100, then we simply stop after repeating 100 iterations.</p>
+<h2 id="step-10-pick-the-winner">Step 10. Pick the winner</h2>
+<p>In the remaining population, pick the organism with the highest fitness. There’s your solution!</p>
+<h1 id="a-target-problem">A Target Problem</h1>
+<p>Just reading about genetic algorithms won’t be enough to grasp this concept; you need to try implementing a genetic algorithm on your own. But first, you need the right kind of problem to solve. Lucky for you, I’ve got that part covered! In this section, I’m going to outline a problem and give you all the necessary details so you can start coding in any programming language you want. In other words, I’m going to cover <strong>Step 1</strong> (planning) and you have to do the rest.</p>
+<h2 id="the-problem">The Problem</h2>
+<p>Given a target number, find a human-readable string of single-digit numbers and basic arithmetic operators that equals that number. For example, if the target number is 10, some solutions would be:</p>
+<ul>
+<li><code>5 + 5</code></li>
+<li><code>5 * 2</code></li>
+<li><code>5 + 5 + 1 - 1 - 5 - 5 + 1 + 9 * 1 / 1</code></li>
+</ul>
+<p><strong>Note:</strong> Because the solutions should take the form of math strings, you should decide how those strings get evaluated. For example, they could be evaluated left-to-right or use the standard order of operations (multiplication &gt; division &gt; addition &gt; subtraction). So, <code>2 + 2 * 3 = 8</code> or <code>2 + 2 * 3 = 12</code>. Feel free to choose whichever evaluation method is easier for you to implement.</p>
+<h2 id="implementing-step-1-planning">Implementing Step 1. Planning</h2>
+<p>Since all of the example solutions (above) equal 10 exactly, in a genetic algorithm they would all be ideal matches with perfect fitness. Of course, there are many possible solutions to reach any target number and our genetic algorithm may not discover <em>any</em> of them in the limited time it has to run. So, the true goal of our genetic algorithm is to give us the <em>best</em> candidate after a certain number of generations. After all, genetic algorithms aren’t guaranteed to give perfect solutions every time.</p>
+<p>In this problem, a potential solution is to be a string of single-digit numbers and arithmetic operators, so that is exactly what an organism’s chromosome should represent. The genes, being pieces of a chromosome, should therefore each express a single-digit number or an arithmetic operator. More specifically, we want strings that alternate between numbers and operators (<em>number</em> <em>operator</em> <em>number</em> <em>operator</em> …). So, let’s have two kinds of genes: a number gene and an operator gene.</p>
+<p>To determine gene size, we need to know how many possible alleles are necessary. For number genes, the required values are single-digit numbers: <code>0</code>, <code>1</code>, <code>2</code>, <code>3</code>, <code>4</code>, <code>5</code>, <code>6</code>, <code>7</code>, <code>8</code>, and <code>9</code>. That’s ten possible alleles in total, so we need a minimum of four bits per gene (giving us 2<sup>4</sup> = 16 different possible alleles). We’ll have a few alleles left over, but we can consider them junk if they turn up in the resulting chromosome. So, our alleles for number genes are:</p>
+<div class="table-container">
+
+<table>
+<thead>
+<tr class="header">
+<th>allele</th>
+<th>value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>0000</code></td>
+<td><code>0</code></td>
+</tr>
+<tr class="even">
+<td><code>0001</code></td>
+<td><code>1</code></td>
+</tr>
+<tr class="odd">
+<td><code>0010</code></td>
+<td><code>2</code></td>
+</tr>
+<tr class="even">
+<td><code>0011</code></td>
+<td><code>3</code></td>
+</tr>
+<tr class="odd">
+<td><code>0100</code></td>
+<td><code>4</code></td>
+</tr>
+<tr class="even">
+<td><code>0101</code></td>
+<td><code>5</code></td>
+</tr>
+<tr class="odd">
+<td><code>0110</code></td>
+<td><code>6</code></td>
+</tr>
+<tr class="even">
+<td><code>0111</code></td>
+<td><code>7</code></td>
+</tr>
+<tr class="odd">
+<td><code>1000</code></td>
+<td><code>8</code></td>
+</tr>
+<tr class="even">
+<td><code>1001</code></td>
+<td><code>9</code></td>
+</tr>
+<tr class="odd">
+<td><code>1010</code></td>
+<td><code>(junk)</code></td>
+</tr>
+<tr class="even">
+<td><code>1011</code></td>
+<td><code>(junk)</code></td>
+</tr>
+<tr class="odd">
+<td><code>1100</code></td>
+<td><code>(junk)</code></td>
+</tr>
+<tr class="even">
+<td><code>1101</code></td>
+<td><code>(junk)</code></td>
+</tr>
+<tr class="odd">
+<td><code>1110</code></td>
+<td><code>(junk)</code></td>
+</tr>
+<tr class="even">
+<td><code>1111</code></td>
+<td><code>(junk)</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<p>For operator genes, we need to represent four basic math operators: <code>+</code>, <code>-</code>, <code>*</code>, and <code>/</code>. Conveniently, we can use two bits for exactly four different possible values:</p>
+<div class="table-container">
+
+<table>
+<thead>
+<tr class="header">
+<th>allele</th>
+<th>value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>00</code></td>
+<td><code>+</code></td>
+</tr>
+<tr class="even">
+<td><code>01</code></td>
+<td><code>-</code></td>
+</tr>
+<tr class="odd">
+<td><code>10</code></td>
+<td><code>*</code></td>
+</tr>
+<tr class="even">
+<td><code>11</code></td>
+<td><code>/</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<p>As an example, we could have the following organism’s chromosome and its phenotype:</p>
+<div class="center">
+<p><img src="images/blog/genetic_algorithm/problem_chromosome_explanation.svg" /></p>
+</div>
+<p>When evaluating a math string (an organism’s phenotype), we’ll have to clean up any junk it may have. Let’s say, for any junk in the string, ignore the junk gene and its immediately preceeding gene (which should be an operator).</p>
+<p>Here’s an example with clean-up:</p>
+<div class="center">
+<pre class="example"><code>[0101 10 0010 00 1010 01 0001 00 1000 11 1111 00 0010]
+= 5 * 2 + (junk) - 1 + 8 / (junk) + 2
+= 5 * 2 - 1 + 8 + 2
+= 19
+</code></pre>
+</div>
+<p>Now we need to decide how the fitness of an organism should be evaluated. Recall that we need an evaluation function which produces a higher number for organisms that are closer to the ideal solution. Ideally, we should fit the fitness number into the range <code>(0, 1]</code>, since this makes the roulette wheel selection easier. Try to come up with this function yourself, or click/tap to see my suggestion below (there’s more than one right answer!).</p>
+<details>
+<summary>Show fitness function</summary>
+
+<p><code>fitness(phenotype) = 1 / abs((target - phenotype) + 1)</code></p>
+<p>Where <code>phenotype</code> is the evaluated expression of a given organism, <code>target</code> is the target number, and <code>abs</code> gives the absolute value of a number.</p>
+</details>
+
+<p><strong>Watch out!</strong> It is very possible for division by 0 to be part of a phenotype. I’ll leave it up to you to decide how to handle it, but do expect it to happen and think about your options.</p>
+<h2 id="build-it">Build it!</h2>
+<p>That’s it! Now you’re on your own to code this algorithm by implementing Steps 2 through 10. In the end, you should have a program which, given a target number, produces a math expression for that number. Remember, if you’re not getting good results, try tweaking the <a href="#step-2">parameters</a>.</p>
+<h1 id="food-for-thought">Food for Thought</h1>
+<h2 id="why-a-chance-of-crossover">Why a chance of crossover?</h2>
+<p>Why is it important to have a chance of crossover <em>not</em> happening? Suppose we have two organisms, Alice and Bob, selected to be parents. Alice’s fitness is 99% and Bob’s is 80%. If Alice and Bob are to produce offspring who inherit from both of them, the offspring are almost guaranteed to have a lower fitness than Alice’s 99%. A preferable outcome would be for Alice’s offspring to <em>exclusively</em> contain her genes—without any crossover with Bob—resulting in a clone. (That final percentage point of fitness might be then achieved with a lucky mutation.)</p>
+<h2 id="can-organisms-breed-with-themselves">Can organisms breed with themselves?</h2>
+<p>Did you notice, in the reproduction process, it’s possible for an organism to be paired with itself? The exact same organism can be <strong>selected</strong> twice in a row! Then, in the <strong>crossover</strong> step, whether a crossover happens or not, we’ll get two identical offspring. So really, one organism can be taken from the current population to produce <em>two</em> of itself for the next population. What are the possible implications of this when the algorithm runs?</p>
+<h2 id="what-does-cloning-represent">What does cloning represent?</h2>
+<p>When a crossover doesn’t occur, the offspring are clones of the parents. What does it mean to produce clones? Are we simulating an organism that reproduces both sexually <em>and</em> asexually? Or are we representing organisms that simply carry on living into the next generation?</p>
+<h2 id="what-are-the-traits">What are the traits?</h2>
+<p>In the real world, organisms can be described as having many traits. In the target problem described above, what are the traits of an organism? Do each of our organisms only have a single trait: its evaluated number? Or can we think of each expressed allele as a trait?</p>
+<h2 id="when-does-crossover-help">When does crossover help?</h2>
+<p>In the target problem described above, does crossing over two high-fitness organisms have a good chance of producing high-fitness offspring? Swapping genes seems likely to drastically, and almost randomly, change a organism’s phenotype. It seems more like mutating a chunk of a chromosome than inheriting traits.</p>
+<h2 id="what-are-other-ways-of-representing-organisms-in-the-target-problem">What are other ways of representing organisms in the target problem?</h2>
+<p>The plan I laid out for the target problem is only one of many options. What are some other ways you could define genes and chromosomes to build math strings? Do we need more than one kind of gene?</p>
+<h1 id="footnotes">Footnotes</h1>
+<section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes">
+<hr />
+<ol>
+<li id="fn1"><p>For a problem that requires solutions with more structure, we could choose chromosomes’ genes to be different lengths. For example, chromosomes could be three genes in length, where the first gene holds 2 bits, the second gene holds 5 bits, and the third gene holds 4 bits. However many different kinds of genes we want to have, each one must have its own set of possible alleles.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>Example borrowed from: Hermawanto, D. (2013). Genetic algorithm for solving simple mathematical equality problem. arXiv preprint <a href="https://arxiv.org/pdf/1308.4675.pdf">arXiv:1308.4675</a>.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn3"><p>This is arguably an implementation detail pertaining to optimization via caching, but I see it as having conceptual importance. The fitness of an organism never changes because its genetics don’t change and the operating problem doesn’t change. This is different from how we might talk about people’s physical fitness, where you can become more fit by working out. Since we’re simulating natural selection and treating environmental factors as being constant, fitness is tied to the genetics of an organism, which are fixed. The only changes to genetics happen between generations (i.e., during reproduction). So, with fitness being an unchanging value of an organism, it should be evaluated exactly once per organism.<a href="#fnref3" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn4"><p>Note that this allows for the same organism to be selected more than once. That’s okay! Organisms with higher fitness being allowed to reproduce multiple times is part of natural selection. Less fit individuals may not be selected to breed at all, allowing their less-desirable traits to simply die out.<a href="#fnref4" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section>
+    </section>
+	<section class="read-more">
+	  <a href="/blog.html" class="btn btn-primary">Read More</a>
+	</section>
+    <section class="newsletter">
+      <script async data-uid="3c58182786" src="https://tim-johns.ck.page/3c58182786/index.js"></script>
+    </section>
+  </article>
+</main>
+
+	<footer>
+      <div class="newsletter">
+        <script async data-uid="907145579d" src="https://tim-johns.ck.page/907145579d/index.js"></script>
+      </div>
+	  <div class="social-icons">
+		<a href="mailto:johns.timf@gmail.com">
+		  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><!--! Font Awesome Pro 6.1.1 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2022 Fonticons, Inc. --><path d="M464 64C490.5 64 512 85.49 512 112C512 127.1 504.9 141.3 492.8 150.4L275.2 313.6C263.8 322.1 248.2 322.1 236.8 313.6L19.2 150.4C7.113 141.3 0 127.1 0 112C0 85.49 21.49 64 48 64H464zM217.6 339.2C240.4 356.3 271.6 356.3 294.4 339.2L512 176V384C512 419.3 483.3 448 448 448H64C28.65 448 0 419.3 0 384V176L217.6 339.2z"/></svg>
+		</a>
+		<a href="https://www.linkedin.com/in/tim-johns/" target="_blank">
+		  <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>LinkedIn</title><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+		</a>
+		<a href="https://github.com/SlimTim10" target="_blank">
+		  <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>GitHub</title><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg>
+		</a>
+		<a href="https://www.instagram.com/slimtim10_/" target="_blank">
+		  <svg role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><title>Instagram</title><path d="M12 0C8.74 0 8.333.015 7.053.072 5.775.132 4.905.333 4.14.63c-.789.306-1.459.717-2.126 1.384S.935 3.35.63 4.14C.333 4.905.131 5.775.072 7.053.012 8.333 0 8.74 0 12s.015 3.667.072 4.947c.06 1.277.261 2.148.558 2.913.306.788.717 1.459 1.384 2.126.667.666 1.336 1.079 2.126 1.384.766.296 1.636.499 2.913.558C8.333 23.988 8.74 24 12 24s3.667-.015 4.947-.072c1.277-.06 2.148-.262 2.913-.558.788-.306 1.459-.718 2.126-1.384.666-.667 1.079-1.335 1.384-2.126.296-.765.499-1.636.558-2.913.06-1.28.072-1.687.072-4.947s-.015-3.667-.072-4.947c-.06-1.277-.262-2.149-.558-2.913-.306-.789-.718-1.459-1.384-2.126C21.319 1.347 20.651.935 19.86.63c-.765-.297-1.636-.499-2.913-.558C15.667.012 15.26 0 12 0zm0 2.16c3.203 0 3.585.016 4.85.071 1.17.055 1.805.249 2.227.415.562.217.96.477 1.382.896.419.42.679.819.896 1.381.164.422.36 1.057.413 2.227.057 1.266.07 1.646.07 4.85s-.015 3.585-.074 4.85c-.061 1.17-.256 1.805-.421 2.227-.224.562-.479.96-.899 1.382-.419.419-.824.679-1.38.896-.42.164-1.065.36-2.235.413-1.274.057-1.649.07-4.859.07-3.211 0-3.586-.015-4.859-.074-1.171-.061-1.816-.256-2.236-.421-.569-.224-.96-.479-1.379-.899-.421-.419-.69-.824-.9-1.38-.165-.42-.359-1.065-.42-2.235-.045-1.26-.061-1.649-.061-4.844 0-3.196.016-3.586.061-4.861.061-1.17.255-1.814.42-2.234.21-.57.479-.96.9-1.381.419-.419.81-.689 1.379-.898.42-.166 1.051-.361 2.221-.421 1.275-.045 1.65-.06 4.859-.06l.045.03zm0 3.678c-3.405 0-6.162 2.76-6.162 6.162 0 3.405 2.76 6.162 6.162 6.162 3.405 0 6.162-2.76 6.162-6.162 0-3.405-2.76-6.162-6.162-6.162zM12 16c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4zm7.846-10.405c0 .795-.646 1.44-1.44 1.44-.795 0-1.44-.646-1.44-1.44 0-.794.646-1.439 1.44-1.439.793-.001 1.44.645 1.44 1.439z"/></svg>
+		</a>
+        <a href="/rss.xml">
+          <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 448 512"><!--! Font Awesome Free 6.4.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license (Commercial License) Copyright 2023 Fonticons, Inc. --><path d="M0 64C0 46.3 14.3 32 32 32c229.8 0 416 186.2 416 416c0 17.7-14.3 32-32 32s-32-14.3-32-32C384 253.6 226.4 96 32 96C14.3 96 0 81.7 0 64zM0 416a64 64 0 1 1 128 0A64 64 0 1 1 0 416zM32 160c159.1 0 288 128.9 288 288c0 17.7-14.3 32-32 32s-32-14.3-32-32c0-123.7-100.3-224-224-224c-17.7 0-32-14.3-32-32s14.3-32 32-32z"/></svg>
+        </a>
+	  </div>
+	  <small>
+		&copy; 2022 Tim Johns. All rights reserved.
+	  </small>
+	  <small>
+		Site proudly generated by
+		<a href="http://jaspervdj.be/hakyll" target="_blank">Hakyll</a>
+		||
+		<a href="https://github.com/SlimTim10/slimtim10.github.io" target="_blank">View source</a>
+	  </small>
+	  <small>
+		Illustrations by
+		<a href="https://undraw.co" target="_blank">unDraw</a>
+		and Tim Johns
+	  </small>
+    </footer>
+	<script async src="./js/script.js"></script>
+  </body>
+</html>
