@@ -1,0 +1,28 @@
+---
+title: "Does Your Project Have a Wow Factor?"
+desc: ""
+image: "./images/blog/wow_factor.jpg"
+imageAlt: ""
+---
+
+Think of the last project you built. What specific feature does it have that make people go, "Wow!" when they see it? If nothing comes to mind, you may be missing out.
+
+I've helped countless students come up with project ideas over the years. I pride myself on my ability to pull project ideas out of people and make sure they're building something they can be really proud of in the end. An important part of that is making sure it has a "wow factor".
+
+When you're working alone and you're somewhat new to development, having a "wow factor" in your projects can be really tough to accomplish. You may not know if you're over-reaching or under-reaching, or even what feature you could be missing out on. And once you've decided on something, it's hard to be sure you're implementing it in a smart way.
+
+
+
+One project that comes to mind is a game built by Andreia. After some deliberation about various project ideas, not being sure what to build, when Andreia described a tile-based game to me, I immediately honed in on it. To me, the most interesting part was the 3D tile grid, where layers of tiles overlap each other at an offset, so a tile has four tiles blocking it from above.
+
+[image of tile game]
+
+How do you store such a system in data? What kind of data structure do you use? How do you render it on a web page? Do you use multiple HTML elements or a single canvas? Anyone with a programming background would find a scalable and flexible implementation of such a system interesting. A great "wow factor".
+
+
+
+I have a project template that I recommend to many of my students, particularly when they're learning Ruby on Rails. I call it "micro-reddit" because it's an implementation of an early generation of Reddit, back when it was much more simple. The two "wow factors" of Reddit were: the ability to give upvotes/downvotes to both posts and comments, and the hierarchical comment structure. If you're unfamiliar with how Reddit works, you're able to reply to a comment instead of a post. So instead of the flat forum-style discussion, comments on posts take the shape of a tree, where people can easily have many separate discussions within one post.
+
+[image of comments]
+
+Again, this is a "wow factor" for techies. How do you store the data of comments which are replies to comments in a relational database? How do you manage the deletion of comments? When a comment is deleted, do you also delete all of its children? How do you render the tree-based nature of the comments? How do you limit the view depth so the content doesn't go off the screen?
