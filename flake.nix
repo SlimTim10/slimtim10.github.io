@@ -1,55 +1,22 @@
 {
-  description = "hakyll-nix-template";
+  description = "slimtim10.github.io";
 
-  nixConfig = {
-    allow-import-from-derivation = "true";
-    bash-prompt = "[hakyll-nix]λ ";
-    extra-trusted-substituters = [
-      "https://cache.iog.io"
-      "https://cache.zw3rk.com" # https://github.com/input-output-hk/haskell.nix/issues/1408
-    ];
-    extra-trusted-public-keys = [
-      "hydra.iohk.io:f/Ea+s+dFdN+3Y/G+FDgSq+a5NEWhJGzdjvKNGv0/EQ="
-      "loony-tools:pr9m4BkM/5/eSTZlkQyRt57Jz7OMBxNSUiMC4FkcNfk="
-    ];
-  };
-
-  inputs.haskellNix.url = "github:input-output-hk/haskell.nix";
-  inputs.nixpkgs.follows = "haskellNix/nixpkgs-unstable";
+  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
   inputs.flake-utils.url = "github:numtide/flake-utils";
 
-  outputs = { self, nixpkgs, flake-utils, haskellNix }:
+  outputs = { self, nixpkgs, flake-utils }:
     flake-utils.lib.eachDefaultSystem (system:
       let
-        overlays = [ haskellNix.overlay
-          (final: prev: {
-            hakyllProject = final.haskell-nix.project' {
-              src = ./ssg;
-              compiler-nix-name = "ghc925";
-              shell.buildInputs = [
-                hakyll-site
-              ];
-              shell.tools = {
-                cabal = "latest";
-                hlint = "latest";
-                haskell-language-server = "latest";
-              };
-            };
-          })
-        ];
+        pkgs = nixpkgs.legacyPackages.${system};
+        hsPkgs = pkgs.haskellPackages;
+        hlib = pkgs.haskell.lib;
 
-        pkgs = import nixpkgs {
-          inherit overlays system;
-          inherit (haskellNix) config;
-        };
+        ssg = hsPkgs.callCabal2nix "ssg" ./ssg {};
 
-        flake = pkgs.hakyllProject.flake {};
-
-        hakyll-site = flake.packages."ssg:exe:hakyll-site";
+        hakyll-site = hlib.justStaticExecutables ssg;
 
         website = pkgs.stdenv.mkDerivation {
           name = "website";
-          buildInputs = [];
           src = pkgs.nix-gitignore.gitignoreSourcePure [
             ./.gitignore
             ".git"
@@ -75,17 +42,20 @@
           '';
         };
 
-      in flake // rec {
-        apps = {
-          default = flake-utils.lib.mkApp {
-            drv = hakyll-site;
-            exePath = "/bin/hakyll-site";
-          };
+      in {
+        apps.default = flake-utils.lib.mkApp {
+          drv = hakyll-site;
+          exePath = "/bin/hakyll-site";
         };
 
         packages = {
           inherit hakyll-site website;
           default = website;
+        };
+
+        devShells.default = hsPkgs.shellFor {
+          packages = _: [ ssg ];
+          nativeBuildInputs = [ pkgs.cabal-install ];
         };
       }
     );
