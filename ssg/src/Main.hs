@@ -109,14 +109,9 @@ main = hakyllWith config $ do
 
   mapM_ simplePage
     [ ("mentorship.html", "mentorship")
-    , ("events.html", "events")
     , ("projects.html", "projects")
     , ("about.html", "about")
     , ("contact.html", "contact")
-    ]
-
-  createRedirects
-    [ ("happy-hour/index.html", "/events.html") -- /happy-hour -> /events.html
     ]
 
   match "templates/*" $
